@@ -3,6 +3,8 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use App\Models\Product;
+use Illuminate\Support\Facades\Auth;
 
 class AuthController extends Controller
 {
@@ -22,9 +24,32 @@ class AuthController extends Controller
         // if (!session()->has('admin_id') && !session()->has('it_id')) {
         //     return redirect('/');
         // }
-        
-    
         return view('login');
+    }
+
+    public function login_submit(Request $request)
+    {
+        $credentials = $request->only('email', 'password');
+
+        if (Auth::attempt($credentials)) {
+            // Fetch the authenticated user
+            $account = Account::where('email', $request->email)->first();
+
+            if ($account->role === 'user') {
+                // Set session for user
+                session(['user_id' => $account->id]);
+                return redirect()->route('home');
+            } elseif ($account->role === 'admin') {
+                // Set session for admin
+                session(['admin_id' => $account->id]);
+                return redirect()->route('dashboard');
+            } else {
+                // Handle unexpected roles
+                return redirect()->route('login')->with('error', 'Invalid role');
+            }
+        }
+        // Authentication failed
+        return redirect()->route('login')->with('error', 'Invalid credentials');
     }
     
 

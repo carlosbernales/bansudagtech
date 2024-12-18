@@ -19,6 +19,9 @@ Route::match(['get', 'post'], '/login', [AuthController::class, 'login']);
 
 
 
+Route::match(['get', 'post'], '/dashboard', [AdminController::class, 'dashboard']);
+
+
 
 Route::put('/edit_category/{id}', [AdminController::class, 'category_edit']);
 Route::delete('/delete_category/{id}', [AdminController::class, 'delete_category']);

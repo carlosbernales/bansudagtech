@@ -11,7 +11,7 @@ License URL: http://creativecommons.org/licenses/by/3.0/
 <!-- Mirrored from p.w3layouts.com/demos_new/template_demo/06-03-2019/triple_forms-demo_Free/1611343419/web/index.html by HTTrack Website Copier/3.x [XR&CO'2014], Wed, 11 Dec 2024 13:12:40 GMT -->
 <!-- Added by HTTrack --><meta http-equiv="content-type" content="text/html;charset=UTF-8" /><!-- /Added by HTTrack -->
 <head>
-	<title>Triple Forms Responsive Widget Template :: w3layouts</title>
+	<title>Agi Tech</title>
 	<!-- Meta tag Keywords -->
 	<meta name="viewport" content="width=device-width, initial-scale=1">
 	<meta charset="UTF-8" />
@@ -223,58 +223,11 @@ RIGHT SIDEBAR TOGGLE SECTION
 <span class="fa title-open-right-sidebar tooltipstered fa-angle-double-right"></span>
 </div>
 
-<div id="right-sidebar" class="right-sidebar-notifcations nav-collapse">
-<div class="bs-example bs-example-tabs right-sidebar-tab-notification" data-example-id="togglable-tabs">
-
-    <div id="w3lDemoBar" class="w3l-demo-bar">
-        <div class="demo-btns">
-        <a href="https://w3layouts.com/?p=45250">
-            <span class="w3l-icon -back">
-                <span class="fa fa-arrow-left"></span>
-            </span>
-            <span class="w3l-text">Back</span>
-        </a>
-        <a href="https://w3layouts.com/?p=45250">
-            <span class="w3l-icon -download">
-                <span class="fa fa-download"></span>
-            </span>
-            <span class="w3l-text">Download</span>
-        </a>
-        <a href="https://w3layouts.com/checkout/?add-to-cart=45250" class="no-margin-bottom-mobile">
-            <span class="w3l-icon -buy">
-                <span class="fa fa-shopping-cart"></span>
-            </span>
-            <span class="w3l-text">Buy</span>
-        </a>
-    </div>
-        <!---<div class="responsive-icons">
-            <a href="#url" class="desktop-mode">
-                <span class="w3l-icon -desktop">
-                    <span class="fa fa-desktop"></span>
-                </span>
-            </a>
-            <a href="#url" class="tablet-mode">
-                <span class="w3l-icon -tablet">
-                    <span class="fa fa-tablet"></span>
-                </span>
-            </a>
-            <a href="#url" class="mobile-mode no-margin-bottom">
-                <span class="w3l-icon -mobile">
-                    <span class="fa fa-mobile"></span>
-                </span>
-            </a>
-        </div>-->
-    </div>
-    <div class="right-sidebar-panel-content animated fadeInRight" tabindex="5003"
-        style="overflow: hidden; outline: none;">
-    </div>
-</div>
-</div>
 </div>
 
 	<div class="main-bg">
 		<!-- title -->
-		<h1>Triple Forms</h1>
+		<h1></h1>
 		<!-- //title -->
 <!---728x90--->
 
