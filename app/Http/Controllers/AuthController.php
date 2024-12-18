@@ -3,8 +3,11 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-use App\Models\Product;
+use App\Models\Accounts;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Validator;
+use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Session;
 
 class AuthController extends Controller
 {
@@ -29,64 +32,66 @@ class AuthController extends Controller
 
     public function login_submit(Request $request)
     {
-        $credentials = $request->only('email', 'password');
+        $request->validate([
+            'email' => 'required|email',
+            'password' => 'required',
+        ]);
 
-        if (Auth::attempt($credentials)) {
-            // Fetch the authenticated user
-            $account = Account::where('email', $request->email)->first();
+        $account = Accounts::where('email', $request->email)->first();
 
-            if ($account->role === 'user') {
-                // Set session for user
-                session(['user_id' => $account->id]);
-                return redirect()->route('home');
-            } elseif ($account->role === 'admin') {
-                // Set session for admin
-                session(['admin_id' => $account->id]);
-                return redirect()->route('dashboard');
-            } else {
-                // Handle unexpected roles
-                return redirect()->route('login')->with('error', 'Invalid role');
-            }
+        if ($account && !Hash::check($request->password, $account->password)) {
+            return redirect()->back()->with('error', 'Incorrect password');
         }
-        // Authentication failed
-        return redirect()->route('login')->with('error', 'Invalid credentials');
+
+        if ($account) {
+            if ($account->role == 'user') {
+                Session::put('user_id', $account->id);
+                return redirect('/home');
+            } elseif ($account->role == 'admin') {
+                Session::put('admin_id', $account->id);
+                return redirect('/dashboard');
+            }
+        } else {
+            return redirect()->back()->with('error', 'Account not found');
+        }
     }
-    
 
-    // public function add_category(Request $request)
-    // {
-    //     if (!session()->has('admin_id') && !session()->has('it_id')) {
-    //         return redirect('/');
-    //     }
+    public function register(Request $request)
+    {
+        $validator = Validator::make($request->all(), [
+            'email' => 'required|email',
+            'password' => 'required|min:6',
+            'rsbsa' => 'required',
+        ]);
 
-    //     $category = new Category();
-    //     $category->cat_name = $request->input('cat_name');
-    //     $category->save(); 
+        if ($validator->fails()) {
+            return redirect()->back()
+                ->withErrors($validator, 'register_error')
+                ->withInput();
+        }
 
-    //     return redirect()->back()->with('success', 'Category added successfully');
-    // }
+        // Check if the email already exists in the database
+        if (Accounts::where('email', $request->email)->exists()) {
+            return redirect()->back()
+                ->withErrors(['email' => 'The email existed.'], 'register_error')
+                ->withInput();
+        }
 
-    // public function category_edit(Request $request, $id)
-    // {
-    //     if (!session()->has('admin_id') && !session()->has('it_id')) {
-    //         return redirect('/');
-    //     }
+        // Check if the RSBSA record exists
+        $account = Accounts::where('rsbsa', $request->rsbsa)->first();
+        if (!$account) {
+            return redirect()->back()
+                ->withErrors(['rsbsa' => 'The RSBSA record was not found.'], 'register_error')
+                ->withInput();
+        }
 
-    //     $category = Category::findOrFail($id);
+        // Update the existing account with the new email and password
+        $account->update([
+            'email' => $request->email,
+            'password' => Hash::make($request->password),
+        ]);
 
-    //     $category->update([
-    //         'cat_name' => $request->input('cat_name'),
-    //     ]);
+        return redirect()->back()->with('success', 'Registration successful!');
+    }
 
-    //     return redirect()->back()->with('success', 'Category updated successfully.');
-    // }
-
-    // public function delete_category($id)
-    // {
-    //     $category = Category::findOrFail($id);
-    //     $category->delete();
-
-    //     return redirect()->back()->with('success', 'Category deleted successfully.');
-    // }
-    //
 }

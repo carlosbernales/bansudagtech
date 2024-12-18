@@ -241,7 +241,8 @@ RIGHT SIDEBAR TOGGLE SECTION
 					<input type="radio" name="sections" id="option1" checked>
 					<label for="option1" class="icon-left-w3pvt"><span class="fa fa-user-circle" aria-hidden="true"></span>Login</label>
 					<article>
-						<form action="#" method="post">
+						<form action="/login_submit" method="post">
+							@csrf
 							<h3 class="legend">Login Here</h3>
 							<div class="input">
 								<span class="fa fa-envelope-o" aria-hidden="true"></span>
@@ -251,6 +252,9 @@ RIGHT SIDEBAR TOGGLE SECTION
 								<span class="fa fa-key" aria-hidden="true"></span>
 								<input type="password" placeholder="Password" name="password" required />
 							</div>
+							@if(session('error'))
+								<div class="alert alert-danger">{{ session('error') }}</div>
+							@endif
 							<button type="submit" class="btn submit">Login</button>
 							<a href="#" class="bottom-text-w3ls">Forgot Password?</a>
 						</form>
@@ -260,22 +264,37 @@ RIGHT SIDEBAR TOGGLE SECTION
 					<input type="radio" name="sections" id="option2">
 					<label for="option2" class="icon-left-w3pvt"><span class="fa fa-pencil-square" aria-hidden="true"></span>Register</label>
 					<article>
-						<form action="#" method="post">
-							<h3 class="legend">Register Here</h3>
-							<div class="input">
-								<span class="fa fa-user-o" aria-hidden="true"></span>
-								<input type="text" placeholder="Username" name="name" required />
-							</div>
-							<div class="input">
-								<span class="fa fa-key" aria-hidden="true"></span>
-								<input type="password" placeholder="Password" name="password" required />
-							</div>
-							<div class="input">
-								<span class="fa fa-key" aria-hidden="true"></span>
-								<input type="password" placeholder="Confirm Password" name="password" required />
-							</div>
-							<button type="submit" class="btn submit">Register</button>
-						</form>
+					<form action="/register" method="POST">
+						@csrf
+						<h3 class="legend">Register Here</h3>
+						<div class="input">
+							<span aria-hidden="true"></span>
+							<input type="text" placeholder="Email" name="email" value="{{ old('email') }}" required />
+							@error('email', 'register_error')
+							<small class="error">{{ $message }}</small>
+							@enderror
+						</div>
+						
+						<div class="input">
+							<span aria-hidden="true"></span>
+							<input type="password" placeholder="Password" name="password" required />
+						</div>
+						
+						<div class="input">
+							<span aria-hidden="true"></span>
+							<input type="password" placeholder="Confirm Password" name="confirm_password" required />
+						</div>
+						
+						<div class="input">
+							<span aria-hidden="true"></span>
+							<input type="text" placeholder="RSBSA" name="rsbsa" id="rsbsa" value="{{ old('rsbsa') }}" required />
+							@error('rsbsa', 'register_error')
+							<small class="error">{{ $message }}</small>
+							@enderror
+						</div>
+						
+						<button type="submit" class="btn submit">Register</button>
+					</form>
 					</article>
 				</div>
 				<div id="section3" class="section-w3ls">
@@ -296,20 +315,36 @@ RIGHT SIDEBAR TOGGLE SECTION
 					</article>
 				</div>
 			</div>
-			<!-- //vertical tabs -->
 			<div class="clear"></div>
 		</div>
-<!---728x90--->
 		<!-- copyright -->
 		<div class="copyright">
-			<h2>&copy; 2019 Triple Forms. All rights reserved | Design by
-				<a href="https://w3layouts.com/" target="_blank">W3layouts</a>
+			<h2>&copy; 2024 Agtech. All rights reserved
 			</h2>
 		</div>
 		<!-- //copyright -->
-<!---728x90--->
 	</div>
 
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/alertifyjs@1.13.1/build/css/alertify.min.css" />
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/alertifyjs@1.13.1/build/css/themes/default.min.css" />
+<script src="https://cdn.jsdelivr.net/npm/alertifyjs@1.13.1/build/alertify.min.js"></script>
+
+<script>
+const rsbsaInput = document.getElementById('rsbsa');
+
+rsbsaInput.addEventListener('input', function () {
+	let value = rsbsaInput.value.replace(/-/g, ''); 
+	let formattedValue = value.match(/.{1,2}/g)?.join('-') || ''; 
+	rsbsaInput.value = formattedValue;
+});
+</script>
+<script>
+	alertify.set('notifier', 'position', 'top-right');
+
+	@if(session('success'))
+		alertify.success('{{ session('success') }}');
+	@endif
+</script>
 
 <script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'8f05ba398850f8ea',t:'MTczMzkyMjc1OS4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='../../../../../../cdn-cgi/challenge-platform/h/g/scripts/jsd/f9063374b04d/maind41d.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
 
