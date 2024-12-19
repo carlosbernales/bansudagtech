@@ -12,7 +12,6 @@
                         <div class="basic-tb-hd">
                             <div class="card-header" style="display: flex; justify-content: space-between;">
                                 <h2>Farmer List</h2>
-                                <button class="btn btn-lightgreen lightgreen-icon-notika"  data-toggle="modal" data-target="#addAnnouncementModal">+ Announcement</button>
                             </div>
                         </div>
                         <div class="table-responsive">
@@ -50,34 +49,34 @@
 
 
     <div class="modal fade" id="addAnnouncementModal" role="dialog">
-    <div class="modal-dialog modal-md"> <!-- Increased the size to modal-lg for more space -->
-        <div class="modal-content">
-            <div class="modal-header">
-                <button type="button" class="close" data-dismiss="modal">&times;</button>
-                <h4 class="modal-title">Add Farmers</h4>
-            </div>
-            <div class="modal-body">
-                <form action="/add_announcement" method="POST">
-                    @csrf
-                    <div class="row">
-                        <div class="col-md-12 mb-3">
-                            <label for="title">Title</label>
-                            <input type="text" class="form-control" id="title" name="title" placeholder="Enter title" required>
-                        </div>
+        <div class="modal-dialog modal-md"> <!-- Increased the size to modal-lg for more space -->
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal">&times;</button>
+                    <h4 class="modal-title">Add Farmers</h4>
+                </div>
+                <div class="modal-body">
+                    <form action="/add_announcement" method="POST">
+                        @csrf
+                        <div class="row">
+                            <div class="col-md-12 mb-3">
+                                <label for="title">Title</label>
+                                <input type="text" class="form-control" id="title" name="title" placeholder="Enter title" required>
+                            </div>
 
-                        <div class="col-md-12 mb-3">
-                            <label for="content">Content</label>
-                            <textarea class="form-control" id="content" name="content" rows="4" placeholder="Enter Content" required></textarea>
+                            <div class="col-md-12 mb-3">
+                                <label for="content">Content</label>
+                                <textarea class="form-control" id="content" name="content" rows="4" placeholder="Enter Content" required></textarea>
+                            </div>
                         </div>
                     </div>
-                </div>
-                <div class="modal-footer">
-                    <button type="submit" class="btn btn-success" >Submit</button>
-                </div>
-            </form>
+                    <div class="modal-footer">
+                        <button type="submit" class="btn btn-success" >Submit</button>
+                    </div>
+                </form>
+            </div>
         </div>
     </div>
-</div>
 
 
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/alertifyjs@1.13.1/build/css/alertify.min.css" />

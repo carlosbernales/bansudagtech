@@ -22,6 +22,8 @@ Route::match(['get', 'post'], '/', [AuthController::class, 'landingpage']);
 Route::match(['get', 'post'], '/login', [AuthController::class, 'login']);
 Route::match(['get', 'post'], '/login_submit', [AuthController::class, 'login_submit']);
 Route::match(['get', 'post'], '/register', [AuthController::class, 'register']);
+Route::match(['get', 'post'], '/logout', [AuthController::class, 'logout']);
+
 
 
 
@@ -40,6 +42,12 @@ Route::delete('/delete_announcement/{id}', [AdminController::class, 'delete_anno
 
 //HOME
 Route::match(['get', 'post'], '/home', [HomeController::class, 'home']);
+Route::match(['get', 'post'], '/farms', [HomeController::class, 'farms']);
+Route::match(['get', 'post'], '/add_farms', [HomeController::class, 'add_farms']);
+Route::match(['get', 'post'], '/test', [HomeController::class, 'test']);
+
+
+
 
 
 
