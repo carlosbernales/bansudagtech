@@ -3,6 +3,8 @@
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\AdminController;
+use App\Http\Controllers\HomeController;
+
 
 
 /*
@@ -33,6 +35,12 @@ Route::match(['get', 'post'], '/check_rsbsa_add_farmer', [AdminController::class
 Route::match(['get', 'post'], '/announcement', [AdminController::class, 'announcement']);
 Route::match(['get', 'post'], '/add_announcement', [AdminController::class, 'add_announcement']);
 Route::delete('/delete_announcement/{id}', [AdminController::class, 'delete_announcement']);
+
+
+
+//HOME
+Route::match(['get', 'post'], '/home', [HomeController::class, 'home']);
+
 
 
 
