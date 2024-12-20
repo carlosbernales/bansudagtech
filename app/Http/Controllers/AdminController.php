@@ -106,6 +106,7 @@ class AdminController extends Controller
             'tot_female' => $request->input('tot_female'),
             'tribe_name' => $request->input('tribe_name'),
             'email' => $request->input('email'),
+            'farmer_type' => $request->input('farmer_type'),
         ]);
         return back()->with('success', 'Farmer Added');
     }

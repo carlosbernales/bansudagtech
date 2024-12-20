@@ -29,6 +29,7 @@ class Farms extends Model
                             'commodity', 
                             'farm_type',
                             'location',
+                            'forms_farm',
                         ];
     // Define the guarded attributes (not mass assignable)
     // protected $guarded = ['id']

@@ -18,6 +18,7 @@ use App\Http\Controllers\HomeController;
 |
 */
 
+//AUTH
 Route::match(['get', 'post'], '/', [AuthController::class, 'landingpage']);
 Route::match(['get', 'post'], '/login', [AuthController::class, 'login']);
 Route::match(['get', 'post'], '/login_submit', [AuthController::class, 'login_submit']);
@@ -25,20 +26,16 @@ Route::match(['get', 'post'], '/register', [AuthController::class, 'register']);
 Route::match(['get', 'post'], '/logout', [AuthController::class, 'logout']);
 
 
-
-
 //ADMIN
-
 Route::match(['get', 'post'], '/dashboard', [AdminController::class, 'dashboard']);
 Route::match(['get', 'post'], '/farmers', [AdminController::class, 'farmers']);
 Route::match(['get', 'post'], '/add_farmer', [AdminController::class, 'add_farmer']);
 Route::match(['get', 'post'], '/check_rsbsa_add_farmer', [AdminController::class, 'checkRsbsa']);
-
 Route::match(['get', 'post'], '/announcement', [AdminController::class, 'announcement']);
 Route::match(['get', 'post'], '/add_announcement', [AdminController::class, 'add_announcement']);
 Route::delete('/delete_announcement/{id}', [AdminController::class, 'delete_announcement']);
-
 Route::match(['get', 'post'], '/farmers_farm', [AdminController::class, 'farmers_farm']);
+
 
 
 
@@ -48,6 +45,7 @@ Route::match(['get', 'post'], '/farms', [HomeController::class, 'farms']);
 Route::match(['get', 'post'], '/add_farms', [HomeController::class, 'add_farms']);
 Route::match(['get', 'post'], '/test', [HomeController::class, 'test']);
 Route::delete('/delete_farm/{id}', [HomeController::class, 'delete_farm']);
+Route::match(['get', 'post'], '/calamity_report', [HomeController::class, 'calamity_report']);
 
 
 

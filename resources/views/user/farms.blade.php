@@ -142,13 +142,25 @@
         <div class="mb-3">
             <label for="commodity" class="form-label">Commodity</label>
             <select class="form-control" id="commodity" name="commodity" required>
-            <option value="">Select</option>
-            <option value="CROP">CROP</option>
-            <option value="LIVESTOCK">LIVESTOCK</option>
+                <option value="">Select</option>
+                <option value="CROP">CROP</option>
+                <option value="LIVESTOCK">LIVESTOCK</option>
             </select>
         </div>
+
+        <div class="mb-3" id="farmTypeDiv" style="display: none;">
+            <label for="forms_farm" class="form-label">Farm Type</label>
+            <select class="form-control" id="forms_farm" name="forms_farm" >
+                <option value="">Select</option>
+                <option value="BACKYARD">BACKYARD</option>
+                <option value="COMMERCIAL">COMMERCIAL</option>
+                <option value="SEMI-COMMERCIAL">SEMI-COMMERCIAL</option>
+            </select>
+        </div>
+
+        
         <div class="mb-3">
-            <label for="farm_type" class="form-label">Farm Type</label>
+            <label for="farm_type" class="form-label">Type</label>
             <input type="text" class="form-control" id="farm_type" name="farm_type" placeholder="eg: RICE or PIG" required>
         </div>
         <div class="mb-3">
@@ -218,6 +230,16 @@
 </script>
 
 <script>
+
+document.getElementById('commodity').addEventListener('change', function () {
+    const farmTypeDiv = document.getElementById('farmTypeDiv');
+    if (this.value === 'LIVESTOCK') {
+        farmTypeDiv.style.display = 'block'; // Show the "Farm Type" dropdown
+    } else {
+        farmTypeDiv.style.display = 'none'; // Hide the "Farm Type" dropdown
+    }
+});
+
 
 function confirmDelete(id) {
     Swal.fire({

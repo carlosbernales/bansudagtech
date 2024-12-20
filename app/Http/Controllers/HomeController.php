@@ -12,6 +12,8 @@ use App\Models\FarmsImages;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\File;
+use App\Models\CalamityReport;
+
 
 
 class HomeController extends Controller
@@ -75,6 +77,7 @@ class HomeController extends Controller
             'location' => $request->input('location'),
             'commodity' => $request->input('commodity'),
             'farm_type' => $request->input('farm_type'),
+            'forms_farm' => $request->input('forms_farm'),
             'user_id' => $userId, 
             'fullname' => $userFullname, 
             'rsbsa' => $rsbsa,
@@ -116,6 +119,12 @@ class HomeController extends Controller
         return redirect()->back()->with('success', 'Deleted!');
     }
 
+
+    public function calamity_report()
+    {
+        // Eager load the farmImages relationship to prevent null errors
+        return view('user/calamityReport');
+    }
 
 
 

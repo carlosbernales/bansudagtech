@@ -54,12 +54,21 @@
                     <form action="/add_farmer" method="POST">
                     @csrf
                     <div class="row">
-                        <div class="col-md-12 mb-3">
+                        <div class="col-md-6 mb-3">
                             <label for="rsbsa">RSBSA</label>
                             <input type="text" class="form-control" id="rsbsa" name="rsbsa" autocomplete="off">
                             <small id="rsbsaFeedback" class="form-text text-danger"></small>
                         </div>
+                        <div class="col-md-6 mb-3">
+                            <label for="farmer_type">Type of Farmer</label>
+                            <select class="form-control" id="farmer_type" name="farmer_type">
+                                <option value="">Select</option>
+                                <option value="INDIVIDUAL">INDIVIDUAL</option>
+                                <option value="GROUP">GROUP</option>
+                            </select>
+                        </div>
                     </div>
+
 
                     <div class="row">
                         <div class="col-md-4 mb-3">
