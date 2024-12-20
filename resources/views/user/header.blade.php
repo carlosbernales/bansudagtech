@@ -23,6 +23,7 @@
     <link rel="preconnect" href="https://fonts.gstatic.com/" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;700&amp;family=Open+Sans:ital,wght@0,400;0,700;1,400;1,700&amp;display=swap" rel="stylesheet">
 
+    
   </head>
   <body>
 
@@ -112,7 +113,7 @@
             </a>
           </li>
           <li class="nav-item border-dashed">
-            <a href="index.html" class="nav-link d-flex align-items-center gap-3 text-dark p-2">
+            <a href="/farms" class="nav-link d-flex align-items-center gap-3 text-dark p-2">
               <svg width="24" height="24" viewBox="0 0 24 24"><use xlink:href="#meat"></use></svg>
               <span>My Crops</span>
             </a>
@@ -184,3 +185,13 @@
         </div>
       </div>
     </header>
+
+<style>
+.swal2-modal {
+    max-width: 300px !important; /* Adjust the width as needed */
+    max-height: 270px !important;
+    }
+.swal2-icon {
+    font-size: 5px; /* Change the size to your desired value */
+    }
+</style>

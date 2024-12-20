@@ -4,15 +4,16 @@
 
 	<!-- Breadcomb area End-->
     <!-- Data Table area Start-->
-    <div class="data-table-area">
-        <div class="container">
-            <div class="row">
-                <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
-                    <div class="data-table-list">
-                        <div class="basic-tb-hd">
-                            <div class="card-header" style="display: flex; justify-content: space-between;">
-                                <h2>Farmer List</h2>
-                            </div>
+            <div class="data-table-area">
+                <div class="container">
+                    <div class="row">
+                        <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                            <div class="data-table-list">
+                                <div class="basic-tb-hd">
+                                    <div class="card-header" style="display: flex; justify-content: space-between;">
+                                        <h2>Farmer List</h2>
+                            <button class="btn btn-lightgreen lightgreen-icon-notika"  data-toggle="modal" data-target="#addAnnouncementModal">+ Announcement</button>
+                        </div>
                         </div>
                         <div class="table-responsive">
                             <table id="data-table-basic" class="table table-striped">
@@ -101,7 +102,7 @@
             showCancelButton: true,
             confirmButtonColor: '#3085d6',
             cancelButtonColor: '#d33',
-            confirmButtonText: 'Yes, delete it!',
+            confirmButtonText: 'Yes!',
         }).then((result) => {
             if (result.isConfirmed) {
                 // Submit the form after confirmation

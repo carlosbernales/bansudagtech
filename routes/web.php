@@ -38,6 +38,8 @@ Route::match(['get', 'post'], '/announcement', [AdminController::class, 'announc
 Route::match(['get', 'post'], '/add_announcement', [AdminController::class, 'add_announcement']);
 Route::delete('/delete_announcement/{id}', [AdminController::class, 'delete_announcement']);
 
+Route::match(['get', 'post'], '/farmers_farm', [AdminController::class, 'farmers_farm']);
+
 
 
 //HOME
@@ -45,6 +47,7 @@ Route::match(['get', 'post'], '/home', [HomeController::class, 'home']);
 Route::match(['get', 'post'], '/farms', [HomeController::class, 'farms']);
 Route::match(['get', 'post'], '/add_farms', [HomeController::class, 'add_farms']);
 Route::match(['get', 'post'], '/test', [HomeController::class, 'test']);
+Route::delete('/delete_farm/{id}', [HomeController::class, 'delete_farm']);
 
 
 

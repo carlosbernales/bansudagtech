@@ -7,6 +7,7 @@ use App\Models\Accounts;
 use Illuminate\Support\Facades\Hash;
 use App\Models\Announcement;
 use App\Models\AnnouncementUser;
+use App\Models\Farms;
 
 
 class AdminController extends Controller
@@ -120,6 +121,13 @@ class AdminController extends Controller
         $exists = Accounts::where('rsbsa', $rsbsa)->exists();
 
         return response()->json(['exists' => $exists]);
+    }
+
+    public function farmers_farm()
+    {
+        // Eager load the farmImages relationship to prevent null errors
+        $farmers = Farms::with('farmImages')->get(); // Use `farmImages` (note plural) for multiple images
+        return view('admin/farmer_farm', compact('farmers'));
     }
 
 }

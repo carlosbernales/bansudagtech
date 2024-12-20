@@ -2,6 +2,7 @@
 @include('user/header')
 
     
+
    
 
 <section class="pb-5">
@@ -22,83 +23,94 @@
         <div class="row">
             <div class="col-md-12">
                 <div class="product-grid row row-cols-1 row-cols-sm-2 row-cols-md-3 row-cols-lg-3 row-cols-xl-4 row-cols-xxl-5">
+                @if($farmers->isEmpty())
+                    <div class="text-center mt-5">
+                        <h4>No farms found</h4>
+                        <a href="#" class="btn btn-primary me-2" data-bs-toggle="modal" data-bs-target="#addFarmModal">Add Farm</a>
+                    </div>
+                @else
                     @foreach ($farmers as $farmer)
-                    <div class="col">
-                        <div class="product-item">
-                            <!-- Thumbnail -->
-                            <figure>
-                                <a href="#" title="{{ $farmer->farm_type }}" data-bs-toggle="modal" data-bs-target="#viewImageModal{{ $farmer->id }}">
-                                    @if($farmer->commodity == 'LIVESTOCK')
-                                        <img src="animal.png" alt="Livestock Thumbnail" class="tab-image">
-                                    @elseif($farmer->commodity == 'CROP')
-                                        <img src="crop.png" alt="Crop Thumbnail" class="tab-image">
-                                    @else
-                                        <img src="default.png" alt="Default Thumbnail" class="tab-image">
-                                    @endif
-                                </a>
-                            </figure>
-                            
-                            <!-- Farm Details -->
-                            <div class="d-flex flex-column text-center">
-                                <h3 class="fs-6 fw-normal">{{ $farmer->farm_type }}</h3>
-                                <div class="d-flex justify-content-center align-items-center gap-2">
-                                    <span class="text-dark fw-semibold">{{ $farmer->commodity }}</span>
-                                </div>
+                        <div class="col">
+                            <div class="product-item">
+                                <!-- Thumbnail -->
+                                <figure>
+                                    <a href="#" title="{{ $farmer->farm_type }}" data-bs-toggle="modal" data-bs-target="#viewImageModal{{ $farmer->id }}">
+                                        @if($farmer->commodity == 'LIVESTOCK')
+                                            <img src="animal.png" alt="Livestock Thumbnail" class="tab-image">
+                                        @elseif($farmer->commodity == 'CROP')
+                                            <img src="crop.png" alt="Crop Thumbnail" class="tab-image">
+                                        @else
+                                            <img src="default.png" alt="Default Thumbnail" class="tab-image">
+                                        @endif
+                                    </a>
+                                </figure>
                                 
-                                <!-- Action Buttons -->
-                                <div class="button-area p-3 pt-0">
-                                    <div class="row g-1 mt-2">
-                                        <div class="col-3"></div>
-                                        <div class="col-7">
-                                            <a href="#" class="btn btn-primary rounded-1 p-2 fs-7 btn-cart" data-location="{{ $farmer->location }}" data-bs-toggle="modal" data-bs-target="#viewLocationModal">
-                                                View Location
-                                            </a>
-                                        </div>
-                                        <div class="col-2">
-                                            <a href="#" class="btn btn-outline-danger rounded-1 p-2 fs-6" title="Delete">
-                                                <svg width="18" height="18">
-                                                    <use xlink:href="#trash"></use>
-                                                </svg>
-                                            </a>
-                                        </div>
+                                <!-- Farm Details -->
+                                <div class="d-flex flex-column text-center">
+                                    <h3 class="fs-6 fw-normal">{{ $farmer->farm_type }}</h3>
+                                    <div class="d-flex justify-content-center align-items-center gap-2">
+                                        <span class="text-dark fw-semibold">{{ $farmer->commodity }}</span>
                                     </div>
-                                </div>
-                            </div>
-                            <!-- / Farm Details -->
-                        </div>
-                    </div>
-
-                    <!-- Modal for Viewing Image -->
-                    <div class="modal fade" id="viewImageModal{{ $farmer->id }}" tabindex="-1" aria-labelledby="viewImageModalLabel" aria-hidden="true">
-                        <div class="modal-dialog modal-dialog-centered">
-                            <div class="modal-content">
-                                <div class="modal-header">
-                                    <h5 class="modal-title" id="viewImageModalLabel">{{ $farmer->farm_type }} Images</h5>
-                                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                                </div>
-                                <div class="modal-body">
-                                    <div class="d-flex justify-content-center align-items-center">
-                                        <div>
-                                            <div id="imageNumber{{ $farmer->id }}" class="text-center mb-2">
-                                                <span id="currentImageIndex{{ $farmer->id }}">1</span> / 
-                                                <span id="totalImages{{ $farmer->id }}">{{ count($farmer->farmImages) }}</span>
+                                    
+                                    <!-- Action Buttons -->
+                                    <div class="button-area p-3 pt-0">
+                                        <div class="row g-1 mt-2">
+                                            <div class="col-3"></div>
+                                            <div class="col-7">
+                                                <a href="#" class="btn btn-primary rounded-1 p-2 fs-7 btn-cart" data-location="{{ $farmer->location }}" data-bs-toggle="modal" data-bs-target="#viewLocationModal">
+                                                    View Location
+                                                </a>
                                             </div>
-                                            @foreach ($farmer->farmImages as $index => $image)
-                                                <div class="image-gallery-item {{ $index == 0 ? 'active' : '' }}" style="display: {{ $index == 0 ? 'block' : 'none' }};" data-index="{{ $index }}">
-                                                    <img src="{{ asset('farms_images/' . $image->image) }}" alt="Farm Image" class="img-fluid" style="max-width: 100%; max-height: 400px; object-fit: contain;">
-                                                </div>
-                                            @endforeach
+                                            <div class="col-2">
+                                            <form action="/delete_farm/{{ $farmer->id }}" method="POST" id="delete-form-{{ $farmer->id }}">
+                                                @csrf
+                                                @method('DELETE')
+                                                <button type="button" class="btn btn-outline-danger rounded-1 p-2 fs-6" 
+                                                    title="Delete" onclick="confirmDelete({{ $farmer->id }})">
+                                                    <svg width="18" height="18">
+                                                        <use xlink:href="#trash"></use>
+                                                    </svg>
+                                                </button>
+                                            </form>
+                                            </div>
                                         </div>
                                     </div>
                                 </div>
-                                <div class="modal-footer">
-                                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                                    <button type="button" class="btn btn-primary" id="nextImageBtn">Next</button>
+                                <!-- / Farm Details -->
+                            </div>
+                        </div>
+
+                        <!-- Modal for Viewing Image -->
+                        <div class="modal fade" id="viewImageModal{{ $farmer->id }}" tabindex="-1" aria-labelledby="viewImageModalLabel" aria-hidden="true">
+                            <div class="modal-dialog modal-dialog-centered">
+                                <div class="modal-content">
+                                    <div class="modal-header">
+                                        <h5 class="modal-title" id="viewImageModalLabel">{{ $farmer->farm_type }} Images</h5>
+                                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                    </div>
+                                    <div class="modal-body">
+                                        <div class="d-flex justify-content-center align-items-center">
+                                            <div>
+                                                <div id="imageNumber{{ $farmer->id }}" class="text-center mb-2">
+                                                    <span id="currentImageIndex{{ $farmer->id }}">1</span> / 
+                                                    <span id="totalImages{{ $farmer->id }}">{{ count($farmer->farmImages) }}</span>
+                                                </div>
+                                                @foreach ($farmer->farmImages as $index => $image)
+                                                    <div class="image-gallery-item {{ $index == 0 ? 'active' : '' }}" style="display: {{ $index == 0 ? 'block' : 'none' }};" data-index="{{ $index }}">
+                                                        <img src="{{ asset('farms_images/' . $image->image) }}" alt="Farm Image" class="img-fluid" style="max-width: 100%; max-height: 400px; object-fit: contain;">
+                                                    </div>
+                                                @endforeach
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="modal-footer">
+                                        <button type="button" class="btn btn-primary" id="nextImageBtn">Next</button>
+                                    </div>
                                 </div>
                             </div>
                         </div>
-                    </div>
                     @endforeach
+                @endif
                 </div>
             </div>
         </div>
@@ -109,9 +121,6 @@
 
 
 
-
-
-<!-- Add Farm Modal -->
 <!-- Add Farm Modal -->
 <div class="modal fade" id="addFarmModal" tabindex="-1" aria-labelledby="addFarmModalLabel" aria-hidden="true">
   <div class="modal-dialog">
@@ -126,7 +135,7 @@
         <div class="mb-3">
             <label for="location" class="form-label">Farm Location</label>
             <div class="input-group">
-            <input type="text" class="form-control" id="location" name="location" disabled required>
+            <input type="text" class="form-control" id="location" name="location" readonly required>
             <button type="button" class="btn btn-secondary" data-bs-toggle="modal" data-bs-target="#mapModal">Select Location</button>
             </div>
         </div>
@@ -156,7 +165,6 @@
 </div>
 
 
-<!-- Main Form Modal -->
 
 
 <!-- Google Maps Modal for Adding Farm Location -->
@@ -172,8 +180,7 @@
         <div id="map" style="width: 100%; height: 400px;"></div>
       </div>
       <div class="modal-footer">
-        <button type="button" class="btn btn-primary" id="saveLocation">Save Location</button>
-        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+        <button type="button" class="btn btn-primary" id="saveLocation">Okay</button>
       </div>
     </div>
   </div>
@@ -184,14 +191,11 @@
     <div class="modal-dialog modal-lg">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title" id="viewLocationModalLabel">Farme Location</h5>
+                <h5 class="modal-title" id="viewLocationModalLabel">Farm Location</h5>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body">
                 <div id="viewMap" style="width: 100%; height: 400px;"></div>
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
             </div>
         </div>
     </div>
@@ -200,8 +204,40 @@
 
 <script async defer src="googlemapsAPI.js"></script>
 
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/alertifyjs@1.13.1/build/css/alertify.min.css" />
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/alertifyjs@1.13.1/build/css/themes/default.min.css" />
+<script src="https://cdn.jsdelivr.net/npm/alertifyjs@1.13.1/build/alertify.min.js"></script>
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 
 <script>
+    alertify.set('notifier', 'position', 'top-right');
+
+    @if(session('success'))
+        alertify.success('{{ session('success') }}');
+    @endif
+</script>
+
+<script>
+
+function confirmDelete(id) {
+    Swal.fire({
+        title: 'Are you sure?',
+        text: "You won't be able to revert this!",
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonColor: '#3085d6',
+        cancelButtonColor: '#d33',
+        confirmButtonText: 'Yes!',
+    }).then((result) => {
+        if (result.isConfirmed) {
+            console.log('Confirmed delete for ID:', id);
+            document.getElementById('delete-form-' + id).submit();
+        }
+    });
+}
+
+
+
 
     
     
@@ -352,10 +388,6 @@ document.getElementById("viewLocationModal").addEventListener("show.bs.modal", f
 
 </script>
 
-
-
-
-    
 
 @include('user/footer')
 

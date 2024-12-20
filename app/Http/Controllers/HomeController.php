@@ -11,6 +11,7 @@ use App\Models\Farms;
 use App\Models\FarmsImages;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\File;
 
 
 class HomeController extends Controller
@@ -52,7 +53,7 @@ class HomeController extends Controller
             'commodity' => 'required|string',
             'farm_type' => 'required|string',
             'image' => 'required|array',
-            'image.*' => 'image|mimes:jpeg,png,jpg,gif|max:2048', // Validate the images
+            'image.*' => 'image|mimes:jpeg,png,jpg,gif|max:2048', 
         ]);
 
         $userId = session('user_id');
@@ -74,8 +75,8 @@ class HomeController extends Controller
             'location' => $request->input('location'),
             'commodity' => $request->input('commodity'),
             'farm_type' => $request->input('farm_type'),
-            'user_id' => $userId, // Associated user
-            'fullname' => $userFullname, // User fullname
+            'user_id' => $userId, 
+            'fullname' => $userFullname, 
             'rsbsa' => $rsbsa,
         ]);
 
@@ -86,13 +87,33 @@ class HomeController extends Controller
                 $image->move(public_path('farms_images'), $imageName);
 
                 FarmsImages::create([
-                    'farms_fk_id' => $farm->id,  // Insert the farm id here
-                    'image' => $imageName,        // Store only the image name
+                    'farms_fk_id' => $farm->id,  
+                    'image' => $imageName,        
                 ]);
             }
         }
 
-        return redirect()->back()->with('success', 'Farm added successfully!');
+        return redirect()->back()->with('success', 'Success!');
+    }
+
+
+    public function delete_farm($id)
+    {
+        $farmer = Farms::findOrFail($id); 
+
+        $farmImages = FarmsImages::where('farms_fk_id', $id)->get();
+        foreach ($farmImages as $image) {
+            $imagePath = public_path('farms_images/' . $image->image);
+            if (File::exists($imagePath)) {
+                File::delete($imagePath);
+            }
+        }
+
+        FarmsImages::where('farms_fk_id', $id)->delete();
+
+        $farmer->delete();
+
+        return redirect()->back()->with('success', 'Deleted!');
     }
 
 
