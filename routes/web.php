@@ -36,6 +36,11 @@ Route::match(['get', 'post'], '/add_announcement', [AdminController::class, 'add
 Route::delete('/delete_announcement/{id}', [AdminController::class, 'delete_announcement']);
 Route::match(['get', 'post'], '/farmers_farm', [AdminController::class, 'farmers_farm']);
 
+Route::match(['get', 'post'], '/check-rsbsa', [AdminController::class, 'checkRsbsaEdit']);
+Route::put('/edit_farmer/{id}', [AdminController::class, 'edit_farmer']);
+Route::delete('/delete_farmer/{id}', [AdminController::class, 'delete_farmer']);
+
+
 
 
 

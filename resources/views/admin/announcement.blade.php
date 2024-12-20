@@ -33,8 +33,8 @@
                                         <form action="{{ url('/delete_announcement/'.$announcement->id) }}" method="POST" id="delete-form-{{ $announcement->id }}">
                                             @csrf
                                             @method('DELETE')
-                                            <button type="button" class="btn btn-danger" onclick="confirmDelete({{ $announcement->id }})">
-                                                <i class="bi bi-trash"></i>
+                                            <button type="button" class="btn btn-danger btn-sm" onclick="confirmDelete({{ $announcement->id }})" style="background-color: transparent; border: none;">
+                                                <i class="bi bi-trash" style="color: #dc3545; font-size: 18px;"></i> <!-- Bootstrap icon with danger color and custom size -->
                                             </button>
                                         </form>
                                         </td>

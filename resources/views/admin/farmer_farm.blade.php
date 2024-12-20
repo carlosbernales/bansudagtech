@@ -1,14 +1,7 @@
 
 @include('admin/header')
 
-<style>
-    .modal-image {
-    max-width: 100%; /* Make sure the image never exceeds the modal's width */
-    max-height: 80vh; /* Limit height to 80% of the viewport height */
-    object-fit: contain; /* Ensure the image keeps its aspect ratio */
-}
 
-</style>
 	<!-- Breadcomb area End-->
     <!-- Data Table area Start-->
     <div class="data-table-area">

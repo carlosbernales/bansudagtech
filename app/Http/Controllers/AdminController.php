@@ -113,22 +113,82 @@ class AdminController extends Controller
 
     public function checkRsbsa(Request $request)
     {
-        $rsbsa = $request->input('rsbsa'); 
-
-        if (!$rsbsa) {
-            return response()->json(['error' => 'RSBSA is required'], 400);
-        }
-
+        $rsbsa = $request->input('rsbsa');
+        
         $exists = Accounts::where('rsbsa', $rsbsa)->exists();
+        
+        return response()->json([
+            'exists' => $exists
+        ]);
+    }
+    public function checkRsbsaEdit(Request $request)
+    {
+        $rsbsa = $request->query('rsbsa');
+        $excludeId = $request->query('excludeId');
+
+        $exists = Accounts::where('rsbsa', $rsbsa)
+            ->where('id', '!=', $excludeId)
+            ->exists();
 
         return response()->json(['exists' => $exists]);
     }
+
+    
+    
 
     public function farmers_farm()
     {
         // Eager load the farmImages relationship to prevent null errors
         $farmers = Farms::with('farmImages')->get(); // Use `farmImages` (note plural) for multiple images
         return view('admin/farmer_farm', compact('farmers'));
+    }
+
+
+    public function edit_farmer(Request $request, $id)
+    {
+
+        $accounts = Accounts::findOrFail($id);
+
+        $fullname = $request->input('firstname') . ' ' . $request->input('middlename') . ' ' . $request->input('lastname') . ' ' . $request->input('suffix');
+
+
+        $accounts->update([
+            'firstname' => $request->input('firstname'),
+            'middlename' => $request->input('middlename'),
+            'lastname' => $request->input('lastname'),
+            'suffix' => $request->input('suffix'),
+            'fullname' => $fullname,
+            'contact' => $request->input('contact'),
+            'email' => $request->input('email'),
+            'password' => $request->input('password'),
+            'birthdate' => $request->input('birthdate'),
+            'rsbsa' => $request->input('rsbsa'),
+            'fourps' => $request->input('fourps'),
+            'indigenous' => $request->input('indigenous'),
+            'tribe_name' => $request->input('tribe_name'),
+            'pwd' => $request->input('pwd'),
+            'sex' => $request->input('sex'),
+            'arb' => $request->input('arb'),
+            'region' => $request->input('region'),
+            'province' => $request->input('province'),
+            'municipality' => $request->input('municipality'),
+            'barangay' => $request->input('barangay'),
+            'org_name' => $request->input('org_name'),
+            'tot_male' => $request->input('tot_male'),
+            'tot_female' => $request->input('tot_female'),
+            'farmer_type' => $request->input('farmer_type'),
+        ]);
+
+        return redirect()->back()->with('success', 'Success.');
+    }
+
+    public function delete_farmer($id)
+    {
+        $accounts = Accounts::findOrFail($id);
+
+        $accounts->delete();
+
+        return back()->with('success', 'Deleted!');
     }
 
 }
