@@ -5,11 +5,11 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class Farms extends Model
+class CalamityImages extends Model
 {
     use HasFactory;
 
-    protected $table = 'farms';
+    protected $table = 'calamity_images';
 
     protected $primaryKey = 'id';
 
@@ -23,20 +23,9 @@ class Farms extends Model
 
     // Define the fillable attributes (mass assignable)
     protected $fillable = [
-                            'user_id',
-                            'rsbsa',
-                            'fullname',
-                            'commodity', 
-                            'farm_type',
-                            'location',
-                            'forms_farm',
-                            'livestock_type',
-                        ];
+                            'cal_fk_id',
+                            'image', 
+                            ];
     // Define the guarded attributes (not mass assignable)
     // protected $guarded = ['id']
-
-    public function farmImages()
-    {
-        return $this->hasMany(FarmsImages::class, 'farms_fk_id', 'id');
-    }
 }

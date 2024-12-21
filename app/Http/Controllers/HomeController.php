@@ -13,6 +13,8 @@ use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\File;
 use App\Models\CalamityReport;
+use App\Models\CalamityImages;
+
 
 
 
@@ -53,7 +55,6 @@ class HomeController extends Controller
         $request->validate([
             'location' => 'required|string',
             'commodity' => 'required|string',
-            'farm_type' => 'required|string',
             'image' => 'required|array',
             'image.*' => 'image|mimes:jpeg,png,jpg,gif|max:2048', 
         ]);
@@ -78,6 +79,7 @@ class HomeController extends Controller
             'commodity' => $request->input('commodity'),
             'farm_type' => $request->input('farm_type'),
             'forms_farm' => $request->input('forms_farm'),
+            'livestock_type' => $request->input('livestock_type'),
             'user_id' => $userId, 
             'fullname' => $userFullname, 
             'rsbsa' => $rsbsa,
@@ -122,9 +124,73 @@ class HomeController extends Controller
 
     public function calamity_report()
     {
-        // Eager load the farmImages relationship to prevent null errors
-        return view('user/calamityReport');
+        $userId = session('user_id');
+        $farms = \App\Models\Farms::where('user_id', $userId)->get(['id', 'location', 'forms_farm', 'farm_type',  'livestock_type']);
+        return view('user/calamityReport', compact('farms'));
     }
+
+    public function submit_calamity_report(Request $request)
+    {
+        $userId = session('user_id');
+
+        $account = Accounts::find($userId);
+
+        if (!$account) {
+            return redirect()->back()->with('error', 'User not found');
+        }
+
+        $calamityReport = CalamityReport::create([
+            'calamity_type' => $request->input('calamity_type'),
+            'location' => $request->input('location'),
+            'crop_type' => $request->input('crop_type'),
+            'partially_damage' => $request->input('partially_damage'),
+            'totally_damage' => $request->input('totally_damage'),
+            'total_area' => $request->input('total_area'),
+            'livestock_type' => $request->input('livestock_type'),
+            'animal_type' => $request->input('animal_type'),
+            'age_class' => $request->input('age_class'),
+            'no_heads' => $request->input('no_heads'),
+            'firstname' => $account->firstname, 
+            'middlename' => $account->middlename, 
+            'lastname' => $account->lastname, 
+            'suffix' => $account->suffix, 
+            'fullname' => $account->fullname, 
+            'contact' => $account->contact, 
+            'email' => $account->email, 
+            'birthdate' => $account->birthdate, 
+            'rsbsa' => $account->rsbsa, 
+            'fourps' => $account->fourps, 
+            'indigenous' => $account->indigenous, 
+            'tribe_name' => $account->tribe_name, 
+            'pwd' => $account->pwd, 
+            'sex' => $account->sex, 
+            'arb' => $account->arb, 
+            'region' => $account->region, 
+            'province' => $account->province, 
+            'municipality' => $account->municipality, 
+            'barangay' => $account->barangay, 
+            'org_name' => $account->org_name, 
+            'tot_male' => $account->tot_male, 
+            'tot_female' => $account->tot_female, 
+            'farmer_type' => $account->farmer_type, 
+        ]);
+
+        if ($request->hasFile('image')) {
+            foreach ($request->file('image') as $image) {
+                $imageName = uniqid('calamity_') . '.' . $image->getClientOriginalExtension();
+                
+                $image->move(public_path('calamity_images'), $imageName);
+    
+                CalamityImages::create([
+                    'cal_fk_id' => $calamityReport->id, 
+                    'image' => $imageName, 
+                ]);
+            }
+        }
+        return back()->with('success', 'Report Submitted!');
+    }
+
+    
 
 
 

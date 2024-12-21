@@ -51,6 +51,8 @@ Route::match(['get', 'post'], '/add_farms', [HomeController::class, 'add_farms']
 Route::match(['get', 'post'], '/test', [HomeController::class, 'test']);
 Route::delete('/delete_farm/{id}', [HomeController::class, 'delete_farm']);
 Route::match(['get', 'post'], '/calamity_report', [HomeController::class, 'calamity_report']);
+Route::match(['get', 'post'], '/submit_calamity_report', [HomeController::class, 'submit_calamity_report']);
+
 
 
 

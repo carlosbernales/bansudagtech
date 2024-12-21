@@ -80,37 +80,75 @@
 
 <!-- Add Farm Modal -->
 <div class="modal fade" id="addFarmModal" tabindex="-1" aria-labelledby="addFarmModalLabel" aria-hidden="true">
-  <div class="modal-dialog">
+<div class="modal-dialog modal-lg">
     <div class="modal-content">
       <div class="modal-header">
-        <h5 class="modal-title" id="addFarmModalLabel">Add Farm</h5>
+        <h5 class="modal-title" id="addFarmModalLabel">Send Calamity Report</h5>
         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
       </div>
       <div class="modal-body">
-      <form method="POST" action="/add_farms" enctype="multipart/form-data">
+      <form method="POST" action="/submit_calamity_report" enctype="multipart/form-data">
         @csrf
-        <div class="mb-3">
-            <label for="location" class="form-label">Farm Location</label>
-            <div class="input-group">
-            <input type="text" class="form-control" id="location" name="location" readonly required>
-            <button type="button" class="btn btn-secondary" data-bs-toggle="modal" data-bs-target="#mapModal">Select Location</button>
+        <div class="row">
+            <div class="col-md-6 mb-3">
+                <label for="calamity_type">Calamity</label>
+                <input type="text" class="form-control" id="calamity_type" name="calamity_type" >
+            </div>
+            <div class="col-md-6 mb-3">
+                <label for="location">Location</label>
+                <input type="text" class="form-control" id="location" name="location" readonly data-bs-toggle="modal" data-bs-target="#locationModal">
             </div>
         </div>
-        <div class="mb-3">
-            <label for="commodity" class="form-label">Commodity</label>
-            <select class="form-control" id="commodity" name="commodity" required>
-            <option value="">Select</option>
-            <option value="CROP">CROP</option>
-            <option value="LIVESTOCK">LIVESTOCK</option>
-            </select>
+
+        <div class="row">
+            <div class="col-md-6 mb-3">
+                <label for="crop_type">Type of Crop</label>
+                <input type="text" class="form-control" id="crop_type" name="crop_type" readonly>
+            </div>
+            <div class="col-md-6 mb-3">
+                <label for="partially_damage">Partially Damaged Area (ha)</label>
+                <input type="text" class="form-control" id="partially_damage" name="partially_damage" >
+            </div>
         </div>
-        <div class="mb-3">
-            <label for="farm_type" class="form-label">Farm Type</label>
-            <input type="text" class="form-control" id="farm_type" name="farm_type" placeholder="eg: RICE or PIG" required>
+
+        <div class="row">
+            <div class="col-md-6 mb-3">
+                <label for="totally_damage">Totally Damaged Area (ha)</label>
+                <input type="text" class="form-control" id="totally_damage" name="totally_damage" >
+            </div>
+            <div class="col-md-6 mb-3">
+                <label for="total_area">Total Area Affected (ha)</label>
+                <input type="text" class="form-control" id="total_area" name="total_area" >
+            </div>
         </div>
-        <div class="mb-3">
-            <label for="image" class="form-label">Images</label>
-            <input type="file" class="form-control" id="image" name="image[]" multiple required>
+
+        <div class="row">
+            <div class="col-md-6 mb-3">
+                <label for="livestock_type">Type of Farm</label>
+                <input type="text" class="form-control" id="livestock_type" name="livestock_type" readonly>
+            </div>
+            <div class="col-md-6 mb-3">
+                <label for="animal_type">Animal Type</label>
+                <input type="text" class="form-control" id="animal_type" name="animal_type" readonly>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-md-6 mb-3">
+                <label for="age_class">Age Classification</label>
+                <input type="text" class="form-control" id="age_class" name="age_class" >
+            </div>
+            <div class="col-md-6 mb-3">
+                <label for="no_heads">No of Heads Affected</label>
+                <input type="text" class="form-control" id="no_heads" name="no_heads" >
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-md-6 mb-3">
+                <label for="image">Proof Image</label>
+                <input type="file" class="form-control" id="image" name="image[]" accept="image/*" multiple>
+            </div>
         </div>
         <div class="modal-footer">
             <button type="submit" class="btn btn-primary" >Submit</button>
@@ -122,41 +160,24 @@
 </div>
 
 
-
-
-<!-- Google Maps Modal for Adding Farm Location -->
-<div class="modal fade" id="mapModal" tabindex="-1" aria-labelledby="mapModalLabel" aria-hidden="true">
-  <div class="modal-dialog modal-lg">
-    <div class="modal-content">
-      <div class="modal-header">
-        <h5 class="modal-title" id="mapModalLabel">Select Location</h5>
-        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-      </div>
-      <div class="modal-body">
-        <input type="text" id="mapSearch" class="form-control mb-3" placeholder="Search location...">
-        <div id="map" style="width: 100%; height: 400px;"></div>
-      </div>
-      <div class="modal-footer">
-        <button type="button" class="btn btn-primary" id="saveLocation">Okay</button>
-      </div>
-    </div>
-  </div>
-</div>
-
-<!-- Google Maps Modal for Viewing Location -->
-<div class="modal fade" id="viewLocationModal" tabindex="-1" aria-labelledby="viewLocationModalLabel" aria-hidden="true">
+<!-- Location Modal -->
+<div class="modal fade" id="locationModal" tabindex="-1" aria-labelledby="locationModalLabel" aria-hidden="true">
     <div class="modal-dialog modal-lg">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title" id="viewLocationModalLabel">Farm Location</h5>
+                <h5 class="modal-title" id="locationModalLabel">Select Location</h5>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body">
-                <div id="viewMap" style="width: 100%; height: 400px;"></div>
+                <input type="text" id="locationSearch" class="form-control mb-3" placeholder="Search for a location">
+                <div id="map" style="height: 400px; width: 100%;"></div>
             </div>
         </div>
     </div>
 </div>
+
+
+
 
 
 <script async defer src="googlemapsAPI.js"></script>
@@ -175,6 +196,82 @@
 </script>
 
 <script>
+
+let map;
+    let geocoder;
+    let markers = [];
+    const farms = @json($farms); // Fetch farms data passed from the controller.
+
+    function initMap() {
+        // Initialize the map
+        map = new google.maps.Map(document.getElementById("map"), {
+            center: { lat: 10.3157, lng: 123.8854 }, // Default center (Cebu City, Philippines)
+            zoom: 8,
+        });
+
+        // Initialize the geocoder
+        geocoder = new google.maps.Geocoder();
+
+        // Add markers for each location
+        farms.forEach(farm => {
+            geocodeFarm(farm);
+        });
+
+        // Add search functionality
+        document.getElementById('locationSearch').addEventListener('input', searchMarkers);
+    }
+
+    function geocodeFarm(farm) {
+        geocoder.geocode({ address: farm.location }, (results, status) => {
+            if (status === "OK") {
+                const marker = new google.maps.Marker({
+                    map: map,
+                    position: results[0].geometry.location,
+                    title: farm.location,
+                });
+
+                markers.push({ marker, farm });
+
+                // Add click event listener to update form fields when a marker is clicked
+                marker.addListener("click", () => {
+                    document.getElementById("location").value = farm.location;
+                    document.getElementById("crop_type").value = farm.farm_type || '';
+                    document.getElementById("animal_type").value = farm.livestock_type || '';
+                    document.getElementById("livestock_type").value = farm.forms_farm || '';
+
+                    // Close the modal after selecting
+                    const modal = bootstrap.Modal.getInstance(document.getElementById("locationModal"));
+                    modal.hide();
+                });
+            } else {
+                console.error("Geocode was not successful for the following reason: " + status);
+            }
+        });
+    }
+
+    function searchMarkers() {
+        const query = document.getElementById('locationSearch').value.toLowerCase();
+        let found = false;
+
+        markers.forEach(({ marker, farm }) => {
+            if (farm.location.toLowerCase().includes(query)) {
+                // Show the marker
+                marker.setVisible(true);
+                // Zoom in and center the map on the marker
+                map.setCenter(marker.getPosition());
+                map.setZoom(12); // Set the zoom level to 12 for a more detailed view
+                found = true;
+            } else {
+                marker.setVisible(false); // Hide the marker if it doesn't match the search
+            }
+        });
+
+        // If no match is found, zoom out to the default location
+        if (!found && query) {
+            map.setCenter({ lat: 10.3157, lng: 123.8854 }); // Default center (Cebu City)
+            map.setZoom(8); // Zoom out to a default level
+        }
+    }
 
 function confirmDelete(id) {
     Swal.fire({

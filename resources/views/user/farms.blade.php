@@ -150,7 +150,7 @@
 
         <div class="mb-3" id="farmTypeDiv" style="display: none;">
             <label for="forms_farm" class="form-label">Farm Type</label>
-            <select class="form-control" id="forms_farm" name="forms_farm" >
+            <select class="form-control" id="forms_farm" name="forms_farm">
                 <option value="">Select</option>
                 <option value="BACKYARD">BACKYARD</option>
                 <option value="COMMERCIAL">COMMERCIAL</option>
@@ -158,10 +158,14 @@
             </select>
         </div>
 
-        
-        <div class="mb-3">
-            <label for="farm_type" class="form-label">Type</label>
-            <input type="text" class="form-control" id="farm_type" name="farm_type" placeholder="eg: RICE or PIG" required>
+        <div class="mb-3" id="livestockTypeDiv"  style="display: none;">
+            <label for="livestock_type" class="form-label">Livestock Type</label>
+            <input type="text" class="form-control" id="livestock_type" name="livestock_type" placeholder="eg: PIG">
+        </div>
+
+        <div class="mb-3" id="cropTypeDiv"  style="display: none;">
+            <label for="farm_type" class="form-label">Crop Type</label>
+            <input type="text" class="form-control" id="farm_type" name="farm_type" placeholder="eg: RICE">
         </div>
         <div class="mb-3">
             <label for="image" class="form-label">Images</label>
@@ -232,13 +236,24 @@
 <script>
 
 document.getElementById('commodity').addEventListener('change', function () {
-    const farmTypeDiv = document.getElementById('farmTypeDiv');
-    if (this.value === 'LIVESTOCK') {
-        farmTypeDiv.style.display = 'block'; // Show the "Farm Type" dropdown
-    } else {
-        farmTypeDiv.style.display = 'none'; // Hide the "Farm Type" dropdown
-    }
-});
+        const farmTypeDiv = document.getElementById('farmTypeDiv');
+        const livestockTypeDiv = document.getElementById('livestockTypeDiv');
+        const cropTypeDiv = document.getElementById('cropTypeDiv');
+
+        if (this.value === 'LIVESTOCK') {
+            farmTypeDiv.style.display = 'block'; // Hide the "Farm Type" dropdown
+            livestockTypeDiv.style.display = 'block'; // Show the "Livestock Type" input
+            cropTypeDiv.style.display = 'none'; // Hide the "Crop Type" input
+        } else if (this.value === 'CROP') {
+            farmTypeDiv.style.display = 'none'; // Show the "Farm Type" dropdown
+            livestockTypeDiv.style.display = 'none'; // Hide the "Livestock Type" input
+            cropTypeDiv.style.display = 'block'; // Show the "Crop Type" input
+        } else {
+            farmTypeDiv.style.display = 'none'; // Hide both
+            livestockTypeDiv.style.display = 'none';
+            cropTypeDiv.style.display = 'none';
+        }
+    });
 
 
 function confirmDelete(id) {

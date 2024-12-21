@@ -59,6 +59,7 @@ class CalamityReport extends Model
                             'assistance_type',
                             'date_provided',
                             'status',
+                            'email',
                         ];
     // Define the guarded attributes (not mass assignable)
     // protected $guarded = ['id']
