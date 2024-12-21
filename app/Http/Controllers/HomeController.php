@@ -33,8 +33,7 @@ class HomeController extends Controller
 
     public function farms()
     {
-        // Eager load the farmImages relationship to prevent null errors
-        $farmers = Farms::with('farmImages')->get(); // Use `farmImages` (note plural) for multiple images
+        $farmers = Farms::with('farmImages')->get(); 
         return view('user.farms', compact('farmers'));
     }
     
@@ -42,11 +41,6 @@ class HomeController extends Controller
 
     public function test()
     {
-        // if (!session()->has('admin_id') && !session()->has('it_id')) {
-        //     return redirect('/');
-        // }
-        
-    
         return view('user/test');
     }
 

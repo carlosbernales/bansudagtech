@@ -18,18 +18,11 @@ class AdminController extends Controller
         // if (!session()->has('admin_id') && !session()->has('it_id')) {
         //     return redirect('/');
         // }
-        
-    
         return view('landing_page');
     }
 
     public function dashboard()
     {
-        // if (!session()->has('admin_id') && !session()->has('it_id')) {
-        //     return redirect('/');
-        // }
-        
-    
         return view('admin/dashboard');
     }
 
@@ -67,7 +60,6 @@ class AdminController extends Controller
 
         return back()->with('success', 'Announcement added successfully!');
     }
-
 
     public function delete_announcement($id)
     {
@@ -133,13 +125,9 @@ class AdminController extends Controller
         return response()->json(['exists' => $exists]);
     }
 
-    
-    
-
     public function farmers_farm()
     {
-        // Eager load the farmImages relationship to prevent null errors
-        $farmers = Farms::with('farmImages')->get(); // Use `farmImages` (note plural) for multiple images
+        $farmers = Farms::with('farmImages')->get(); 
         return view('admin/farmer_farm', compact('farmers'));
     }
 

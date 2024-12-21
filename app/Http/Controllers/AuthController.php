@@ -14,15 +14,11 @@ class AuthController extends Controller
 
     public function landingpage()
     {
-
-
         if (session()->has('admin_id')) {
             return redirect('/dashboard');
         } elseif (session()->has('user_id')) {
             return redirect('/home');
         }
-        
-    
         return view('landing_page');
     }
 
@@ -46,7 +42,6 @@ class AuthController extends Controller
         if ($account && !Hash::check($request->password, $account->password)) {
             return redirect()->back()->with('error', 'Incorrect password');
         }
-
         if ($account) {
             session()->flush();
 
@@ -61,7 +56,6 @@ class AuthController extends Controller
             return redirect()->back()->with('error', 'Account not found');
         }
     }
-
 
     public function register(Request $request)
     {
