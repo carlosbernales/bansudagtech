@@ -137,7 +137,7 @@ class HomeController extends Controller
             return redirect()->back()->with('error', 'User not found');
         }
 
-        $dateReported = Carbon::now('Asia/Manila');
+        // $dateReported = Carbon::now('Asia/Manila');
 
         $calamityReport = CalamityReport::create([
             'calamity_type' => $request->input('calamity_type'),
@@ -173,7 +173,7 @@ class HomeController extends Controller
             'tot_male' => $account->tot_male, 
             'tot_female' => $account->tot_female, 
             'farmer_type' => $account->farmer_type, 
-            'date_reported' => $dateReported, 
+            // 'date_reported' => $dateReported, 
         ]);
 
         if ($request->hasFile('image')) {

@@ -47,7 +47,8 @@
                                 
                                 <!-- Farm Details -->
                                 <div class="d-flex flex-column text-center">
-                                    <h3 class="fs-6 fw-normal">{{ $calamity->date_reported }}</h3>
+                                    <h3 class="fs-6 fw-normal">{{ \Carbon\Carbon::parse($calamity->date_reported)->format('F j, Y') }}</h3>
+
                                     <div class="d-flex justify-content-center align-items-center gap-2">
                                         <span class="text-dark fw-semibold">{{ $calamity->crop_type }}</span>
                                         <span class="text-dark fw-semibold">{{ $calamity->animal_type }}</span>
