@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: localhost:3306
--- Generation Time: Dec 21, 2024 at 11:51 AM
+-- Generation Time: Dec 25, 2024 at 01:48 PM
 -- Server version: 8.0.30
 -- PHP Version: 8.1.10
 
@@ -62,7 +62,7 @@ CREATE TABLE `account` (
 
 INSERT INTO `account` (`id`, `firstname`, `middlename`, `lastname`, `suffix`, `fullname`, `role`, `contact`, `email`, `password`, `birthdate`, `rsbsa`, `fourps`, `indigenous`, `tribe_name`, `pwd`, `sex`, `arb`, `region`, `province`, `municipality`, `barangay`, `org_name`, `tot_male`, `tot_female`, `farmer_type`) VALUES
 (1, 'Admin', NULL, 'Admin', NULL, 'Admin  Admin ', 'admin', NULL, 'admin@admin.com', '$2y$12$8KAHM0a5B0q5bVxTVKV4cOxBB1lfobCrZ.XojQtFnZ5KQKx4qR0.q', NULL, '23-45-79-92-81', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'INDIVIDUAL'),
-(2, 'wqewqe', 'adas', 'dasdas', 'Jr.', 'wqewqe adas dasdas Jr.', 'user', 2345678, 'sarahelmenzo13@gmail.com', NULL, '2024-12-21', 'sd-sf-sg-fg-s2', 'YES', 'NO', NULL, 'YES', 'MALE', 'YES', 'asfsdfsdfsd', 'asdasd', 'asdasdasd', 'sdasd', 'asdasdas', 3, 2, 'GROUP');
+(2, 'wqewqe', 'adas', 'dasdas', 'Jr.', 'wqewqe adas dasdas Jr.', 'user', 2345678, 'sarahelmenzo13@gmail.com', '$2y$12$3EiOYw.R5UhzoHbhyAEBtezV1tQNai7SQXmv7njgrRlpAO4MNc95y', '2024-12-21', 'sd-sf-sg-fg-s2', 'YES', 'NO', NULL, 'YES', 'MALE', 'YES', 'asfsdfsdfsd', 'asdasd', 'asdasdasd', 'sdasd', 'asdasdas', 3, 2, 'GROUP');
 
 -- --------------------------------------------------------
 
@@ -124,9 +124,10 @@ CREATE TABLE `calamity_images` (
 --
 
 INSERT INTO `calamity_images` (`id`, `cal_fk_id`, `image`) VALUES
-(1, 2, 'calamity_6766ab0366b26.jfif'),
-(2, 2, 'calamity_6766ab0367b81.jfif'),
-(3, 2, 'calamity_6766ab0368348.png');
+(1, 1, 'calamity_676c0669eec3f.jpg'),
+(2, 1, 'calamity_676c066a012dd.jpg'),
+(3, 1, 'calamity_676c066a02084.jpg'),
+(4, 1, 'calamity_676c066a02e0d.jpg');
 
 -- --------------------------------------------------------
 
@@ -172,15 +173,16 @@ CREATE TABLE `calamity_report` (
   `assistance_type` varchar(255) DEFAULT NULL,
   `date_provided` date DEFAULT NULL,
   `status` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL DEFAULT 'Pending',
-  `email` varchar(255) NOT NULL
+  `email` varchar(255) NOT NULL,
+  `date_reported` date NOT NULL DEFAULT '2024-01-01'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
 --
 -- Dumping data for table `calamity_report`
 --
 
-INSERT INTO `calamity_report` (`id`, `user_id`, `rsbsa`, `calamity_type`, `farmer_type`, `birthdate`, `region`, `province`, `municipality`, `barangay`, `org_name`, `tot_male`, `tot_female`, `sex`, `indigenous`, `tribe_name`, `pwd`, `arb`, `fourps`, `crop_type`, `partially_damage`, `totally_damage`, `total_area`, `livestock_type`, `animal_type`, `age_class`, `no_heads`, `remarks`, `lastname`, `firstname`, `middlename`, `suffix`, `fullname`, `location`, `assistance_type`, `date_provided`, `status`, `email`) VALUES
-(2, NULL, 'sd-sf-sg-fg-s2', 'dasdasd', 'GROUP', '2024-12-21', 'asfsdfsdfsd', 'asdasd', 'asdasdasd', 'sdasd', 'asdasdas', 3, 2, 'MALE', 'NO', NULL, 'YES', 'YES', 'YES', NULL, 3, 5, 4, 'BACKYARD', 'PIG', 5, 6, NULL, 'dasdas', 'wqewqe', 'adas', 'Jr.', 'wqewqe adas dasdas Jr.', '85XV+68 Calapan, Oriental Mindoro, Philippines', NULL, NULL, 'Pending', 'sarahelmenzo13@gmail.com');
+INSERT INTO `calamity_report` (`id`, `user_id`, `rsbsa`, `calamity_type`, `farmer_type`, `birthdate`, `region`, `province`, `municipality`, `barangay`, `org_name`, `tot_male`, `tot_female`, `sex`, `indigenous`, `tribe_name`, `pwd`, `arb`, `fourps`, `crop_type`, `partially_damage`, `totally_damage`, `total_area`, `livestock_type`, `animal_type`, `age_class`, `no_heads`, `remarks`, `lastname`, `firstname`, `middlename`, `suffix`, `fullname`, `location`, `assistance_type`, `date_provided`, `status`, `email`, `date_reported`) VALUES
+(1, NULL, 'sd-sf-sg-fg-s2', 'Typhoon', 'GROUP', '2024-12-21', 'asfsdfsdfsd', 'asdasd', 'asdasdasd', 'sdasd', 'asdasdas', 3, 2, 'MALE', 'NO', NULL, 'YES', 'YES', 'YES', 'RICE', 7, 9, 8, NULL, NULL, 32, 67, NULL, 'dasdas', 'wqewqe', 'adas', 'Jr.', 'wqewqe adas dasdas Jr.', '95J9+2C Calapan, Oriental Mindoro, Philippines', NULL, NULL, 'Pending', 'sarahelmenzo13@gmail.com', '2024-01-01');
 
 -- --------------------------------------------------------
 
@@ -307,13 +309,13 @@ ALTER TABLE `announcement_user`
 -- AUTO_INCREMENT for table `calamity_images`
 --
 ALTER TABLE `calamity_images`
-  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
+  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
 
 --
 -- AUTO_INCREMENT for table `calamity_report`
 --
 ALTER TABLE `calamity_report`
-  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
 
 --
 -- AUTO_INCREMENT for table `farms`
