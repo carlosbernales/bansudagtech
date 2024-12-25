@@ -14,8 +14,7 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\File;
 use App\Models\CalamityReport;
 use App\Models\CalamityImages;
-
-
+use Carbon\Carbon;
 
 
 class HomeController extends Controller
@@ -116,11 +115,16 @@ class HomeController extends Controller
     }
 
 
+
+
     public function calamity_report()
     {
         $userId = session('user_id');
-        $farms = \App\Models\Farms::where('user_id', $userId)->get(['id', 'location', 'forms_farm', 'farm_type',  'livestock_type']);
-        return view('user/calamityReport', compact('farms'));
+
+        $farms = Farms::where('user_id', $userId)->get(['id', 'location', 'forms_farm', 'farm_type',  'livestock_type']);
+        $calamities = CalamityReport::with('calamityImages')->get(); 
+
+        return view('user/calamityReport', compact('farms', 'calamities'));
     }
 
     public function submit_calamity_report(Request $request)
@@ -132,6 +136,8 @@ class HomeController extends Controller
         if (!$account) {
             return redirect()->back()->with('error', 'User not found');
         }
+
+        $dateReported = Carbon::now('Asia/Manila');
 
         $calamityReport = CalamityReport::create([
             'calamity_type' => $request->input('calamity_type'),
@@ -167,6 +173,7 @@ class HomeController extends Controller
             'tot_male' => $account->tot_male, 
             'tot_female' => $account->tot_female, 
             'farmer_type' => $account->farmer_type, 
+            'date_reported' => $dateReported, 
         ]);
 
         if ($request->hasFile('image')) {

@@ -134,13 +134,11 @@ class AdminController extends Controller
 
     public function edit_farmer(Request $request, $id)
     {
-
         $accounts = Accounts::findOrFail($id);
 
         $fullname = $request->input('firstname') . ' ' . $request->input('middlename') . ' ' . $request->input('lastname') . ' ' . $request->input('suffix');
 
-
-        $accounts->update([
+        $data = [
             'firstname' => $request->input('firstname'),
             'middlename' => $request->input('middlename'),
             'lastname' => $request->input('lastname'),
@@ -148,7 +146,6 @@ class AdminController extends Controller
             'fullname' => $fullname,
             'contact' => $request->input('contact'),
             'email' => $request->input('email'),
-            'password' => $request->input('password'),
             'birthdate' => $request->input('birthdate'),
             'rsbsa' => $request->input('rsbsa'),
             'fourps' => $request->input('fourps'),
@@ -165,10 +162,17 @@ class AdminController extends Controller
             'tot_male' => $request->input('tot_male'),
             'tot_female' => $request->input('tot_female'),
             'farmer_type' => $request->input('farmer_type'),
-        ]);
+        ];
+
+        if ($request->filled('password')) {
+            $data['password'] = Hash::make($request->input('password'));
+        }
+
+        $accounts->update($data);
 
         return redirect()->back()->with('success', 'Success.');
     }
+
 
     public function delete_farmer($id)
     {

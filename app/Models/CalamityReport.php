@@ -60,7 +60,13 @@ class CalamityReport extends Model
                             'date_provided',
                             'status',
                             'email',
+                            'date_reported,'
                         ];
     // Define the guarded attributes (not mass assignable)
     // protected $guarded = ['id']
+
+    public function calamityImages()
+    {
+        return $this->hasMany(CalamityImages::class, 'cal_fk_id', 'id');
+    }
 }
