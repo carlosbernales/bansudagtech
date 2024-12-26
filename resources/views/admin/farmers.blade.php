@@ -64,7 +64,6 @@
                                                     <form action="{{ url('/edit_farmer/'.$account->id) }}" method="POST">
                                                         @csrf
                                                         @method('PUT')
-                                                        @csrf
                                                         <div class="row">
                                                             <div class="col-md-6 mb-3">
                                                                 <label for="rsbsa">RSBSA</label>

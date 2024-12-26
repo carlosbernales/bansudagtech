@@ -13,7 +13,7 @@
                 <div class="section-header d-flex flex-wrap justify-content-between my-4">
                     <h2 class="section-title">Calamity Reports</h2>
                     <div class="d-flex align-items-center">
-                        <a href="#" class="btn btn-primary me-2" data-bs-toggle="modal" data-bs-target="#addFarmModal">Add Report</a>
+                        <a href="#" class="btn btn-primary me-2" data-bs-toggle="modal" data-bs-target="#AddReportModal">Add Report</a>
                     </div>
                 </div>
             </div>
@@ -26,7 +26,7 @@
                 @if($calamities->isEmpty())
                     <div class="text-center mt-5">
                         <h4>No report found</h4>
-                        <a href="#" class="btn btn-primary me-2" data-bs-toggle="modal" data-bs-target="#addFarmModal">Add Report</a>
+                        <a href="#" class="btn btn-primary me-2" data-bs-toggle="modal" data-bs-target="#AddReportModal">Add Report</a>
                     </div>
                 @else
                     @foreach ($calamities as $calamity)
@@ -35,9 +35,9 @@
                                 <!-- Thumbnail -->
                                 <figure>
                                     <a href="#" title="{{ $calamity->farm_type }}" data-bs-toggle="modal" data-bs-target="#viewImageModal{{ $calamity->id }}">
-                                        @if($calamity->crop_type !== 'NULL')
+                                        @if($calamity->crop_type == '')
                                             <img src="animal.png" alt="Livestock Thumbnail" class="tab-image">
-                                        @elseif($calamity->animal !== 'NULL')
+                                        @elseif($calamity->animal_type == '')
                                             <img src="crop.png" alt="Crop Thumbnail" class="tab-image">
                                         @else
                                             <img src="default.png" alt="Default Thumbnail" class="tab-image">
@@ -58,9 +58,9 @@
                                     <div class="button-area p-3 pt-0">
                                         <div class="row g-1 mt-2">
                                             <div class="col-3">
-                                                <button type="button" class="btn btn-link">
-                                                    <i class="fas fa-eye"></i>
-                                                </button>
+                                            <button type="button" class="btn btn-link" data-bs-toggle="modal" data-bs-target="#viewDetailsModal{{ $calamity->id }}">
+                                                <i class="fas fa-eye"></i>
+                                            </button>
                                             </div>
 
                                             <div class="col-7">
@@ -69,7 +69,7 @@
                                                 </a>
                                             </div>
                                             <div class="col-2">
-                                            <form action="/delete_farm/{{ $calamity->id }}" method="POST" id="delete-form-{{ $calamity->id }}">
+                                            <form action="/delete_report/{{ $calamity->id }}" method="POST" id="delete-form-{{ $calamity->id }}">
                                                 @csrf
                                                 @method('DELETE')
                                                 <button type="button" class="btn btn-outline-danger rounded-1 p-2 fs-6" 
@@ -84,6 +84,66 @@
                                     </div>
                                 </div>
                                 <!-- / Farm Details -->
+                            </div>
+                        </div>
+
+                        <div class="modal fade" id="viewDetailsModal{{ $calamity->id }}" tabindex="-1" aria-labelledby="viewDetailsModalLabel" aria-hidden="true">
+                            <div class="modal-dialog modal-lg">
+                                <div class="modal-content">
+                                    <div class="modal-header">
+                                        <h5 class="modal-title" id="viewDetailsModalLabel">Calamity Report Details</h5>
+                                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                    </div>
+                                    <div class="modal-body">
+                                        <table class="table table-bordered">
+                                            <thead>
+                                                <tr>
+                                                    <th>Field</th>
+                                                    <th>Value</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                <tr><td>RSBSA</td><td>{{ $calamity->rsbsa }}</td></tr>
+                                                <tr><td>Calamity Type</td><td>{{ $calamity->calamity_type }}</td></tr>
+                                                <tr><td>Farmer Type</td><td>{{ $calamity->farmer_type }}</td></tr>
+                                                <tr><td>Birthdate</td><td>{{ $calamity->birthdate }}</td></tr>
+                                                <tr><td>Region</td><td>{{ $calamity->region }}</td></tr>
+                                                <tr><td>Province</td><td>{{ $calamity->province }}</td></tr>
+                                                <tr><td>Municipality</td><td>{{ $calamity->municipality }}</td></tr>
+                                                <tr><td>Barangay</td><td>{{ $calamity->barangay }}</td></tr>
+                                                <tr><td>Organization Name</td><td>{{ $calamity->org_name }}</td></tr>
+                                                <tr><td>Total Male</td><td>{{ $calamity->tot_male }}</td></tr>
+                                                <tr><td>Total Female</td><td>{{ $calamity->tot_female }}</td></tr>
+                                                <tr><td>Sex</td><td>{{ $calamity->sex }}</td></tr>
+                                                <tr><td>Indigenous</td><td>{{ $calamity->indigenous }}</td></tr>
+                                                <tr><td>Tribe Name</td><td>{{ $calamity->tribe_name }}</td></tr>
+                                                <tr><td>PWD</td><td>{{ $calamity->pwd }}</td></tr>
+                                                <tr><td>ARB</td><td>{{ $calamity->arb }}</td></tr>
+                                                <tr><td>4Ps</td><td>{{ $calamity->fourps }}</td></tr>
+                                                <tr><td>Crop Type</td><td>{{ $calamity->crop_type }}</td></tr>
+                                                <tr><td>Partially Damaged (ha)</td><td>{{ $calamity->partially_damage }}</td></tr>
+                                                <tr><td>Totally Damaged (ha)</td><td>{{ $calamity->totally_damage }}</td></tr>
+                                                <tr><td>Total Area (ha)</td><td>{{ $calamity->total_area }}</td></tr>
+                                                <tr><td>Livestock Type</td><td>{{ $calamity->livestock_type }}</td></tr>
+                                                <tr><td>Animal Type</td><td>{{ $calamity->animal_type }}</td></tr>
+                                                <tr><td>Age Class</td><td>{{ $calamity->age_class }}</td></tr>
+                                                <tr><td>No. of Heads</td><td>{{ $calamity->no_heads }}</td></tr>
+                                                <tr><td>Remarks</td><td>{{ $calamity->remarks }}</td></tr>
+                                                <tr><td>Last Name</td><td>{{ $calamity->lastname }}</td></tr>
+                                                <tr><td>First Name</td><td>{{ $calamity->firstname }}</td></tr>
+                                                <tr><td>Middle Name</td><td>{{ $calamity->middlename }}</td></tr>
+                                                <tr><td>Suffix</td><td>{{ $calamity->suffix }}</td></tr>
+                                                <tr><td>Full Name</td><td>{{ $calamity->fullname }}</td></tr>
+                                                <tr><td>Location</td><td>{{ $calamity->location }}</td></tr>
+                                                <tr><td>Assistance Type</td><td>{{ $calamity->assistance_type }}</td></tr>
+                                                <tr><td>Date Provided</td><td>{{ $calamity->date_provided }}</td></tr>
+                                                <tr><td>Status</td><td>{{ $calamity->status }}</td></tr>
+                                                <tr><td>Email</td><td>{{ $calamity->email }}</td></tr>
+                                                <tr><td>Date Reported</td><td>{{ \Carbon\Carbon::parse($calamity->date_reported)->format('F j, Y') }}</td></tr>
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </div>
                             </div>
                         </div>
 
@@ -129,11 +189,11 @@
 
 
 <!-- Add Farm Modal -->
-<div class="modal fade" id="addFarmModal" tabindex="-1" aria-labelledby="addFarmModalLabel" aria-hidden="true">
+<div class="modal fade" id="AddReportModal" tabindex="-1" aria-labelledby="AddReportModalLabel" aria-hidden="true">
 <div class="modal-dialog modal-lg">
     <div class="modal-content">
       <div class="modal-header">
-        <h5 class="modal-title" id="addFarmModalLabel">Send Calamity Report</h5>
+        <h5 class="modal-title" id="AddReportModalLabel">Send Calamity Report</h5>
         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
       </div>
       <div class="modal-body">
@@ -380,7 +440,10 @@ function geocodeFarm(farm) {
                 document.getElementById("livestock_type").value = farm.forms_farm || '';
 
                 const modal = bootstrap.Modal.getInstance(document.getElementById("locationModal"));
+                const modals = bootstrap.Modal.getInstance(document.getElementById("AddReportModal"));
                 modal.hide();
+                modals.show();
+
             });
         } else {
             console.error("Geocode was not successful for the following reason: " + status);

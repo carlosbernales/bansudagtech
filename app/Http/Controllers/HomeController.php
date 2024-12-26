@@ -173,6 +173,8 @@ class HomeController extends Controller
             'tot_male' => $account->tot_male, 
             'tot_female' => $account->tot_female, 
             'farmer_type' => $account->farmer_type, 
+            'user_id' => $userId, 
+
             // 'date_reported' => $dateReported, 
         ]);
 
@@ -191,6 +193,24 @@ class HomeController extends Controller
         return back()->with('success', 'Report Submitted!');
     }
 
+    public function delete_report($id)
+    {
+        $calReport = CalamityReport::findOrFail($id); 
+
+        $calReportImage = CalamityImages::where('cal_fk_id', $id)->get();
+        foreach ($calReportImage as $image) {
+            $imagePath = public_path('calamity_images/' . $image->image);
+            if (File::exists($imagePath)) {
+                File::delete($imagePath);
+            }
+        }
+
+        CalamityImages::where('cal_fk_id', $id)->delete();
+
+        $calReport->delete();
+
+        return redirect()->back()->with('success', 'Deleted!');
+    }
     
 
 

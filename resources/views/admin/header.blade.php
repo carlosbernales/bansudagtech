@@ -480,8 +480,10 @@
                         <li class="{{ Request::is('farmers_farm') ? 'active' : '' }}">
                             <a href="/farmers_farm"> Farmers Farm</a>
                         </li>
-                        <li><a data-toggle="tab" href="#Charts"><i class="notika-icon notika-bar-chart"></i> Charts</a>
+                        <li class="{{ Request::is('calamity_reports') ? 'active' : '' }}">
+                            <a href="/calamity_reports"> Calamity Reports</a>
                         </li>
+                
                         <li><a data-toggle="tab" href="#Tables"><i class="notika-icon notika-windows"></i> Tables</a>
                         </li>
                         <li><a data-toggle="tab" href="#Forms"><i class="notika-icon notika-form"></i> Forms</a>

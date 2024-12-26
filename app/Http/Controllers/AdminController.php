@@ -8,6 +8,8 @@ use Illuminate\Support\Facades\Hash;
 use App\Models\Announcement;
 use App\Models\AnnouncementUser;
 use App\Models\Farms;
+use App\Models\CalamityReport;
+
 
 
 class AdminController extends Controller
@@ -182,5 +184,48 @@ class AdminController extends Controller
 
         return back()->with('success', 'Deleted!');
     }
+
+
+    public function calamity_reports()
+    {
+        $calamities = CalamityReport::with('calamityImages')->get(); 
+
+        return view('admin/calamity_report', compact('calamities'));
+    }
+
+    public function updateToShorlisted($id)
+    {
+        $calamity = CalamityReport::findOrFail($id);
+
+        $calamity->status = 'Shortlisted';
+        $calamity->save();
+
+        return redirect()->back()->with('status', 'Calamity has been shortlisted!');
+    }
+
+    public function updateStatus(Request $request)
+    {
+        $ids = $request->input('ids');
+    
+        if (!$ids || !is_array($ids)) {
+            return redirect()->back()->with('status', 'Invalid request data');
+        }
+    
+        try {
+            // Update the status of selected calamities
+            CalamityReport::whereIn('id', $ids)->update(['status' => 'Updated']);
+    
+            return redirect()->back()->with('status', 'Calamity has been shortlisted!');
+        } catch (\Exception $e) {
+            return redirect()->back()->with('status', 'Failed to update calamity status.');
+        }
+    }
+    
+    
+    
+    
+    
+
+    
 
 }

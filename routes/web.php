@@ -39,9 +39,9 @@ Route::match(['get', 'post'], '/farmers_farm', [AdminController::class, 'farmers
 Route::match(['get', 'post'], '/check-rsbsa', [AdminController::class, 'checkRsbsaEdit']);
 Route::put('/edit_farmer/{id}', [AdminController::class, 'edit_farmer']);
 Route::delete('/delete_farmer/{id}', [AdminController::class, 'delete_farmer']);
+Route::match(['get', 'post'], '/calamity_reports', [AdminController::class, 'calamity_reports']);
 
-
-
+Route::put('/updateToShorlisted/{id}', [AdminController::class, 'updateToShorlisted']);
 
 
 //HOME
@@ -53,6 +53,7 @@ Route::delete('/delete_farm/{id}', [HomeController::class, 'delete_farm']);
 Route::match(['get', 'post'], '/calamity_report', [HomeController::class, 'calamity_report']);
 Route::match(['get', 'post'], '/submit_calamity_report', [HomeController::class, 'submit_calamity_report']);
 
+Route::delete('/delete_report/{id}', [HomeController::class, 'delete_report']);
 
 
 

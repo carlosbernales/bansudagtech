@@ -48,6 +48,7 @@
                                 <!-- Farm Details -->
                                 <div class="d-flex flex-column text-center">
                                     <h3 class="fs-6 fw-normal">{{ $farmer->farm_type }}</h3>
+                                    <h3 class="fs-6 fw-normal">{{ $farmer->livestock_type }}</h3>
                                     <div class="d-flex justify-content-center align-items-center gap-2">
                                         <span class="text-dark fw-semibold">{{ $farmer->commodity }}</span>
                                     </div>
@@ -288,7 +289,6 @@ document.addEventListener("DOMContentLoaded", function() {
             const images = modal.querySelectorAll('.image-gallery-item'); // Get all images in the modal
             let activeImage = modal.querySelector('.image-gallery-item.active'); // Find the currently active image
 
-            // Get the next image or loop back to the first image if the last one is reached
             let nextImage = activeImage ? activeImage.nextElementSibling : images[0];
             if (!nextImage) {
                 nextImage = images[0]; // If no next image, loop back to the first one
@@ -323,73 +323,93 @@ document.addEventListener("DOMContentLoaded", function() {
 
 
 
-let map, marker, geocoder;
+
+let map;
+let marker;
+let geocoder;
 
 function initMap() {
-  geocoder = new google.maps.Geocoder();
-  const defaultLocation = { lat: -34.397, lng: 150.644 }; // Default location
+    const initialLocation = { lat: -34.397, lng: 150.644 };
 
-  map = new google.maps.Map(document.getElementById("map"), {
-    center: defaultLocation,
-    zoom: 8,
-  });
+    map = new google.maps.Map(document.getElementById('map'), {
+        center: initialLocation,
+        zoom: 8,
+    });
 
-  marker = new google.maps.Marker({
-    map: map,
-    position: defaultLocation,
-  });
+    geocoder = new google.maps.Geocoder();
 
-  const searchBox = new google.maps.places.SearchBox(document.getElementById("mapSearch"));
-  map.controls[google.maps.ControlPosition.TOP_LEFT].push(searchBox);
+    marker = new google.maps.Marker({
+        position: initialLocation,
+        map: map,
+        draggable: true,  // Make the marker draggable
+    });
 
-  searchBox.addListener("places_changed", () => {
-    const places = searchBox.getPlaces();
-    if (places.length === 0) return;
+    google.maps.event.addListener(marker, 'dragend', function() {
+        const position = marker.getPosition();
+        getAddressFromLatLng(position);  // Get the address from the marker's position
+    });
 
-    const place = places[0];
-    if (!place.geometry || !place.geometry.location) return;
+    const input = document.getElementById('mapSearch');
+    
+    input.addEventListener('keydown', function(event) {
+        if (event.key === 'Enter') {
+            geocodeAddress(input.value);  // Geocode the address when Enter is pressed
+        }
+    });
 
-    map.setCenter(place.geometry.location);
-    map.setZoom(15);
-    marker.setPosition(place.geometry.location);
+    google.maps.event.addListener(map, 'click', function(event) {
+        const clickedLocation = event.latLng;
 
-    updateLocationInput(place.geometry.location);
-  });
+        marker.setPosition(clickedLocation);
 
-  map.addListener("click", (event) => {
-    const clickedLocation = event.latLng;
-    marker.setPosition(clickedLocation);
-    updateLocationInput(clickedLocation);
-  });
+        getAddressFromLatLng(clickedLocation);
+    });
 }
 
-function updateLocationInput(location) {
-  geocoder.geocode({ location }, (results, status) => {
-    if (status === "OK" && results[0]) {
-      document.getElementById("location").value = results[0].formatted_address;
+function geocodeAddress(address) {
+    geocoder.geocode({ 'address': address }, function(results, status) {
+        if (status === 'OK') {
+            const location = results[0].geometry.location;
+            map.setCenter(location);  // Move the map to the searched location
+            marker.setPosition(location);  // Move the marker to the searched location
+            getAddressFromLatLng(location);  // Get the address from the new marker position
+        } else {
+            alert('Geocode was not successful for the following reason: ' + status);
+        }
+    });
+}
+
+function getAddressFromLatLng(latLng) {
+    geocoder.geocode({ 'location': latLng }, function(results, status) {
+        if (status === 'OK') {
+            if (results[0]) {
+                document.getElementById('location').value = results[0].formatted_address;
+
+                $('#addFarmModal').modal('show');  // Show the modal programmatically
+            } else {
+                alert('No address found for this location.');
+            }
+        } else {
+            alert('Geocoder failed due to: ' + status);
+        }
+    });
+}
+
+document.getElementById('saveLocation').addEventListener('click', function() {
+    const locationValue = document.getElementById('location').value;
+    if (locationValue) {
+        console.log('Selected Address:', locationValue);
+        $('#mapModal').modal('hide');  // Close the modal
+    } else {
+        alert('Please select a location on the map.');
     }
-  });
-}
-
-document.getElementById("saveLocation").addEventListener("click", () => {
-  const mapModalElement = document.getElementById("mapModal");
-  const mapModalInstance = bootstrap.Modal.getInstance(mapModalElement);
-  mapModalInstance.hide();
-
-  const addFarmModalElement = document.getElementById("addFarmModal");
-  const addFarmModalInstance = bootstrap.Modal.getInstance(addFarmModalElement);
-  if (addFarmModalInstance) {
-    addFarmModalInstance.show();
-  }
 });
 
 
 
 
+/////////////////////////////////////////////////////////////
 
-
-
-// For viewing farm location
 let viewMap, viewMarker, viewGeocoder;
 
 function initViewMap(location) {
