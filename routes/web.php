@@ -42,6 +42,24 @@ Route::delete('/delete_farmer/{id}', [AdminController::class, 'delete_farmer']);
 Route::match(['get', 'post'], '/calamity_reports', [AdminController::class, 'calamity_reports']);
 
 Route::put('/updateToShorlisted/{id}', [AdminController::class, 'updateToShorlisted']);
+Route::match(['get', 'post'], '/multipleUpdateToShorlisted', [AdminController::class, 'multipleUpdateToShorlisted']);
+Route::match(['get', 'post'], '/shortlisted_reports', [AdminController::class, 'shortlisted_reports']);
+Route::match(['get', 'post'], '/multipleUpdateToOngoing', [AdminController::class, 'multipleUpdateToOngoing']);
+
+Route::put('/updateToOngoing/{id}', [AdminController::class, 'updateToOngoing']);
+Route::match(['get', 'post'], '/ongoing_reports', [AdminController::class, 'ongoing_reports']);
+Route::match(['get', 'post'], '/multipleUpdateToCompleted', [AdminController::class, 'multipleUpdateToCompleted']);
+Route::put('/updateToCompleted/{id}', [AdminController::class, 'updateToCompleted']);
+Route::match(['get', 'post'], '/completed_reports', [AdminController::class, 'completed_reports']);
+Route::match(['get', 'post'], '/assistances', [AdminController::class, 'assistances']);
+
+Route::match(['get', 'post'], '/add_assistance', [AdminController::class, 'add_assistance']);
+Route::delete('/delete_assistance/{id}', [AdminController::class, 'delete_assistance']);
+
+
+
+Route::post('/fetch-calamity-reports', [AdminController::class, 'fetchCalamityReports']);
+
 
 
 //HOME

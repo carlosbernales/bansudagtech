@@ -9,8 +9,8 @@ use App\Models\Announcement;
 use App\Models\AnnouncementUser;
 use App\Models\Farms;
 use App\Models\CalamityReport;
-
-
+use App\Models\Assistance;
+use Carbon\Carbon;
 
 class AdminController extends Controller
 {
@@ -188,10 +188,13 @@ class AdminController extends Controller
 
     public function calamity_reports()
     {
-        $calamities = CalamityReport::with('calamityImages')->get(); 
-
+        $calamities = CalamityReport::with('calamityImages')
+                                     ->where('status', 'Pending')
+                                     ->get();
+    
         return view('admin/calamity_report', compact('calamities'));
     }
+    
 
     public function updateToShorlisted($id)
     {
@@ -200,32 +203,158 @@ class AdminController extends Controller
         $calamity->status = 'Shortlisted';
         $calamity->save();
 
-        return redirect()->back()->with('status', 'Calamity has been shortlisted!');
+        return redirect()->back()->with('success', 'Success!');
     }
 
-    public function updateStatus(Request $request)
+
+    public function multipleUpdateToShorlisted(Request $request)
     {
         $ids = $request->input('ids');
     
-        if (!$ids || !is_array($ids)) {
-            return redirect()->back()->with('status', 'Invalid request data');
+        if (is_array($ids) && count($ids) > 0) {
+            CalamityReport::whereIn('id', $ids)->update(['status' => 'Shortlisted']);
+            return redirect()->back()->with('success', 'Success!');
         }
     
-        try {
-            // Update the status of selected calamities
-            CalamityReport::whereIn('id', $ids)->update(['status' => 'Updated']);
+        return redirect()->back()->with('error', 'No calamities were selected.');
+    }
+
+
+    public function shortlisted_reports()
+    {
+        $calamities = CalamityReport::with('calamityImages')
+                                    ->where('status', 'Shortlisted')
+                                    ->get(); 
+
+        $assistanceTypes = Assistance::all();  
+        
     
-            return redirect()->back()->with('status', 'Calamity has been shortlisted!');
-        } catch (\Exception $e) {
-            return redirect()->back()->with('status', 'Failed to update calamity status.');
+        return view('admin/shortlisted_reports', compact('calamities', 'assistanceTypes'));
+    }
+
+    public function multipleUpdateToOngoing(Request $request)
+    {
+        $ids = $request->input('ids');
+        $assistanceType = $request->input('assistance_type');  
+    
+        if (is_array($ids) && count($ids) > 0 && $assistanceType) {
+            CalamityReport::whereIn('id', $ids)
+                          ->update([
+                              'status' => 'Ongoing',
+                              'assistance_type' => $assistanceType  
+                          ]);
+    
+            return redirect()->back()->with('success', 'Success!');
         }
+    
+        return redirect()->back()->with('error', 'No calamities were selected or assistance type not provided.');
     }
     
+
+    public function updateToOngoing($id, Request $request)
+    {
+        $calamity = CalamityReport::findOrFail($id);
     
+        $calamity->status = 'Ongoing';  
+        if ($request->has('assistance_type')) {
+            $calamity->assistance_type = $request->input('assistance_type');
+        }
+        $calamity->save();
     
-    
+        return redirect()->back()->with('success', 'Calamity report updated successfully!');
+    }
     
 
+    public function ongoing_reports()
+    {
+        $calamities = CalamityReport::with('calamityImages')
+                                    ->where('status', 'Ongoing')
+                                    ->get(); 
     
+        return view('admin/ongoing_reports', compact('calamities'));
+    }
 
+
+    public function multipleUpdateToCompleted(Request $request)
+    {
+        $ids = $request->input('ids');
+    
+        if (is_array($ids) && count($ids) > 0) {
+            CalamityReport::whereIn('id', $ids)->update([
+                'status' => 'Completed',
+                'date_provided' => Carbon::now('Asia/Manila'), 
+            ]);
+            return redirect()->back()->with('success', 'Success!');
+        }
+    
+        return redirect()->back()->with('error', 'No calamities were selected.');
+    }
+
+    public function updateToCompleted($id)
+    {
+        $calamity = CalamityReport::findOrFail($id);
+
+        $calamity->status = 'Completed';
+        $calamity->date_provided = Carbon::now('Asia/Manila'); 
+        $calamity->save();
+
+        return redirect()->back()->with('success', 'Success!');
+    }
+
+    public function completed_reports()
+    {
+        $calamities = CalamityReport::with('calamityImages')
+                                    ->where('status', 'Completed')
+                                    ->get(); 
+    
+        return view('admin/completed_reports', compact('calamities'));
+    }
+
+    public function assistances()
+    {
+        $assistance = Assistance::all();
+
+        return view('admin/assistances', ['assistance' => $assistance]);
+    }
+
+
+    public function add_assistance(Request $request)
+    {
+        Assistance::create([
+            'assistance_type' => $request->input('assistance_type'),
+        ]);
+    
+        return redirect()->back()->with('success', 'Added!');
+    }
+
+    public function delete_assistance($id)
+    {
+        $assistance = Assistance::findOrFail($id);
+
+        $assistance->delete();
+
+        return back()->with('success', 'Deleted!');
+    }
+    
+    public function fetchCalamityReports(Request $request)
+    {
+        $request->validate([
+            'from_date' => 'required|date',
+            'to_date' => 'required|date|after_or_equal:from_date',
+        ]);
+
+        // Fetch the data from the model filtered by the date range
+        $reports = CalamityReport::whereBetween('date_reported', [
+            Carbon::parse($request->from_date)->startOfDay(),
+            Carbon::parse($request->to_date)->endOfDay()
+        ])->get([
+                'rsbsa', 'calamity_type', 'farmer_type', 'birthdate', 'region', 'province', 'municipality', 'barangay', 
+                'org_name', 'tot_male', 'tot_female', 'sex', 'indigenous', 'tribe_name', 'pwd', 'arb', 'fourps', 'crop_type',
+                'partially_damage', 'totally_damage', 'total_area', 'livestock_type', 'animal_type', 'age_class', 'no_heads', 
+                'remarks', 'lastname', 'firstname', 'middlename', 'suffix', 'fullname', 'location', 'assistance_type', 
+                'date_provided', 'status', 'email', 'date_reported'
+            ]);
+
+        return response()->json(['data' => $reports]);
+    }
 }

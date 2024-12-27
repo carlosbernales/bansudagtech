@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: localhost:3306
--- Generation Time: Dec 25, 2024 at 01:48 PM
+-- Generation Time: Dec 27, 2024 at 04:39 AM
 -- Server version: 8.0.30
 -- PHP Version: 8.1.10
 
@@ -110,6 +110,25 @@ INSERT INTO `announcement_user` (`int`, `title`, `content`, `user_id`, `status`)
 -- --------------------------------------------------------
 
 --
+-- Table structure for table `assistance`
+--
+
+CREATE TABLE `assistance` (
+  `id` int NOT NULL,
+  `assistance_type` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+
+--
+-- Dumping data for table `assistance`
+--
+
+INSERT INTO `assistance` (`id`, `assistance_type`) VALUES
+(2, 'Seeds'),
+(3, 'Cash');
+
+-- --------------------------------------------------------
+
+--
 -- Table structure for table `calamity_images`
 --
 
@@ -124,10 +143,14 @@ CREATE TABLE `calamity_images` (
 --
 
 INSERT INTO `calamity_images` (`id`, `cal_fk_id`, `image`) VALUES
-(1, 1, 'calamity_676c0669eec3f.jpg'),
-(2, 1, 'calamity_676c066a012dd.jpg'),
-(3, 1, 'calamity_676c066a02084.jpg'),
-(4, 1, 'calamity_676c066a02e0d.jpg');
+(3, 2, 'calamity_676cc6a4092ba.jpg'),
+(4, 2, 'calamity_676cc6a40db60.jpg'),
+(5, 2, 'calamity_676cc6a41015f.jpg'),
+(6, 3, 'calamity_676cc6c8e478b.jpg'),
+(7, 3, 'calamity_676cc6c8e6ec4.jpg'),
+(8, 3, 'calamity_676cc6c8e9016.jpg'),
+(9, 4, 'calamity_676cc7788c681.jpg'),
+(10, 4, 'calamity_676cc7788f32f.jpg');
 
 -- --------------------------------------------------------
 
@@ -174,7 +197,7 @@ CREATE TABLE `calamity_report` (
   `date_provided` date DEFAULT NULL,
   `status` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL DEFAULT 'Pending',
   `email` varchar(255) NOT NULL,
-  `date_reported` date NOT NULL DEFAULT '2024-01-01'
+  `date_reported` datetime DEFAULT CURRENT_TIMESTAMP
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
 --
@@ -182,7 +205,9 @@ CREATE TABLE `calamity_report` (
 --
 
 INSERT INTO `calamity_report` (`id`, `user_id`, `rsbsa`, `calamity_type`, `farmer_type`, `birthdate`, `region`, `province`, `municipality`, `barangay`, `org_name`, `tot_male`, `tot_female`, `sex`, `indigenous`, `tribe_name`, `pwd`, `arb`, `fourps`, `crop_type`, `partially_damage`, `totally_damage`, `total_area`, `livestock_type`, `animal_type`, `age_class`, `no_heads`, `remarks`, `lastname`, `firstname`, `middlename`, `suffix`, `fullname`, `location`, `assistance_type`, `date_provided`, `status`, `email`, `date_reported`) VALUES
-(1, NULL, 'sd-sf-sg-fg-s2', 'Typhoon', 'GROUP', '2024-12-21', 'asfsdfsdfsd', 'asdasd', 'asdasdasd', 'sdasd', 'asdasdas', 3, 2, 'MALE', 'NO', NULL, 'YES', 'YES', 'YES', 'RICE', 7, 9, 8, NULL, NULL, 32, 67, NULL, 'dasdas', 'wqewqe', 'adas', 'Jr.', 'wqewqe adas dasdas Jr.', '95J9+2C Calapan, Oriental Mindoro, Philippines', NULL, NULL, 'Pending', 'sarahelmenzo13@gmail.com', '2024-01-01');
+(2, 2, 'sd-sf-sg-fg-s2', 'Typhoon', 'GROUP', '2024-12-21', 'asfsdfsdfsd', 'asdasd', 'asdasdasd', 'sdasd', 'asdasdas', 3, 2, 'MALE', 'NO', NULL, 'YES', 'YES', 'YES', 'RICE', 3, NULL, 2, NULL, NULL, NULL, NULL, NULL, 'dasdas', 'wqewqe', 'adas', 'Jr.', 'wqewqe adas dasdas Jr.', '95J9+2C Calapan, Oriental Mindoro, Philippines', 'Cash', '2024-12-25', 'Completed', 'sarahelmenzo13@gmail.com', '2024-12-25 10:59:47'),
+(3, 2, 'sd-sf-sg-fg-s2', 'Typhoon', 'GROUP', '2024-12-21', 'asfsdfsdfsd', 'asdasd', 'asdasdasd', 'sdasd', 'asdasdas', 3, 2, 'MALE', 'NO', NULL, 'YES', 'YES', 'YES', NULL, NULL, NULL, NULL, 'BACKYARD', 'PIG', 3, 6, NULL, 'dasdas', 'wqewqe', 'adas', 'Jr.', 'wqewqe adas dasdas Jr.', '85XV+68 Calapan, Oriental Mindoro, Philippines', 'Seeds', '2024-12-24', 'Completed', 'sarahelmenzo13@gmail.com', '2024-12-24 11:00:24'),
+(4, 2, 'sd-sf-sg-fg-s2', 'Typhoon', 'GROUP', '2024-12-21', 'asfsdfsdfsd', 'asdasd', 'asdasdasd', 'sdasd', 'asdasdas', 3, 2, 'MALE', 'NO', NULL, 'YES', 'YES', 'YES', 'WHEAT', 3, 3, 2, NULL, NULL, NULL, NULL, NULL, 'dasdas', 'wqewqe', 'adas', 'Jr.', 'wqewqe adas dasdas Jr.', '031 Tawagan Rd, Calapan, Oriental Mindoro, Philippines', 'Seeds', '2024-12-27', 'Completed', 'sarahelmenzo13@gmail.com', '2024-12-26 11:03:20');
 
 -- --------------------------------------------------------
 
@@ -260,6 +285,12 @@ ALTER TABLE `announcement_user`
   ADD PRIMARY KEY (`int`);
 
 --
+-- Indexes for table `assistance`
+--
+ALTER TABLE `assistance`
+  ADD PRIMARY KEY (`id`);
+
+--
 -- Indexes for table `calamity_images`
 --
 ALTER TABLE `calamity_images`
@@ -306,28 +337,34 @@ ALTER TABLE `announcement_user`
   MODIFY `int` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
 
 --
+-- AUTO_INCREMENT for table `assistance`
+--
+ALTER TABLE `assistance`
+  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
+
+--
 -- AUTO_INCREMENT for table `calamity_images`
 --
 ALTER TABLE `calamity_images`
-  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
+  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=11;
 
 --
 -- AUTO_INCREMENT for table `calamity_report`
 --
 ALTER TABLE `calamity_report`
-  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
 
 --
 -- AUTO_INCREMENT for table `farms`
 --
 ALTER TABLE `farms`
-  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
+  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
 
 --
 -- AUTO_INCREMENT for table `farms_images`
 --
 ALTER TABLE `farms_images`
-  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=9;
+  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=11;
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;

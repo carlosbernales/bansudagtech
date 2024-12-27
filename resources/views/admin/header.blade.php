@@ -477,15 +477,16 @@
                         <li class="{{ Request::is('announcement') ? 'active' : '' }}">
                             <a href="/announcement"> Announcement</a>
                         </li>
+                        <li class="{{ Request::is('assistances') ? 'active' : '' }}">
+                            <a href="/assistances"> Assistance</a>
+                        </li>
                         <li class="{{ Request::is('farmers_farm') ? 'active' : '' }}">
                             <a href="/farmers_farm"> Farmers Farm</a>
                         </li>
-                        <li class="{{ Request::is('calamity_reports') ? 'active' : '' }}">
+                        <li data-toggle="tab" href="#Tables" class="{{ Request::is('calamity_reports') ? 'active' : '' }}">
                             <a href="/calamity_reports"> Calamity Reports</a>
                         </li>
-                
-                        <li><a data-toggle="tab" href="#Tables"><i class="notika-icon notika-windows"></i> Tables</a>
-                        </li>
+                        
                         <li><a data-toggle="tab" href="#Forms"><i class="notika-icon notika-form"></i> Forms</a>
                         </li>
                         <li><a data-toggle="tab" href="#Appviews"><i class="notika-icon notika-app"></i> App views</a>
@@ -495,50 +496,17 @@
                         </li>
                     </ul>
                     <div class="tab-content custom-menu-content">
-                        
-                        <div id="mailbox" class="tab-pane notika-tab-menu-bg animated flipInX">
+                        <div id="Tables" class="tab-pane {{ request()->is('calamity_reports') || request()->is('shortlisted_reports') 
+                        || request()->is('ongoing_reports') || request()->is('completed_reports') ? 'active' : '' }}
+                            notika-tab-menu-bg animated flipInX">
                             <ul class="notika-main-menu-dropdown">
-                                <li><a href="inbox.html">Inbox</a>
+                                <li><a href="/calamity_reports">Reports</a>
                                 </li>
-                                <li><a href="view-email.html">View Email</a>
+                                <li><a href="/shortlisted_reports">Shortlisted</a>
                                 </li>
-                                <li><a href="compose-email.html">Compose Email</a>
+                                <li><a href="/ongoing_reports">Ongoing</a>
                                 </li>
-                            </ul>
-                        </div>
-                        <div id="Interface" class="tab-pane notika-tab-menu-bg animated flipInX">
-                            <ul class="notika-main-menu-dropdown">
-                                <li><a href="animations.html">Animations</a>
-                                </li>
-                                <li><a href="google-map.html">Google Map</a>
-                                </li>
-                                <li><a href="data-map.html">Data Maps</a>
-                                </li>
-                                <li><a href="code-editor.html">Code Editor</a>
-                                </li>
-                                <li><a href="image-cropper.html">Images Cropper</a>
-                                </li>
-                                <li><a href="wizard.html">Wizard</a>
-                                </li>
-                            </ul>
-                        </div>
-                        <div id="Charts" class="tab-pane notika-tab-menu-bg animated flipInX">
-                            <ul class="notika-main-menu-dropdown">
-                                <li><a href="flot-charts.html">Flot Charts</a>
-                                </li>
-                                <li><a href="bar-charts.html">Bar Charts</a>
-                                </li>
-                                <li><a href="line-charts.html">Line Charts</a>
-                                </li>
-                                <li><a href="area-charts.html">Area Charts</a>
-                                </li>
-                            </ul>
-                        </div>
-                        <div id="Tables" class="tab-pane notika-tab-menu-bg animated flipInX">
-                            <ul class="notika-main-menu-dropdown">
-                                <li><a href="normal-table.html">Normal Table</a>
-                                </li>
-                                <li><a href="data-table.html">Data Table</a>
+                                <li><a href="/completed_reports">Completed</a>
                                 </li>
                             </ul>
                         </div>

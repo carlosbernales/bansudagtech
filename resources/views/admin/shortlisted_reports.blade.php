@@ -1,7 +1,7 @@
 
 @include('admin/header')
-<meta name="csrf-token" content="{{ csrf_token() }}">
 
+    <meta name="csrf-token" content="{{ csrf_token() }}">
 
 	<!-- Breadcomb area End-->
     <!-- Data Table area Start-->
@@ -12,7 +12,7 @@
                     <div class="data-table-list">
                         <div class="basic-tb-hd">
                             <div class="card-header" style="display: flex; justify-content: space-between;">
-                                <h2>Calamity Reports</h2>
+                                <h2>Shortlisted Reports</h2>
                                 <button id="update-status-btn" class="btn btn-lightgreen lightgreen-icon-notika" style="display: none;">
                                     <i class="notika-icon notika-checked"></i>
                                 </button>
@@ -54,14 +54,18 @@
                                         No Images
                                         @endif
                                     </td>
-                                    <td><form action="/updateToShorlisted/{{ $calamity->id }}" method="POST">
-                                        @csrf
-                                        @method('PUT')
-                                        <button type="submit" class="btn btn-lightgreen lightgreen-icon-notika">
+                                    <td>
+                                        <button data-toggle="modal" data-target="#editModal{{ $calamity->id }}"class="btn btn-lightgreen lightgreen-icon-notika">
                                             <i class="notika-icon notika-checked"></i>
                                         </button>
-                                    </form></td>
+                                    </td>
                                 </tr>
+
+
+                               
+
+                                
+
 
                                 <!-- Modal for Location -->
                                 <div class="modal fade" id="viewLocationModal-{{ $calamity->id }}" tabindex="-1" aria-labelledby="viewLocationModalLabel" aria-hidden="true">
@@ -108,6 +112,41 @@
                                     </div>
                                 </div>
 
+
+                                 <!-- Edit Modal -->
+                                 <div class="modal fade" id="editModal{{ $calamity->id }}" tabindex="-1" role="dialog" aria-labelledby="editModalLabel{{ $calamity->id }}" aria-hidden="true">
+                                    <div class="modal-dialog modal-sm" role="document">
+                                        <div class="modal-content">
+                                            <div class="modal-header">
+                                                <h5 class="modal-title" id="editModalLabel{{ $calamity->id }}"></h5>
+                                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                                    <span aria-hidden="true">&times;</span>
+                                                </button>
+                                            </div>
+                                            <div class="modal-body">
+                                            <form action="/updateToOngoing/{{ $calamity->id }}" method="POST">
+                                                @csrf
+                                                @method('PUT')
+                                                <div class="row">
+                                                    <div class="col-md-6 mb-3">
+                                                        <label for="assistance-type">Type of Assistance</label>
+                                                        <select name="assistance_type" id="assistance-type-dropdown" class="form-control">
+                                                            <option value="">Select Assistance Type</option>
+                                                            @foreach ($assistanceTypes as $type)
+                                                                <option value="{{ $type->assistance_type }}" {{ $calamity->assistance_type == $type->assistance_type ? 'selected' : '' }}>
+                                                                    {{ $type->assistance_type }}
+                                                                </option>
+                                                            @endforeach
+                                                        </select>
+                                                    </div>
+                                                </div>
+                                                <div class="modal-footer">
+                                                    <button type="submit" class="btn btn-primary" id="save-btn-{{ $calamity->id }}">Okay</button>
+                                                </div>
+                                            </form>
+                                        </div>
+                                    </div>
+                                </div>
                                 @endforeach
                                 </tbody>
                             </table>
@@ -118,6 +157,30 @@
         </div>
     </div>
 
+
+    <div class="modal fade" id="assistanceModal" role="dialog">
+        <div class="modal-dialog modal-md">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal">&times;</button>
+                </div>
+                <div class="modal-body">
+                    <select id="assistance-type-dropdown" class="form-control">
+                        <option value="">Select Assistance Type</option>
+                        @foreach ($assistanceTypes as $type)
+                            <option value="{{ $type->assistance_type }}">{{ $type->assistance_type }}</option>
+                        @endforeach
+                    </select>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                    <button type="button" class="btn btn-primary" id="submit-assistance-type">Update Status</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    
 
 
 
@@ -138,14 +201,20 @@
     @if(session('error'))
         alertify.error('{{ session('error') }}');
     @endif
+    
 </script>
 
 
 <script>
+    
 document.addEventListener('DOMContentLoaded', () => {
     const updateBtn = document.getElementById('update-status-btn');
     const checkboxes = document.querySelectorAll('.row-checkbox');
     const selectAll = document.getElementById('select-all');
+    const assistanceModal = $('#assistanceModal'); // Use jQuery for Bootstrap modal
+    const submitAssistanceTypeBtn = document.getElementById('submit-assistance-type');
+    const assistanceTypeDropdown = document.getElementById('assistance-type-dropdown');
+    const csrfToken = document.querySelector('meta[name="csrf-token"]').content;
 
     const toggleButton = () => {
         const anyChecked = Array.from(checkboxes).some(checkbox => checkbox.checked);
@@ -170,14 +239,25 @@ document.addEventListener('DOMContentLoaded', () => {
             .map(checkbox => checkbox.value);
 
         if (selectedIds.length > 0) {
+            assistanceModal.modal('show');
+        }
+    });
+
+    submitAssistanceTypeBtn.addEventListener('click', () => {
+        const selectedIds = Array.from(checkboxes)
+            .filter(checkbox => checkbox.checked)
+            .map(checkbox => checkbox.value);
+        const assistanceType = assistanceTypeDropdown.value;
+
+        if (assistanceType) {
             const form = document.createElement('form');
             form.method = 'POST';
-            form.action = '/multipleUpdateToShorlisted';
+            form.action = '/multipleUpdateToOngoing';
 
             const csrfInput = document.createElement('input');
             csrfInput.type = 'hidden';
             csrfInput.name = '_token';
-            csrfInput.value = document.querySelector('meta[name="csrf-token"]').content;
+            csrfInput.value = csrfToken;
             form.appendChild(csrfInput);
 
             selectedIds.forEach(id => {
@@ -188,8 +268,18 @@ document.addEventListener('DOMContentLoaded', () => {
                 form.appendChild(input);
             });
 
+            const assistanceInput = document.createElement('input');
+            assistanceInput.type = 'hidden';
+            assistanceInput.name = 'assistance_type';
+            assistanceInput.value = assistanceType;
+            form.appendChild(assistanceInput);
+
             document.body.appendChild(form);
             form.submit();
+
+            assistanceModal.modal('hide');
+        } else {
+            alert('Please select an assistance type.');
         }
     });
 });

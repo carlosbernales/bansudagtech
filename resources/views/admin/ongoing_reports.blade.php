@@ -1,7 +1,7 @@
 
 @include('admin/header')
-<meta name="csrf-token" content="{{ csrf_token() }}">
 
+    <meta name="csrf-token" content="{{ csrf_token() }}">
 
 	<!-- Breadcomb area End-->
     <!-- Data Table area Start-->
@@ -12,7 +12,7 @@
                     <div class="data-table-list">
                         <div class="basic-tb-hd">
                             <div class="card-header" style="display: flex; justify-content: space-between;">
-                                <h2>Calamity Reports</h2>
+                                <h2>Ongoing Reports</h2>
                                 <button id="update-status-btn" class="btn btn-lightgreen lightgreen-icon-notika" style="display: none;">
                                     <i class="notika-icon notika-checked"></i>
                                 </button>
@@ -54,7 +54,7 @@
                                         No Images
                                         @endif
                                     </td>
-                                    <td><form action="/updateToShorlisted/{{ $calamity->id }}" method="POST">
+                                    <td><form action="/updateToCompleted/{{ $calamity->id }}" method="POST">
                                         @csrf
                                         @method('PUT')
                                         <button type="submit" class="btn btn-lightgreen lightgreen-icon-notika">
@@ -138,6 +138,7 @@
     @if(session('error'))
         alertify.error('{{ session('error') }}');
     @endif
+    
 </script>
 
 
@@ -172,7 +173,7 @@ document.addEventListener('DOMContentLoaded', () => {
         if (selectedIds.length > 0) {
             const form = document.createElement('form');
             form.method = 'POST';
-            form.action = '/multipleUpdateToShorlisted';
+            form.action = '/multipleUpdateToCompleted';
 
             const csrfInput = document.createElement('input');
             csrfInput.type = 'hidden';

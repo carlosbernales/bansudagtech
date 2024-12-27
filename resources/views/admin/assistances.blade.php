@@ -11,29 +11,27 @@
                 <div class="data-table-list">
                     <div class="basic-tb-hd">
                         <div class="card-header" style="display: flex; justify-content: space-between;">
-                            <h2>Announcements</h2>
-                            <button class="btn btn-lightgreen lightgreen-icon-notika"  data-toggle="modal" data-target="#addAnnouncementModal">+ Announcement</button>
+                            <h2>Assistances</h2>
+                            <button class="btn btn-lightgreen lightgreen-icon-notika"  data-toggle="modal" data-target="#addAssistanceModal">+ Assistance</button>
                         </div>
                         </div>
                         <div class="table-responsive">
                             <table id="data-table-basic" class="table table-striped">
                                 <thead>
                                     <tr>
-                                        <th>Title</th>
-                                        <th>Content</th>
+                                        <th>Type</th>
                                         <th style="width: 5%; text-align: center;">
                                     </tr>
                                 </thead>
                                 <tbody>
-                                @foreach ($announcement as $announcement)
+                                @foreach ($assistance as $assistance)
                                     <tr>
-                                        <td>{{ $announcement->title }}</td>
-                                        <td>{{ $announcement->content }}</td>
+                                        <td>{{ $assistance->assistance_type }}</td>
                                         <td>
-                                        <form action="{{ url('/delete_announcement/'.$announcement->id) }}" method="POST" id="delete-form-{{ $announcement->id }}">
+                                        <form action="{{ url('/delete_assistance/'.$assistance->id) }}" method="POST" id="delete-form-{{ $assistance->id }}">
                                             @csrf
                                             @method('DELETE')
-                                            <button type="button" class="btn btn-danger btn-sm" onclick="confirmDelete({{ $announcement->id }})" style="background-color: transparent; border: none;">
+                                            <button type="button" class="btn btn-danger btn-sm" onclick="confirmDelete({{ $assistance->id }})" style="background-color: transparent; border: none;">
                                                 <i class="bi bi-trash" style="color: #dc3545; font-size: 18px;"></i> <!-- Bootstrap icon with danger color and custom size -->
                                             </button>
                                         </form>
@@ -49,26 +47,22 @@
     </div>
 
 
-    <div class="modal fade" id="addAnnouncementModal" role="dialog">
+    <div class="modal fade" id="addAssistanceModal" role="dialog">
         <div class="modal-dialog modal-md"> <!-- Increased the size to modal-lg for more space -->
             <div class="modal-content">
                 <div class="modal-header">
                     <button type="button" class="close" data-dismiss="modal">&times;</button>
-                    <h4 class="modal-title">Add Farmers</h4>
+                    <h4 class="modal-title">Add Assistance</h4>
                 </div>
                 <div class="modal-body">
-                    <form action="/add_announcement" method="POST">
+                    <form action="/add_assistance" method="POST">
                         @csrf
                         <div class="row">
                             <div class="col-md-12 mb-3">
-                                <label for="title">Title</label>
-                                <input type="text" class="form-control" id="title" name="title" placeholder="Enter title" required>
+                                <label for="Assitance Type">Assitance Type</label>
+                                <input type="text" class="form-control" id="Assitance Type" name="assistance_type" placeholder="Enter Assistance Type" required>
                             </div>
-
-                            <div class="col-md-12 mb-3">
-                                <label for="content">Content</label>
-                                <textarea class="form-control" id="content" name="content" rows="4" placeholder="Enter Content" required></textarea>
-                            </div>
+                            
                         </div>
                     </div>
                     <div class="modal-footer">
