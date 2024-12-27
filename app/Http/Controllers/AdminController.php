@@ -15,22 +15,21 @@ use Carbon\Carbon;
 class AdminController extends Controller
 {
 
-    public function landingpage()
-    {
-        // if (!session()->has('admin_id') && !session()->has('it_id')) {
-        //     return redirect('/');
-        // }
-        return view('landing_page');
-    }
-
     public function dashboard()
     {
+        if (!session()->has('admin_id')) {
+            return redirect('/');
+        }
+        
         return view('admin/dashboard');
     }
 
 
     public function farmers()
     {
+        if (!session()->has('admin_id')) {
+            return redirect('/');
+        }
         $accounts = Accounts::all();
 
         return view('admin/farmers', ['accounts' => $accounts]);
@@ -38,6 +37,9 @@ class AdminController extends Controller
 
     public function announcement()
     {
+        if (!session()->has('admin_id')) {
+            return redirect('/');
+        }
         $announcement = Announcement::all();
 
         return view('admin/announcement', ['announcement' => $announcement]);
@@ -129,6 +131,9 @@ class AdminController extends Controller
 
     public function farmers_farm()
     {
+        if (!session()->has('admin_id')) {
+            return redirect('/');
+        }
         $farmers = Farms::with('farmImages')->get(); 
         return view('admin/farmer_farm', compact('farmers'));
     }
@@ -188,6 +193,9 @@ class AdminController extends Controller
 
     public function calamity_reports()
     {
+        if (!session()->has('admin_id')) {
+            return redirect('/');
+        }
         $calamities = CalamityReport::with('calamityImages')
                                      ->where('status', 'Pending')
                                      ->get();
@@ -222,6 +230,9 @@ class AdminController extends Controller
 
     public function shortlisted_reports()
     {
+        if (!session()->has('admin_id')) {
+            return redirect('/');
+        }
         $calamities = CalamityReport::with('calamityImages')
                                     ->where('status', 'Shortlisted')
                                     ->get(); 
@@ -267,6 +278,9 @@ class AdminController extends Controller
 
     public function ongoing_reports()
     {
+        if (!session()->has('admin_id')) {
+            return redirect('/');
+        }
         $calamities = CalamityReport::with('calamityImages')
                                     ->where('status', 'Ongoing')
                                     ->get(); 
@@ -303,6 +317,9 @@ class AdminController extends Controller
 
     public function completed_reports()
     {
+        if (!session()->has('admin_id')) {
+            return redirect('/');
+        }
         $calamities = CalamityReport::with('calamityImages')
                                     ->where('status', 'Completed')
                                     ->get(); 
@@ -312,6 +329,9 @@ class AdminController extends Controller
 
     public function assistances()
     {
+        if (!session()->has('admin_id')) {
+            return redirect('/');
+        }
         $assistance = Assistance::all();
 
         return view('admin/assistances', ['assistance' => $assistance]);
@@ -343,7 +363,6 @@ class AdminController extends Controller
             'to_date' => 'required|date|after_or_equal:from_date',
         ]);
 
-        // Fetch the data from the model filtered by the date range
         $reports = CalamityReport::whereBetween('date_reported', [
             Carbon::parse($request->from_date)->startOfDay(),
             Carbon::parse($request->to_date)->endOfDay()

@@ -14,9 +14,8 @@
                             <div class="card-header" style="display: flex; justify-content: space-between;">
                                 <h2>Completed Reports</h2>
                                 <button class="btn btn-lightgreen lightgreen-icon-notika" data-toggle="modal" data-target="#generateReportModal">
-    Report
-</button>
-
+                                    Report
+                                </button>
                             </div>
                         </div>
                         <div class="table-responsive">
@@ -30,7 +29,6 @@
                                         <th>Proof Image</th>
                                         <th>Assistance</th>
                                         <th>Date Provided</th>
-                                        <th></th>
                                     </tr>
                                 </thead>
                                 <tbody>
@@ -55,15 +53,6 @@
                                     </td>
                                     <td>{{ $calamity->assistance_type }}</td>
                                     <td>{{ \Carbon\Carbon::parse($calamity->date_provided)->format('F j, Y') }}</td>
-                                    <td><form action="/updateToOngoing/{{ $calamity->id }}" method="POST">
-                                        @csrf
-                                        @method('PUT')
-                                        <button type="submit" class="btn btn-lightgreen lightgreen-icon-notika">
-                                            <i class="notika-icon notika-checked"></i>
-                                        </button>
-                                    </form></td>
-                                    
-
                                 </tr>
 
                                 <!-- Modal for Location -->
@@ -140,7 +129,9 @@
                         <label for="toDate">To:</label>
                         <input type="date" class="form-control" id="toDate" name="to_date">
                     </div>
-                    <button type="submit" class="btn btn-primary">Generate</button>
+                    <div class="modal-footer">
+                        <button type="submit" class="btn btn-primary" >Generate</button>
+                    </div>
                 </form>
             </div>
         </div>
@@ -180,7 +171,6 @@ $('#reportForm').submit(function(e) {
     let fromDate = $('#fromDate').val();
     let toDate = $('#toDate').val();
 
-    // Ensure the dates are in the correct format
     console.log('From Date:', fromDate);
     console.log('To Date:', toDate);
 
@@ -193,7 +183,7 @@ $('#reportForm').submit(function(e) {
             _token: '{{ csrf_token() }}', // CSRF token for security
         },
         success: function(response) {
-            generateExcel(response.data);
+            generateExcel(response.data, fromDate, toDate);
         },
         error: function(xhr, status, error) {
             alert('Error generating report');
@@ -202,10 +192,9 @@ $('#reportForm').submit(function(e) {
 });
 
 
-function generateExcel(data) {
+function generateExcel(data, fromDate, toDate) {
     const ws_data = [
-        // First row (merged cells A1 to A4 and B1 to B4 will contain their respective values)
-        ['CALAMITY', 'TYPE OF AFFECTED FARMER (Individual/Group)', 'HEADER 3', 'HEADER 4', 'HEADER 5', 'HEADER 6', 'HEADER 7', 'HEADER 8', 
+        ['CALAMITY', 'TYPE OF AFFECTED FARMER (Individual/Group)', 'NAME OF AFFECTED FARMER/FOCAL', 'HEADER 4', 'HEADER 5', 'HEADER 6', 'HEADER 7', 'HEADER 8', 
         'HEADER 9', 'HEADER 10', 'HEADER 11', 'HEADER 12', 'HEADER 13', 'HEADER 14', 'HEADER 15', 'HEADER 16',
         'HEADER 17', 'HEADER 18', 'HEADER 19', 'HEADER 20', 'HEADER 21', 'HEADER 22', 'HEADER 23', 'HEADER 24', 
         'HEADER 25', 'HEADER 26', 'HEADER 27', 'HEADER 28', 'HEADER 29', 'HEADER 30', 'HEADER 31', 'HEADER 32', 'HEADER 33'],
@@ -226,36 +215,71 @@ function generateExcel(data) {
         'TYPE OF FARM', 'ANIMAL TYPE', 'AGE CLASSIFICATION', 'NO OF HEADS AFFECTED', 'REMARKS', 'ASSISTANCE PROVIDED', 'DATE PROVIDED', 'DATE REPORTED']
     ];
 
-    // Add the data to the worksheet
     data.forEach(report => {
         ws_data.push([ 
-            report.calamity_type, report.farmer_type, report.rsbsa, report.lastname, report.firstname, report.middlename, 
-            report.suffix, report.birthdate, report.region, report.province, report.municipality, report.barangay, 
-            report.org_name, report.tot_male, report.tot_female, report.sex, report.indigenous, report.tribe_name, 
+            report.calamity_type, report.farmer_type, report.rsbsa, report.lastname, report.firstname, report.middlename, report.suffix, report.birthdate, report.region, report.province, report.municipality, 
+            report.barangay, report.org_name, report.tot_male, report.tot_female, report.sex, report.indigenous, report.tribe_name, 
             report.pwd, report.arb, report.fourps, report.crop_type, report.partially_damage, 
             report.totally_damage, report.total_area, report.livestock_type, report.animal_type, report.age_class, report.no_heads, 
             report.remarks, report.assistance_type, report.date_provided, report.date_reported
         ]);
     });
 
-    // Create a new workbook and add the data
     const ws = XLSX.utils.aoa_to_sheet(ws_data);
     const wb = XLSX.utils.book_new();
     XLSX.utils.book_append_sheet(wb, ws, 'Calamity Report');
 
-    // Merge cells A1 to A4 and B1 to B4 and set the values
     ws['!merges'] = [
         { s: { r: 0, c: 0 }, e: { r: 3, c: 0 } }, // Merge A1 to A4
-        { s: { r: 0, c: 1 }, e: { r: 3, c: 1 } }  // Merge B1 to B4
+        { s: { r: 0, c: 1 }, e: { r: 3, c: 1 } }, // Merge B1 to B4
+        { s: { r: 0, c: 2 }, e: { r: 0, c: 6 } },  // Merge C1 to G1
+        { s: { r: 1, c: 2 }, e: { r: 2, c: 6 } },  // Merge C2 to G3
+        { s: { r: 0, c: 7 }, e: { r: 3, c: 7 } },  // Merge H1 to H4 for DATE OF BIRTH
+        { s: { r: 0, c: 8 }, e: { r: 2, c: 11 } }, // Merge I1 to L3 for FARM LOCATION / ORGANIZATION LOCATION ADDRESS
+        { s: { r: 0, c: 12 }, e: { r: 0, c: 14 } }, // Merge M1 to O1 for GROUP BENEFICIARY
+        { s: { r: 1, c: 13 }, e: { r: 2, c: 14 } },  // Merge N2 to O3 for TOTAL NUMBER OF
+        { s: { r: 1, c: 12 }, e: { r: 3, c: 12 } },  // Merge M2 to M4 for NAME OF ORGANIZATION
+        { s: { r: 0, c: 15 }, e: { r: 3, c: 15 } },  // Merge P1 to P4 for SEX
+        { s: { r: 0, c: 16 }, e: { r: 2, c: 17 } },  // Merge Q1 to R3 for INDIGENOUS PEOPLE
+        { s: { r: 0, c: 18 }, e: { r: 3, c: 18 } },  // Merge S1 to S4 for PWD
+        { s: { r: 0, c: 19 }, e: { r: 3, c: 19 } },  // Merge T1 to T4 for ARB
+        { s: { r: 0, c: 20 }, e: { r: 3, c: 20 } },  // Merge U1 to U4 for 4Ps
+        { s: { r: 0, c: 21 }, e: { r: 0, c: 28 } },  // Merge V1 to AC1 for DETAILS OF DAMAGED AND LOSSES
+        { s: { r: 1, c: 21 }, e: { r: 2, c: 24 } }, // Merge V2 to Y3 for CROP
+        { s: { r: 1, c: 25 }, e: { r: 2, c: 28 } },
+        { s: { r: 0, c: 29 }, e: { r: 3, c: 29 } },
+        { s: { r: 0, c: 30 }, e: { r: 3, c: 30 } }, 
+        { s: { r: 0, c: 31 }, e: { r: 3, c: 31 } }, // Merge AF1 to AF4 for DATE PROVIDED
+        { s: { r: 0, c: 32 }, e: { r: 3, c: 32 } },
     ];
 
-    // Set the values for the merged cells
     ws['A1'] = { v: 'CALAMITY', t: 's' }; // Set value for A1 to A4
     ws['B1'] = { v: 'TYPE OF AFFECTED FARMER (Individual/Group)', t: 's' }; // Set value for B1 to B4
+    ws['C1'] = { v: 'NAME OF AFFECTED FARMER/FOCAL', t: 's' }; // Set value for C1 to G1
+    ws['C2'] = { v: 'NAME OF BENEFICIARY (for Individual) ORGANIZATION\'s FOCAL PERSON NAME (for Group)', t: 's' }; // Set value for C2 to G3
+    ws['H1'] = { v: 'DATE OF BIRTH', t: 's' }; // Set value for H1 to H4
+    ws['I1'] = { v: 'FARM LOCATION / ORGANIZATION LOCATION ADDRESS', t: 's' }; // Set value for I1 to L3
+    ws['M1'] = { v: 'GROUP BENEFICIARY', t: 's' }; // Set value for M1 to O1
+    ws['N2'] = { v: 'TOTAL NUMBER OF', t: 's' }; // Set value for N2 to O3
+    ws['M2'] = { v: 'NAME OF ORGANIZATION', t: 's' }; // Set value for M2 to M4
+    ws['P1'] = { v: 'SEX', t: 's' }; // Set value for P1 to P4
+    ws['Q1'] = { v: 'INDIGENOUS PEOPLE', t: 's' }; // Set value for Q1 to R3
+    ws['S1'] = { v: 'PWD', t: 's' }; // Set value for S1 to S4
+    ws['T1'] = { v: 'ARB', t: 's' }; // Set value for T1 to T4
+    ws['U1'] = { v: '4Ps', t: 's' }; // Set value for U1 to U4
+    ws['V1'] = { v: 'DETAILS OF DAMAGED AND LOSSES', t: 's' }; // Set value for V1 to AC1
+    ws['V2'] = { v: 'CROP', t: 's' }; // Set value for V2 to Y3
+    ws['Z2'] = { v: 'LIVESTOCK', t: 's' };
+    ws['AD1'] = { v: 'REMARKS', t: 's' };
+    ws['AE1'] = { v: 'ASSISTANCE PROVIDED', t: 's' };
+    ws['AF1'] = { v: 'DATE PROVIDED', t: 's' }; // Set value for AF1 to AF4
+    ws['AG1'] = { v: 'DATE REPORTED', t: 's' };
 
-    // Export the Excel file
-    XLSX.writeFile(wb, 'calamity_report.xlsx');
+    const fileName = `calamity_report_${fromDate}_to_${toDate}.xlsx`; // Set dynamic filename
+    XLSX.writeFile(wb, fileName);
 }
+
+
 
 
 </script>

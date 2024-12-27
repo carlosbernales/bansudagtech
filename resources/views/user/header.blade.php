@@ -4,7 +4,7 @@
 <!-- Mirrored from themewagon.github.io/organic/index.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 19 Dec 2024 00:17:51 GMT -->
 <!-- Added by HTTrack --><meta http-equiv="content-type" content="text/html;charset=utf-8" /><!-- /Added by HTTrack -->
 <head>
-    <title>Organic - Grocery Store HTML Website Template</title>
+    <title>AgTech</title>
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -164,20 +164,22 @@
           
           <div class="col-sm-8 col-lg-2 d-flex gap-5 align-items-center justify-content-center justify-content-sm-end">
             <ul class="d-flex justify-content-end list-unstyled m-0">
-              <li>
+            <li>
                 <a href="#" class="p-2 mx-1">
-                  <svg width="24" height="24"><use xlink:href="#user"></use></svg>
+                    <i class="fas fa-user"></i>
                 </a>
-              </li>
+            </li>
+
               <li>
-                <a href="#" class="p-2 mx-1">
-                  <svg width="24" height="24"><use xlink:href="#wishlist"></use></svg>
-                </a>
+                  <a href="#" class="p-2 mx-1">
+                      <i class="fas fa-bell"></i>
+                  </a>
               </li>
+
               <li>
-                <a href="#" class="p-2 mx-1" data-bs-toggle="offcanvas" data-bs-target="#offcanvasCart" aria-controls="offcanvasCart">
-                  <svg width="24" height="24"><use xlink:href="#shopping-bag"></use></svg>
-                </a>
+                  <a href="/logout" class="p-2 mx-1">
+                      <i class="fas fa-sign-out-alt"></i>
+                  </a>
               </li>
             </ul>
           </div>

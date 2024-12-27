@@ -22,9 +22,9 @@ class HomeController extends Controller
 
     public function home()
     {
-        // if (!session()->has('admin_id') && !session()->has('it_id')) {
-        //     return redirect('/');
-        // }
+        if (!session()->has('user_id')) {
+            return redirect('/');
+        }
         
     
         return view('user/home');
@@ -32,16 +32,15 @@ class HomeController extends Controller
 
     public function farms()
     {
+        if (!session()->has('user_id')) {
+            return redirect('/');
+        }
+        
         $farmers = Farms::with('farmImages')->get(); 
         return view('user.farms', compact('farmers'));
     }
     
     
-
-    public function test()
-    {
-        return view('user/test');
-    }
 
     public function add_farms(Request $request)
     {
@@ -119,6 +118,9 @@ class HomeController extends Controller
 
     public function calamity_report()
     {
+        if (!session()->has('user_id')) {
+            return redirect('/');
+        }
         $userId = session('user_id');
 
         $farms = Farms::where('user_id', $userId)->get(['id', 'location', 'forms_farm', 'farm_type',  'livestock_type']);

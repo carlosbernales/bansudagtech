@@ -24,9 +24,11 @@ class AuthController extends Controller
 
     public function login()
     {
-        // if (!session()->has('admin_id') && !session()->has('it_id')) {
-        //     return redirect('/');
-        // }
+        if (session()->has('admin_id')) {
+            return redirect('/dashboard');
+        } elseif (session()->has('user_id')) {
+            return redirect('/home');
+        }
         return view('login');
     }
 

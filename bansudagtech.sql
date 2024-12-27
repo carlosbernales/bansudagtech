@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: localhost:3306
--- Generation Time: Dec 27, 2024 at 04:39 AM
+-- Generation Time: Dec 27, 2024 at 06:42 AM
 -- Server version: 8.0.30
 -- PHP Version: 8.1.10
 
@@ -62,7 +62,7 @@ CREATE TABLE `account` (
 
 INSERT INTO `account` (`id`, `firstname`, `middlename`, `lastname`, `suffix`, `fullname`, `role`, `contact`, `email`, `password`, `birthdate`, `rsbsa`, `fourps`, `indigenous`, `tribe_name`, `pwd`, `sex`, `arb`, `region`, `province`, `municipality`, `barangay`, `org_name`, `tot_male`, `tot_female`, `farmer_type`) VALUES
 (1, 'Admin', NULL, 'Admin', NULL, 'Admin  Admin ', 'admin', NULL, 'admin@admin.com', '$2y$12$8KAHM0a5B0q5bVxTVKV4cOxBB1lfobCrZ.XojQtFnZ5KQKx4qR0.q', NULL, '23-45-79-92-81', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'INDIVIDUAL'),
-(2, 'wqewqe', 'adas', 'dasdas', 'Jr.', 'wqewqe adas dasdas Jr.', 'user', 2345678, 'sarahelmenzo13@gmail.com', '$2y$12$3EiOYw.R5UhzoHbhyAEBtezV1tQNai7SQXmv7njgrRlpAO4MNc95y', '2024-12-21', 'sd-sf-sg-fg-s2', 'YES', 'NO', NULL, 'YES', 'MALE', 'YES', 'asfsdfsdfsd', 'asdasd', 'asdasdasd', 'sdasd', 'asdasdas', 3, 2, 'GROUP');
+(2, 'wqewqe', 'adas', 'dasdas', 'Jr.', 'wqewqe adas dasdas Jr.', 'user', 2345678, 'carlosbernales24@gmail.com', '$2y$12$3EiOYw.R5UhzoHbhyAEBtezV1tQNai7SQXmv7njgrRlpAO4MNc95y', '2024-12-21', 'sd-sf-sg-fg-s2', 'YES', 'NO', NULL, 'YES', 'MALE', 'YES', 'asfsdfsdfsd', 'asdasd', 'asdasdasd', 'sdasd', 'asdasdas', 3, 2, 'GROUP');
 
 -- --------------------------------------------------------
 

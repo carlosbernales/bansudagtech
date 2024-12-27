@@ -20,7 +20,7 @@
                                 <thead>
                                     <tr>
                                         <th>Type</th>
-                                        <th style="width: 5%; text-align: center;">
+                                        <th style="width: 8%; text-align: center;">
                                     </tr>
                                 </thead>
                                 <tbody>
@@ -28,15 +28,25 @@
                                     <tr>
                                         <td>{{ $assistance->assistance_type }}</td>
                                         <td>
-                                        <form action="{{ url('/delete_assistance/'.$assistance->id) }}" method="POST" id="delete-form-{{ $assistance->id }}">
-                                            @csrf
-                                            @method('DELETE')
-                                            <button type="button" class="btn btn-danger btn-sm" onclick="confirmDelete({{ $assistance->id }})" style="background-color: transparent; border: none;">
-                                                <i class="bi bi-trash" style="color: #dc3545; font-size: 18px;"></i> <!-- Bootstrap icon with danger color and custom size -->
-                                            </button>
-                                        </form>
+                                            <div style="display: flex; gap: 10px; align-items: center;">
+                                                <!-- Edit Button -->
+                                                <!-- <button class="btn btn-primary btn-sm" data-toggle="modal" data-target="#editModal{{ $assistance->id }}" style="background-color: transparent; border: none;">
+                                                    <i class="bi bi-pencil" style="color: #007bff; font-size: 18px;"></i>
+                                                </button> -->
+
+                                                <!-- Delete Button -->
+                                                <form action="{{ url('/delete_assistance/'.$assistance->id) }}" method="POST" id="delete-form-{{ $assistance->id }}">
+                                                    @csrf
+                                                    @method('DELETE')
+                                                    <button type="button" class="btn btn-danger btn-sm" onclick="confirmDelete({{ $assistance->id }})" style="background-color: transparent; border: none;">
+                                                        <i class="bi bi-trash" style="color: #dc3545; font-size: 18px;"></i>
+                                                    </button>
+                                                </form>
+                                            </div>
                                         </td>
+
                                     </tr>
+                                    
                                 @endforeach
                             </table>
                         </div>

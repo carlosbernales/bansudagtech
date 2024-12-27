@@ -220,7 +220,6 @@ RIGHT SIDEBAR TOGGLE SECTION
 }
 </style>
 <div class="pull-right toggle-right-sidebar">
-<span class="fa title-open-right-sidebar tooltipstered fa-angle-double-right"></span>
 </div>
 
 </div>

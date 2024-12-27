@@ -63,7 +63,7 @@
         <div class="container">
           <div class="row align-items-center min-vh-75 min-vh-lg-100">
             <div class="col-md-7 col-lg-6 col-xxl-5 py-6 text-sm-start text-center">
-              <h1 class="mt-6 mb-sm-4 fw-semi-bold lh-sm fs-4 fs-lg-5 fs-xl-6">A New Way to Invest <br class="d-block d-lg-block" />in Agriculture</h1>
+              <h1 class="mt-6 mb-sm-4 fw-semi-bold lh-sm fs-4 fs-lg-5 fs-xl-6">A New Way to Improve <br class="d-block d-lg-block" />your Agriculture</h1>
               <p class="mb-4 fs-1">AgiTech provides farmes, ranchers, private foresters, and agricultural producers with online self service applications and educational materials.</p><a class="btn btn-lg btn-success" href="/login" role="button">Join Now</a>
             </div>
           </div>
@@ -135,8 +135,8 @@
                       <h6 class="text-success pt-2">NEW FARM TODAY</h6>
                       <hr class="text-white" style="height:0.12rem;width:2.813rem" />
                       <div class="pt-lg-3">
-                        <h6 class="fw-bold text-white fs-1 fs-md-2 fs-lg-3 w-xxl-50">Short terms investment</h6>
-                        <p class="w-xxl-75">Invest in farms that will be ready for harvest in 3-18 months</p><button class="btn btn-lg btn-light text-success" type="button">Browse Farm</button>
+                        <h6 class="fw-bold text-white fs-1 fs-md-2 fs-lg-3 w-xxl-50">Short terms</h6>
+                        <p class="w-xxl-75">Farms that will be ready for harvest in 3-18 months</p><button class="btn btn-lg btn-light text-success" type="button">Browse Farm</button>
                       </div>
                     </div>
                   </div>
@@ -147,8 +147,8 @@
                       <h6 class="text-success pt-2">FULLY FUNDED</h6>
                       <hr class="text-white" style="height:0.12rem;width:2.813rem" />
                       <div class="pt-lg-3">
-                        <h6 class="fw-bold text-white fs-1 fs-md-2 fs-lg-3 w-xxl-50">Long terms investment</h6>
-                        <p class="w-xxl-75">Consider farms that have long term investment program.</p><button class="btn btn-lg btn-light text-success" type="button">Learn More</button>
+                        <h6 class="fw-bold text-white fs-1 fs-md-2 fs-lg-3 w-xxl-50">Long terms </h6>
+                        <p class="w-xxl-75">Consider farms that have long term program.</p><button class="btn btn-lg btn-light text-success" type="button">Learn More</button>
                       </div>
                     </div>
                   </div>
@@ -234,7 +234,7 @@
             <div class="col-12">
               <div class="card shadow h-100 py-5">
                 <div class="card-body text-center">
-                  <h1 class="fw-semi-bold mb-4">The future of &nbsp;<span class="text-success">Farm Investing</span> &nbsp; is AgiTech</h1><a class="btn btn-lg btn-success px-6" href="/login" role="button">Join Now</a>
+                  <h1 class="fw-semi-bold mb-4">The future of &nbsp;<span class="text-success">Farm </span> &nbsp; is AgiTech</h1><a class="btn btn-lg btn-success px-6" href="/login" role="button">Join Now</a>
                 </div>
               </div>
             </div>
@@ -257,15 +257,7 @@
                 <li class="mb-3"><a class="text-700 text-decoration-none" href="#!">Contact</a></li>
               </ul>
             </div>
-            <div class="col-6 col-sm-4 col-lg-auto mb-3">
-              <h6 class="mb-3 text-1000 fw-semi-bold">INVEST </h6>
-              <ul class="list-unstyled mb-md-4 mb-lg-0">
-                <li class="mb-3"><a class="text-700 text-decoration-none" href="#!">Features</a></li>
-                <li class="mb-3"><a class="text-700 text-decoration-none" href="#!">How it works</a></li>
-                <li class="mb-3"><a class="text-700 text-decoration-none" href="#!">Pricing</a></li>
-                <li class="mb-3"><a class="text-700 text-decoration-none" href="#!">Login</a></li>
-              </ul>
-            </div>
+            
             <div class="col-6 col-sm-4 col-lg-auto mb-3">
               <h6 class="mb-3 text-1000 fw-semi-bold">LEGAL </h6>
               <ul class="list-unstyled mb-md-4 mb-lg-0">
