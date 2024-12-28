@@ -161,17 +161,12 @@
     
         <ul class="navbar-nav justify-content-end menu-list list-unstyled d-flex gap-md-3 mb-0">
           <li class="nav-item border-dashed active">
-            <a href="index.html" class="nav-link d-flex align-items-center gap-3 text-dark p-2">
+            <a href="/home" class="nav-link d-flex align-items-center gap-3 text-dark p-2">
               <svg width="24" height="24" viewBox="0 0 24 24"><use xlink:href="#fruits"></use></svg>
               <span>Dashboard</span>
             </a>
           </li>
-          <li class="nav-item border-dashed">
-            <a href="index.html" class="nav-link d-flex align-items-center gap-3 text-dark p-2">
-              <svg width="24" height="24" viewBox="0 0 24 24"><use xlink:href="#dairy"></use></svg>
-              <span>Feedback</span>
-            </a>
-          </li>
+
           <li class="nav-item border-dashed">
             <a href="/farms" class="nav-link d-flex align-items-center gap-3 text-dark p-2">
               <svg width="24" height="24" viewBox="0 0 24 24"><use xlink:href="#meat"></use></svg>
@@ -231,32 +226,45 @@
             </li>
 
             <li class="position-relative">
-            <a href="javascript:void(0);" class="p-2 mx-1" id="bell-icon">
-                <i class="fas fa-bell"></i>
-                @if($notificationCount > 0)
-                    <span class="badge badge-danger position-absolute top-0 end-0 translate-middle-x translate-middle-y">
-                        {{ $notificationCount }}
-                    </span>
-                @endif
-            </a>
+              <a href="javascript:void(0);" class="p-2 mx-1" id="bell-icon">
+                  <i class="fas fa-bell"></i>
+                  @if($notificationCount > 0)
+                      <span class="badge badge-danger position-absolute top-0 end-0 translate-middle-x translate-middle-y">
+                          {{ $notificationCount }}
+                      </span>
+                  @else
+                      <!-- No notifications, show message -->
+                      <span class="badge badge-secondary position-absolute top-0 end-0 translate-middle-x translate-middle-y">
+                          No Notifications
+                      </span>
+                  @endif
+              </a>
 
-            <!-- Dropdown Menu for Notifications -->
-            <ul id="notification-dropdown" class="dropdown-menu" style="display: none; position: absolute; top: 30px; right: 0;">
-              @foreach($notifications as $notification)
-                  <li class="dropdown-item">
-                      <strong>{{ $notification->title }}</strong>
-                      <a href="javascript:void(0);" 
-                        class="readmore-link" 
-                        data-toggle="modal" 
-                        data-target="#notificationModal" 
-                        data-content="{{ $notification->content }}" 
-                        data-id="{{ $notification->id }}">
-                        Read More
-                      </a>
-                  </li>
-              @endforeach
-            </ul>
-        </li>
+              <!-- Dropdown Menu for Notifications -->
+              <ul id="notification-dropdown" class="dropdown-menu" style="display: none; position: absolute; top: 30px; right: 0;">
+                  @if($notificationCount > 0)
+                      @foreach($notifications as $notification)
+                          <li class="dropdown-item">
+                              <strong>{{ $notification->title }}</strong>
+                              <a href="javascript:void(0);" 
+                                class="readmore-link" 
+                                data-toggle="modal" 
+                                data-target="#notificationModal" 
+                                data-content="{{ $notification->content }}" 
+                                data-id="{{ $notification->id }}">
+                                Read More
+                              </a>
+                          </li>
+                      @endforeach
+                  @else
+                      <!-- If no notifications, show this message -->
+                      <li class="dropdown-item">
+                          No notifications available.
+                      </li>
+                  @endif
+              </ul>
+          </li>
+
         <meta name="csrf-token" content="{{ csrf_token() }}">
 
         <!-- Modal for displaying content -->

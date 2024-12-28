@@ -26,8 +26,17 @@ class HomeController extends Controller
             return redirect('/');
         }
         
+        $userId = session('user_id'); 
+        
+        $notifications = AnnouncementUser::where('user_id', $userId)
+        ->where('status', 'unread')
+        ->get();
+        $notificationCount = $notifications->count();
+
+        
     
-        return view('user/home');
+        return view('user/home', compact('notificationCount', 'notifications'));
+
     }
 
     public function farms()
