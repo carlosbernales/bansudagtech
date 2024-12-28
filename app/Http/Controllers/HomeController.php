@@ -38,17 +38,14 @@ class HomeController extends Controller
         
         $userId = session('user_id'); 
 
-        // Get unread notifications
         $notifications = AnnouncementUser::where('user_id', $userId)
                                         ->where('status', 'unread')
                                         ->get();
 
-        // Get farmers data
         $farmers = Farms::with('farmImages')
                         ->where('user_id', $userId) 
                         ->get(); 
         
-        // Get the count of unread notifications
         $notificationCount = $notifications->count();
 
         // Share the notification count and notifications with the view
@@ -131,8 +128,6 @@ class HomeController extends Controller
     }
 
 
-
-
     public function calamity_report()
     {
         if (!session()->has('user_id')) {
@@ -140,6 +135,10 @@ class HomeController extends Controller
         }
 
         $userId = session('user_id'); 
+        
+        $notifications = AnnouncementUser::where('user_id', $userId)
+        ->where('status', 'unread')
+        ->get();
 
         $farms = Farms::where('user_id', $userId)
                     ->get(['id', 'location', 'forms_farm', 'farm_type', 'livestock_type']);
@@ -147,8 +146,10 @@ class HomeController extends Controller
         $calamities = CalamityReport::with('calamityImages')
                                     ->where('user_id', $userId) 
                                     ->get();
+        $notificationCount = $notifications->count();
 
-        return view('user/calamityReport', compact('farms', 'calamities'));
+        return view('user/calamityReport', compact('farms', 'calamities','notificationCount', 'notifications'));
+
     }
 
 
@@ -237,6 +238,21 @@ class HomeController extends Controller
         return redirect()->back()->with('success', 'Deleted!');
     }
 
+    public function updateNotifStatus(Request $request)
+    {
+        $id = $request->input('id');
+
+        $notification = AnnouncementUser::find($id);
+
+        if ($notification) {
+            $notification->status = 'viewed';
+            $notification->save();
+
+            return response()->json(['success' => true, 'message' => 'Notification updated successfully']);
+        }
+
+        return response()->json(['success' => false, 'message' => 'Notification not found'], 404);
+    }
 
 
     

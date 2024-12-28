@@ -28,6 +28,7 @@
                                         <th>Farm Type</th>
                                         <th>Location</th>
                                         <th>Proof Image</th>
+                                        <th>Date Reported</th>
                                         <th></th>
                                     </tr>
                                 </thead>
@@ -54,6 +55,7 @@
                                         No Images
                                         @endif
                                     </td>
+                                    <td>{{ \Carbon\Carbon::parse($calamity->date_reported)->format('F d, Y') }}</td>
                                     <td>
                                         <button data-toggle="modal" data-target="#editModal{{ $calamity->id }}"class="btn btn-lightgreen lightgreen-icon-notika">
                                             <i class="notika-icon notika-checked"></i>

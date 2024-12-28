@@ -1,9 +1,6 @@
-
-@include('user/header')
+@include('user.header', ['notificationCount' => $notificationCount, 'notifications' => $notifications])
 
     
-
-   
 
 <section class="pb-5">
     <div class="container-lg">

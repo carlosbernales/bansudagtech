@@ -26,6 +26,65 @@
 
     
   </head>
+  <style>
+.swal2-modal {
+    max-width: 300px !important; /* Adjust the width as needed */
+    max-height: 270px !important;
+    }
+.swal2-icon {
+    font-size: 5px; /* Change the size to your desired value */
+    }
+    .position-relative {
+    position: relative;
+}
+
+.position-absolute {
+    position: absolute;
+}
+
+.top-0 {
+    top: 0;
+}
+
+.end-0 {
+    right: 0;
+}
+
+.translate-middle-x {
+    transform: translateX(50%);
+}
+
+.translate-middle-y {
+    transform: translateY(-50%);
+}
+
+.badge-danger {
+    background-color: #dc3545;
+    color: white;
+    border-radius: 50%;
+    padding: 0.3em 0.6em;
+    font-size: 0.75rem;
+}
+/* Style for Read More link */
+.dropdown-item {
+    position: relative;
+    padding-right: 40px; /* Ensure space for the Read More link */
+}
+
+.readmore-link {
+    font-size: 0.8rem; /* Smaller text */
+    color: #007bff; /* Link color */
+    text-decoration: none;
+    position: absolute;
+    bottom: 5px;
+    right: 5px;
+}
+
+.readmore-link:hover {
+    text-decoration: underline; /* Underline on hover */
+}
+
+</style>
   <body>
 
     <svg xmlns="http://www.w3.org/2000/svg" style="display: none;">
@@ -172,75 +231,51 @@
             </li>
 
             <li class="position-relative">
-    <a href="javascript:void(0);" class="p-2 mx-1" id="bell-icon">
-        <i class="fas fa-bell"></i>
-        @if($notificationCount > 0)
-            <span class="badge badge-danger position-absolute top-0 end-0 translate-middle-x translate-middle-y">
-                {{ $notificationCount }}
-            </span>
-        @endif
-    </a>
+            <a href="javascript:void(0);" class="p-2 mx-1" id="bell-icon">
+                <i class="fas fa-bell"></i>
+                @if($notificationCount > 0)
+                    <span class="badge badge-danger position-absolute top-0 end-0 translate-middle-x translate-middle-y">
+                        {{ $notificationCount }}
+                    </span>
+                @endif
+            </a>
 
-    <!-- Dropdown Menu for Notifications -->
-    <ul id="notification-dropdown" class="dropdown-menu" style="display: none; position: absolute; top: 30px; right: 0;">
-        @foreach($notifications as $notification)
-            <li class="dropdown-item">
-                <strong>{{ $notification->title }}</strong>
-                <!-- Read More link positioned at the bottom right -->
-                <a href="javascript:void(0);" class="readmore-link" data-toggle="modal" data-target="#notificationModal" data-content="{{ $notification->content }}">Read More</a>
-            </li>
-        @endforeach
-    </ul>
-</li>
+            <!-- Dropdown Menu for Notifications -->
+            <ul id="notification-dropdown" class="dropdown-menu" style="display: none; position: absolute; top: 30px; right: 0;">
+              @foreach($notifications as $notification)
+                  <li class="dropdown-item">
+                      <strong>{{ $notification->title }}</strong>
+                      <a href="javascript:void(0);" 
+                        class="readmore-link" 
+                        data-toggle="modal" 
+                        data-target="#notificationModal" 
+                        data-content="{{ $notification->content }}" 
+                        data-id="{{ $notification->id }}">
+                        Read More
+                      </a>
+                  </li>
+              @endforeach
+            </ul>
+        </li>
+        <meta name="csrf-token" content="{{ csrf_token() }}">
 
-<!-- Modal for displaying content -->
-<div class="modal fade" id="notificationModal" tabindex="-1" role="dialog" aria-labelledby="notificationModalLabel" aria-hidden="true">
-    <div class="modal-dialog" role="document">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title" id="notificationModalLabel"> Content</h5>
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                    <span aria-hidden="true">&times;</span>
-                </button>
-            </div>
-            <div class="modal-body" id="notificationContent">
-                <!-- Content will be dynamically injected here -->
-            </div>
-            
-        </div>
-    </div>
-</div>
-
-<script>
-    // JavaScript to toggle the notification dropdown
-    const bellIcon = document.getElementById('bell-icon');
-    const dropdown = document.getElementById('notification-dropdown');
-
-    bellIcon.addEventListener('click', function(event) {
-        event.stopPropagation();
-        dropdown.style.display = dropdown.style.display === 'none' ? 'block' : 'none';
-    });
-
-    // Close the dropdown if the user clicks outside of it
-    document.addEventListener('click', function(event) {
-        if (!dropdown.contains(event.target) && event.target !== bellIcon) {
-            dropdown.style.display = 'none';
-        }
-    });
-
-    document.querySelectorAll('.readmore-link').forEach(function(link) {
-        link.addEventListener('click', function() {
-            const content = link.getAttribute('data-content');
-            document.getElementById('notificationContent').innerHTML = content;
-        });
-    });
-</script>
-
-
-
-
-
-
+        <!-- Modal for displaying content -->
+              <div class="modal fade" id="notificationModal" tabindex="-1" role="dialog" aria-labelledby="notificationModalLabel" aria-hidden="true">
+                  <div class="modal-dialog" role="document">
+                      <div class="modal-content">
+                          <div class="modal-header">
+                              <h5 class="modal-title" id="notificationModalLabel"> Content</h5>
+                              <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                  <span aria-hidden="true">&times;</span>
+                              </button>
+                          </div>
+                          <div class="modal-body" id="notificationContent">
+                              <!-- Content will be dynamically injected here -->
+                          </div>
+                          
+                      </div>
+                  </div>
+              </div>
               <li>
                   <a href="/logout" class="p-2 mx-1">
                       <i class="fas fa-sign-out-alt"></i>
@@ -253,67 +288,52 @@
       </div>
     </header>
    
-<style>
-.swal2-modal {
-    max-width: 300px !important; /* Adjust the width as needed */
-    max-height: 270px !important;
-    }
-.swal2-icon {
-    font-size: 5px; /* Change the size to your desired value */
-    }
-    .position-relative {
-    position: relative;
-}
 
-.position-absolute {
-    position: absolute;
-}
 
-.top-0 {
-    top: 0;
-}
 
-.end-0 {
-    right: 0;
-}
+<script>
+    const bellIcon = document.getElementById('bell-icon');
+    const dropdown = document.getElementById('notification-dropdown');
 
-.translate-middle-x {
-    transform: translateX(50%);
-}
+    bellIcon.addEventListener('click', function(event) {
+        event.stopPropagation();
+        dropdown.style.display = dropdown.style.display === 'none' ? 'block' : 'none';
+    });
 
-.translate-middle-y {
-    transform: translateY(-50%);
-}
+    document.addEventListener('click', function(event) {
+        if (!dropdown.contains(event.target) && event.target !== bellIcon) {
+            dropdown.style.display = 'none';
+        }
+    });
 
-.badge-danger {
-    background-color: #dc3545;
-    color: white;
-    border-radius: 50%;
-    padding: 0.3em 0.6em;
-    font-size: 0.75rem;
-}
-/* Style for Read More link */
-.dropdown-item {
-    position: relative;
-    padding-right: 40px; /* Ensure space for the Read More link */
-}
+    document.querySelectorAll('.readmore-link').forEach(function(link) {
+        link.addEventListener('click', function() {
+            const content = link.getAttribute('data-content');
+            const notificationId = link.getAttribute('data-id'); 
+            
+            document.getElementById('notificationContent').innerHTML = content;
 
-.readmore-link {
-    font-size: 0.8rem; /* Smaller text */
-    color: #007bff; /* Link color */
-    text-decoration: none;
-    position: absolute;
-    bottom: 5px;
-    right: 5px;
-}
+            fetch('/notifications/update-status', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
+                },
+                body: JSON.stringify({ id: notificationId })
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    console.log('Notification status updated to viewed');
+                } else {
+                    console.error('Failed to update notification status:', data.message);
+                }
+            })
+            .catch(error => console.error('Error:', error));
+        });
+    });
+</script>
 
-.readmore-link:hover {
-    text-decoration: underline; /* Underline on hover */
-}
-
-</style>
-
-<!-- Add Bootstrap CSS in the head -->
 
 <!-- Add Bootstrap JS before closing body tag -->
 <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>

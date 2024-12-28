@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: localhost:3306
--- Generation Time: Dec 28, 2024 at 03:37 AM
+-- Generation Time: Dec 28, 2024 at 09:10 AM
 -- Server version: 8.0.30
 -- PHP Version: 8.1.10
 
@@ -107,13 +107,13 @@ CREATE TABLE `announcement_user` (
 
 INSERT INTO `announcement_user` (`id`, `title`, `content`, `user_id`, `status`) VALUES
 (1, 'dfdgdg', 'fgdgdfgdfg', 1, 'unread'),
-(2, 'dfdgdg', 'fgdgdfgdfg', 2, 'unread'),
+(2, 'dfdgdg', 'fgdgdfgdfg', 2, 'viewed'),
 (3, 'adsa', 'dasdasd', 1, 'unread'),
-(4, 'adsa', 'dasdasd', 2, 'unread'),
-(5, 'dad', 'asdsadsad', 2, 'unread'),
+(4, 'adsa', 'dasdasd', 2, 'viewed'),
+(5, 'dad', 'asdsadsad', 2, 'viewed'),
 (6, 'sdasd', 'asdasdsad', 2, 'unread'),
 (7, 'sdasd', 'asdasdsad', 6, 'unread'),
-(8, 'WALA', 'adasdadadasdasdasd', 2, 'unread'),
+(8, 'WALA', 'adasdadadasdasdasd', 2, 'viewed'),
 (9, 'WALA', 'adasdadadasdasdasd', 6, 'unread');
 
 -- --------------------------------------------------------
@@ -209,18 +209,19 @@ CREATE TABLE `calamity_report` (
   `date_provided` date DEFAULT NULL,
   `status` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL DEFAULT 'Pending',
   `email` varchar(255) NOT NULL,
-  `date_reported` datetime DEFAULT CURRENT_TIMESTAMP
+  `date_reported` datetime DEFAULT CURRENT_TIMESTAMP,
+  `notification_status` enum('unread','viewed') CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL DEFAULT 'unread'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
 --
 -- Dumping data for table `calamity_report`
 --
 
-INSERT INTO `calamity_report` (`id`, `user_id`, `rsbsa`, `calamity_type`, `farmer_type`, `birthdate`, `region`, `province`, `municipality`, `barangay`, `org_name`, `tot_male`, `tot_female`, `sex`, `indigenous`, `tribe_name`, `pwd`, `arb`, `fourps`, `crop_type`, `partially_damage`, `totally_damage`, `total_area`, `livestock_type`, `animal_type`, `age_class`, `no_heads`, `remarks`, `lastname`, `firstname`, `middlename`, `suffix`, `fullname`, `location`, `assistance_type`, `date_provided`, `status`, `email`, `date_reported`) VALUES
-(2, 2, 'sd-sf-sg-fg-s2', 'Typhoon', 'GROUP', '2024-12-21', 'asfsdfsdfsd', 'asdasd', 'asdasdasd', 'sdasd', 'asdasdas', 3, 2, 'MALE', 'NO', NULL, 'YES', 'YES', 'YES', 'RICE', 3, NULL, 2, NULL, NULL, NULL, NULL, NULL, 'dasdas', 'wqewqe', 'adas', 'Jr.', 'wqewqe adas dasdas Jr.', '95J9+2C Calapan, Oriental Mindoro, Philippines', 'Cash', '2024-12-25', 'Completed', 'sarahelmenzo13@gmail.com', '2024-12-25 10:59:47'),
-(3, 2, 'sd-sf-sg-fg-s2', 'Typhoon', 'GROUP', '2024-12-21', 'asfsdfsdfsd', 'asdasd', 'asdasdasd', 'sdasd', 'asdasdas', 3, 2, 'MALE', 'NO', NULL, 'YES', 'YES', 'YES', NULL, NULL, NULL, NULL, 'BACKYARD', 'PIG', 3, 6, NULL, 'dasdas', 'wqewqe', 'adas', 'Jr.', 'wqewqe adas dasdas Jr.', '85XV+68 Calapan, Oriental Mindoro, Philippines', 'Seeds', '2024-12-24', 'Completed', 'sarahelmenzo13@gmail.com', '2024-12-24 11:00:24'),
-(4, 2, 'sd-sf-sg-fg-s2', 'Typhoon', 'GROUP', '2024-12-21', 'asfsdfsdfsd', 'asdasd', 'asdasdasd', 'sdasd', 'asdasdas', 3, 2, 'MALE', 'NO', NULL, 'YES', 'YES', 'YES', 'WHEAT', 3, 3, 2, NULL, NULL, NULL, NULL, NULL, 'dasdas', 'wqewqe', 'adas', 'Jr.', 'wqewqe adas dasdas Jr.', '031 Tawagan Rd, Calapan, Oriental Mindoro, Philippines', 'Seeds', '2024-12-27', 'Completed', 'sarahelmenzo13@gmail.com', '2024-12-26 11:03:20'),
-(5, 6, '32-13-21-27-8d-fs', 'Typhoon', 'INDIVIDUAL', '2024-12-28', 'MIMAROPA', 'ORIENTAL MINDORO', 'CALAPAN', 'MASIPIT', 'WALA', 3, 2, 'MALE', 'YES', 'Mangyan', 'NO', 'NO', 'NO', 'CORN', 7, 9, 8, NULL, NULL, 32, 3, NULL, 'Bernales', 'Carlos', 'Laurel', 'Jr.', 'Carlos Laurel Bernales Jr.', '203bde brg pag asa, Bansud, Oriental Mindoro, Philippines', NULL, NULL, 'Pending', 'bernalescarlos480@gmail.com', '2024-12-28 09:39:04');
+INSERT INTO `calamity_report` (`id`, `user_id`, `rsbsa`, `calamity_type`, `farmer_type`, `birthdate`, `region`, `province`, `municipality`, `barangay`, `org_name`, `tot_male`, `tot_female`, `sex`, `indigenous`, `tribe_name`, `pwd`, `arb`, `fourps`, `crop_type`, `partially_damage`, `totally_damage`, `total_area`, `livestock_type`, `animal_type`, `age_class`, `no_heads`, `remarks`, `lastname`, `firstname`, `middlename`, `suffix`, `fullname`, `location`, `assistance_type`, `date_provided`, `status`, `email`, `date_reported`, `notification_status`) VALUES
+(2, 2, 'sd-sf-sg-fg-s2', 'Typhoon', 'GROUP', '2024-12-21', 'asfsdfsdfsd', 'asdasd', 'asdasdasd', 'sdasd', 'asdasdas', 3, 2, 'MALE', 'NO', NULL, 'YES', 'YES', 'YES', 'RICE', 3, NULL, 2, NULL, NULL, NULL, NULL, NULL, 'dasdas', 'wqewqe', 'adas', 'Jr.', 'wqewqe adas dasdas Jr.', '95J9+2C Calapan, Oriental Mindoro, Philippines', 'Cash', '2024-12-25', 'Completed', 'sarahelmenzo13@gmail.com', '2024-12-25 10:59:47', 'unread'),
+(3, 2, 'sd-sf-sg-fg-s2', 'Typhoon', 'GROUP', '2024-12-21', 'asfsdfsdfsd', 'asdasd', 'asdasdasd', 'sdasd', 'asdasdas', 3, 2, 'MALE', 'NO', NULL, 'YES', 'YES', 'YES', NULL, NULL, NULL, NULL, 'BACKYARD', 'PIG', 3, 6, NULL, 'dasdas', 'wqewqe', 'adas', 'Jr.', 'wqewqe adas dasdas Jr.', '85XV+68 Calapan, Oriental Mindoro, Philippines', 'Seeds', '2024-12-24', 'Completed', 'sarahelmenzo13@gmail.com', '2024-12-24 11:00:24', 'unread'),
+(4, 2, 'sd-sf-sg-fg-s2', 'Typhoon', 'GROUP', '2024-12-21', 'asfsdfsdfsd', 'asdasd', 'asdasdasd', 'sdasd', 'asdasdas', 3, 2, 'MALE', 'NO', NULL, 'YES', 'YES', 'YES', 'WHEAT', 3, 3, 2, NULL, NULL, NULL, NULL, NULL, 'dasdas', 'wqewqe', 'adas', 'Jr.', 'wqewqe adas dasdas Jr.', '031 Tawagan Rd, Calapan, Oriental Mindoro, Philippines', 'Seeds', '2024-12-27', 'Completed', 'sarahelmenzo13@gmail.com', '2024-12-26 11:03:20', 'unread'),
+(5, 6, '32-13-21-27-8d-fs', 'Typhoon', 'INDIVIDUAL', '2024-12-28', 'MIMAROPA', 'ORIENTAL MINDORO', 'CALAPAN', 'MASIPIT', 'WALA', 3, 2, 'MALE', 'YES', 'Mangyan', 'NO', 'NO', 'NO', 'CORN', 7, 9, 8, NULL, NULL, 32, 3, NULL, 'Bernales', 'Carlos', 'Laurel', 'Jr.', 'Carlos Laurel Bernales Jr.', '203bde brg pag asa, Bansud, Oriental Mindoro, Philippines', 'Seeds', NULL, 'Ongoing', 'bernalescarlos480@gmail.com', '2024-12-28 09:39:04', 'unread');
 
 -- --------------------------------------------------------
 

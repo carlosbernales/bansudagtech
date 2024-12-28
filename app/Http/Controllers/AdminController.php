@@ -21,10 +21,16 @@ class AdminController extends Controller
         if (!session()->has('admin_id')) {
             return redirect('/');
         }
-        
-        return view('admin/dashboard');
-    }
+        $unreadNotifications = CalamityReport::where('notification_status', 'unread')->get();
+        $farmCount = Farms::count();
+        $farmers = Accounts::count();
+        $reports = CalamityReport::count();
+        $completedReports = CalamityReport::where('status', 'Completed')->count();
 
+        
+        return view('admin/dashboard', compact('unreadNotifications','farmCount','farmers','reports','completedReports'));
+
+    }
 
     public function farmers()
     {
@@ -32,8 +38,10 @@ class AdminController extends Controller
             return redirect('/');
         }
         $accounts = Accounts::all();
+        $unreadNotifications = CalamityReport::where('notification_status', 'unread')->get();
 
-        return view('admin/farmers', ['accounts' => $accounts]);
+        return view('admin/farmers', compact('accounts','unreadNotifications'));
+
     }
 
     public function announcement()
@@ -41,11 +49,18 @@ class AdminController extends Controller
         if (!session()->has('admin_id')) {
             return redirect('/');
         }
+
+        $unreadNotifications = CalamityReport::where('notification_status', 'unread')->get();
+
         $announcement = Announcement::all();
 
-        return view('admin/announcement', ['announcement' => $announcement]);
+        return view('admin/announcement', [
+            'announcement' => $announcement,
+            'unreadNotifications' => $unreadNotifications
+        ]);
     }
 
+   
     public function add_announcement(Request $request)
     {
         $request->validate([
@@ -142,13 +157,16 @@ class AdminController extends Controller
         return response()->json(['exists' => $exists]);
     }
 
+
     public function farmers_farm()
     {
         if (!session()->has('admin_id')) {
             return redirect('/');
         }
+        $unreadNotifications = CalamityReport::where('notification_status', 'unread')->get();
+
         $farmers = Farms::with('farmImages')->get(); 
-        return view('admin/farmer_farm', compact('farmers'));
+        return view('admin/farmer_farm', compact('farmers','unreadNotifications'));
     }
 
 
@@ -203,17 +221,18 @@ class AdminController extends Controller
         return back()->with('success', 'Deleted!');
     }
 
-
     public function calamity_reports()
     {
         if (!session()->has('admin_id')) {
             return redirect('/');
         }
+        $unreadNotifications = CalamityReport::where('notification_status', 'unread')->get();
+
         $calamities = CalamityReport::with('calamityImages')
                                      ->where('status', 'Pending')
                                      ->get();
     
-        return view('admin/calamity_report', compact('calamities'));
+        return view('admin/calamity_report', compact('calamities','unreadNotifications'));
     }
     
 
@@ -246,6 +265,8 @@ class AdminController extends Controller
         if (!session()->has('admin_id')) {
             return redirect('/');
         }
+        $unreadNotifications = CalamityReport::where('notification_status', 'unread')->get();
+
         $calamities = CalamityReport::with('calamityImages')
                                     ->where('status', 'Shortlisted')
                                     ->get(); 
@@ -253,7 +274,7 @@ class AdminController extends Controller
         $assistanceTypes = Assistance::all();  
         
     
-        return view('admin/shortlisted_reports', compact('calamities', 'assistanceTypes'));
+        return view('admin/shortlisted_reports', compact('calamities', 'assistanceTypes','unreadNotifications'));
     }
 
     public function multipleUpdateToOngoing(Request $request)
@@ -289,16 +310,20 @@ class AdminController extends Controller
     }
     
 
+
+
     public function ongoing_reports()
     {
         if (!session()->has('admin_id')) {
             return redirect('/');
         }
+        $unreadNotifications = CalamityReport::where('notification_status', 'unread')->get();
+
         $calamities = CalamityReport::with('calamityImages')
                                     ->where('status', 'Ongoing')
                                     ->get(); 
     
-        return view('admin/ongoing_reports', compact('calamities'));
+        return view('admin/ongoing_reports', compact('calamities','unreadNotifications'));
     }
 
 
@@ -328,16 +353,19 @@ class AdminController extends Controller
         return redirect()->back()->with('success', 'Success!');
     }
 
+
     public function completed_reports()
     {
         if (!session()->has('admin_id')) {
             return redirect('/');
         }
+        $unreadNotifications = CalamityReport::where('notification_status', 'unread')->get();
+
         $calamities = CalamityReport::with('calamityImages')
                                     ->where('status', 'Completed')
                                     ->get(); 
     
-        return view('admin/completed_reports', compact('calamities'));
+        return view('admin/completed_reports', compact('calamities','unreadNotifications'));
     }
 
     public function assistances()
@@ -345,9 +373,12 @@ class AdminController extends Controller
         if (!session()->has('admin_id')) {
             return redirect('/');
         }
+        $unreadNotifications = CalamityReport::where('notification_status', 'unread')->get();
+
         $assistance = Assistance::all();
 
-        return view('admin/assistances', ['assistance' => $assistance]);
+        return view('admin/assistances', compact('assistance','unreadNotifications'));
+
     }
 
 

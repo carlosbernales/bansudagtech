@@ -70,6 +70,18 @@
 .swal2-icon {
     font-size: 8px; /* Change the size to your desired value */
     }
+
+/* Add this to your CSS file */
+.notification-item {
+    border-bottom: 1px solid #ccc;
+    color: black;
+    padding: 10px;
+}
+
+.notification-item:hover {
+    background-color: #f9f9f9; /* Optional: Add a hover effect */
+}
+
 </style>
     
 
@@ -94,29 +106,34 @@
                         <ul class="nav navbar-nav notika-top-nav">
                            
                             
-                            <li class="nav-item nc-al"><a href="#" data-toggle="dropdown" role="button" aria-expanded="false" class="nav-link dropdown-toggle"><span><i class="notika-icon notika-alarm"></i></span></a>
-                                <div role="menu" class="dropdown-menu message-dd notification-dd animated zoomIn">
-                                    <div class="hd-mg-tt">
-                                        <h2>Notification</h2>
-                                    </div>
-                                    <div class="hd-message-info">
-                                        <a href="#">
-                                            <div class="hd-message-sn">
-                                                <div class="hd-message-img">
-                                                    <img src="admin_template/img/post/1.jpg" alt="" />
-                                                </div>
-                                                <div class="hd-mg-ctn">
-                                                    <h3>David Belle</h3>
-                                                    <p>Cum sociis natoque penatibus et magnis dis parturient montes</p>
-                                                </div>
-                                            </div>
-                                        </a>
-                                    </div>
-                                    <div class="hd-mg-va">
-                                        <a href="#">View All</a>
-                                    </div>
+                        <li class="nav-item nc-al">
+                            <a href="#" data-toggle="dropdown" role="button" aria-expanded="false" class="nav-link dropdown-toggle">
+                                <span>
+                                    <i class="notika-icon notika-alarm"></i>
+                                    @if($unreadNotifications->count() > 0)
+                                        <span class="badge badge-danger">{{ $unreadNotifications->count() }}</span>
+                                    @endif
+                                </span>
+                            </a>
+                            <div role="menu" class="dropdown-menu message-dd notification-dd animated zoomIn">
+                                <div class="hd-mg-tt">
+                                    <h2>Notification</h2>
                                 </div>
-                            </li>
+                                <div class="hd-message-info">
+                                    @foreach($unreadNotifications as $notification)
+                                        <a href="#" class="dropdown-item notification-item" data-id="{{ $notification->id }}" style="border-bottom: 1px solid #ccc; color: black; padding: 10px;">
+                                            <strong>{{ $notification->fullname }}</strong> sent a calamity report. <button class="btn btn-sm btn-link mark-as-viewed" style="float: right;">View</button>
+                                            <br>
+                                        
+                                        </a>
+                                    @endforeach
+                                </div>
+                            </div>
+                        </li>
+
+
+
+
                             <li class="nav-item">
                                 <a href="/logout" class="nav-link">
                                     <span><i class="fas fa-sign-out-alt"></i></span>
@@ -213,3 +230,6 @@
         </div>
     </div>
     <!-- Main Menu area End-->
+
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+

@@ -65,7 +65,7 @@ Route::match(['get', 'post'], '/calamity_report', [HomeController::class, 'calam
 Route::match(['get', 'post'], '/submit_calamity_report', [HomeController::class, 'submit_calamity_report']);
 Route::delete('/delete_report/{id}', [HomeController::class, 'delete_report']);
 
-
+Route::post('/notifications/update-status', [HomeController::class, 'updateNotifStatus']);
 
 
 
