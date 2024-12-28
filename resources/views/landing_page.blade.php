@@ -44,7 +44,6 @@
               <li class="nav-item px-2"><a class="nav-link fw-medium active" aria-current="page" href="#header">Home</a></li>
               <li class="nav-item px-2"><a class="nav-link fw-medium" href="#Opportuanities">Opportuanities</a></li>
               <li class="nav-item px-2"><a class="nav-link fw-medium" href="#testimonial">Testimonial</a></li>
-              <li class="nav-item px-2"><a class="nav-link fw-medium" href="#invest">Invest</a></li>
               <li class="nav-item px-2"><a class="nav-link fw-medium" href="#contact">Contact </a></li>
             </ul>
             <div class="d-flex">

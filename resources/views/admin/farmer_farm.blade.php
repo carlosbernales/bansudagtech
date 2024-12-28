@@ -32,7 +32,7 @@
                                     <td>{{ $farmer->rsbsa }}</td>
                                     <td>{{ $farmer->fullname }}</td>
                                     <td>{{ $farmer->commodity }}</td>
-                                    <td>{{ $farmer->farm_type }}</td>
+                                    <td>{{ $farmer->farm_type }}{{ $farmer->livestock_type }}</td>
                                     <td>
                                         <button class="btn btn-link" data-toggle="modal" data-target="#viewLocationModal-{{ $farmer->id }}">
                                             <i class="bi bi-eye"></i>

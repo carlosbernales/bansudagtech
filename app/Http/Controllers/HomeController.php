@@ -36,9 +36,26 @@ class HomeController extends Controller
             return redirect('/');
         }
         
-        $farmers = Farms::with('farmImages')->get(); 
-        return view('user.farms', compact('farmers'));
+        $userId = session('user_id'); 
+
+        // Get unread notifications
+        $notifications = AnnouncementUser::where('user_id', $userId)
+                                        ->where('status', 'unread')
+                                        ->get();
+
+        // Get farmers data
+        $farmers = Farms::with('farmImages')
+                        ->where('user_id', $userId) 
+                        ->get(); 
+        
+        // Get the count of unread notifications
+        $notificationCount = $notifications->count();
+
+        // Share the notification count and notifications with the view
+        return view('user.farms', compact('farmers', 'notificationCount', 'notifications'));
     }
+
+
     
     
 
@@ -121,13 +138,19 @@ class HomeController extends Controller
         if (!session()->has('user_id')) {
             return redirect('/');
         }
-        $userId = session('user_id');
 
-        $farms = Farms::where('user_id', $userId)->get(['id', 'location', 'forms_farm', 'farm_type',  'livestock_type']);
-        $calamities = CalamityReport::with('calamityImages')->get(); 
+        $userId = session('user_id'); 
+
+        $farms = Farms::where('user_id', $userId)
+                    ->get(['id', 'location', 'forms_farm', 'farm_type', 'livestock_type']);
+
+        $calamities = CalamityReport::with('calamityImages')
+                                    ->where('user_id', $userId) 
+                                    ->get();
 
         return view('user/calamityReport', compact('farms', 'calamities'));
     }
+
 
     public function submit_calamity_report(Request $request)
     {
@@ -213,6 +236,11 @@ class HomeController extends Controller
 
         return redirect()->back()->with('success', 'Deleted!');
     }
+
+
+
+    
+
     
 
 

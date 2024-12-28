@@ -1,7 +1,7 @@
 
-@include('user/header')
 
-    
+@include('user.header', ['notificationCount' => $notificationCount, 'notifications' => $notifications])
+
 
    
 

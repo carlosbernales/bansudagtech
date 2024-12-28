@@ -11,6 +11,7 @@ use App\Models\Farms;
 use App\Models\CalamityReport;
 use App\Models\Assistance;
 use Carbon\Carbon;
+use Illuminate\Support\Facades\Mail;
 
 class AdminController extends Controller
 {
@@ -47,22 +48,34 @@ class AdminController extends Controller
 
     public function add_announcement(Request $request)
     {
+        $request->validate([
+            'title' => 'required|string|max:255',
+            'content' => 'required|string',
+        ]);
+
         $announcement = Announcement::create([
             'title' => $request->input('title'),
             'content' => $request->input('content'),
         ]);
 
-        $userIds = Accounts::all()->pluck('id');
+        $users = Accounts::where('role', 'user')->get();
 
-        foreach ($userIds as $userId) {
+        foreach ($users as $user) {
             AnnouncementUser::create([
-                'user_id' => $userId,
-                'title' => $request->input('title'),
-                'content' => $request->input('content'),
+                'user_id' => $user->id,
+                'title' => $announcement->title,
+                'content' => $announcement->content,
             ]);
+
+            Mail::send('email.announcement_mail', [
+                'title' => $announcement->title,
+                'content' => $announcement->content,
+            ], function ($message) use ($user) {
+                $message->to($user->email)->subject('Announcement');
+            });
         }
 
-        return back()->with('success', 'Announcement added successfully!');
+        return back()->with('success', 'Announcement added and emails sent successfully!');
     }
 
     public function delete_announcement($id)
