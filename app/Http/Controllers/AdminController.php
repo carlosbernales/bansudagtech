@@ -21,16 +21,28 @@ class AdminController extends Controller
         if (!session()->has('admin_id')) {
             return redirect('/');
         }
+
         $unreadNotifications = CalamityReport::where('notification_status', 'unread')->get();
         $farmCount = Farms::count();
         $farmers = Accounts::count();
         $reports = CalamityReport::count();
         $completedReports = CalamityReport::where('status', 'Completed')->count();
 
-        
-        return view('admin/dashboard', compact('unreadNotifications','farmCount','farmers','reports','completedReports'));
+        $calamityReportsByMonth = CalamityReport::selectRaw('MONTH(date_reported) as month, COUNT(*) as count')
+            ->groupBy('month')
+            ->orderBy('month')
+            ->get();
 
+        $chartData = [
+            'labels' => $calamityReportsByMonth->pluck('month')->map(function ($month) {
+                return date('F', mktime(0, 0, 0, $month, 1));
+            }),
+            'data' => $calamityReportsByMonth->pluck('count'),
+        ];
+
+        return view('admin/dashboard', compact('unreadNotifications', 'farmCount', 'farmers', 'reports', 'completedReports', 'chartData'));
     }
+
 
     public function farmers()
     {
