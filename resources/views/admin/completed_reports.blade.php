@@ -29,6 +29,7 @@
                                         <th>Proof Image</th>
                                         <th>Assistance</th>
                                         <th>Date Provided</th>
+                                        <th>Details</th>
                                     </tr>
                                 </thead>
                                 <tbody>
@@ -53,7 +54,58 @@
                                     </td>
                                     <td>{{ $calamity->assistance_type }}</td>
                                     <td>{{ \Carbon\Carbon::parse($calamity->date_provided)->format('F j, Y') }}</td>
+                                    <td>
+                                        <button class="btn btn-link" data-toggle="modal" data-target="#viewDetails-{{ $calamity->id }}">
+                                            <i class="bi bi-eye"></i>
+                                        </button>
+                                    </td>
                                 </tr>
+
+                                <div class="modal fade" id="viewDetails-{{ $calamity->id }}" tabindex="-1" aria-labelledby="viewDetailsLabel" aria-hidden="true">
+                                    <div class="modal-dialog modal-dialog-centered">
+                                        <div class="modal-content">
+                                            <div class="modal-header">
+                                                <h5 class="modal-title" id="viewDetailsLabel">Calamity Details</h5>
+                                            </div>
+                                            <div class="modal-body">
+                                                <p><strong>RSBSA:</strong> {{ $calamity->rsbsa }}</p>
+                                                <p><strong>Calamity Type:</strong> {{ $calamity->calamity_type }}</p>
+                                                <p><strong>Farmer Type:</strong> {{ $calamity->farmer_type }}</p>
+                                                <p><strong>Birthdate:</strong> {{ $calamity->birthdate }}</p>
+                                                <p><strong>Region:</strong> {{ $calamity->region }}</p>
+                                                <p><strong>Province:</strong> {{ $calamity->province }}</p>
+                                                <p><strong>Municipality:</strong> {{ $calamity->municipality }}</p>
+                                                <p><strong>Barangay:</strong> {{ $calamity->barangay }}</p>
+                                                <p><strong>Organization Name:</strong> {{ $calamity->org_name }}</p>
+                                                <p><strong>Total Male:</strong> {{ $calamity->tot_male }}</p>
+                                                <p><strong>Total Female:</strong> {{ $calamity->tot_female }}</p>
+                                                <p><strong>Sex:</strong> {{ $calamity->sex }}</p>
+                                                <p><strong>Indigenous:</strong> {{ $calamity->indigenous }}</p>
+                                                <p><strong>Tribe Name:</strong> {{ $calamity->tribe_name }}</p>
+                                                <p><strong>PWD:</strong> {{ $calamity->pwd }}</p>
+                                                <p><strong>ARB:</strong> {{ $calamity->arb }}</p>
+                                                <p><strong>4Ps:</strong> {{ $calamity->fourps }}</p>
+                                                <p><strong>Crop Type:</strong> {{ $calamity->crop_type }}</p>
+                                                <p><strong>Partially Damaged:</strong> {{ $calamity->partially_damage }}</p>
+                                                <p><strong>Totally Damaged:</strong> {{ $calamity->totally_damage }}</p>
+                                                <p><strong>Total Area:</strong> {{ $calamity->total_area }}</p>
+                                                <p><strong>Livestock Type:</strong> {{ $calamity->livestock_type }}</p>
+                                                <p><strong>Animal Type:</strong> {{ $calamity->animal_type }}</p>
+                                                <p><strong>Age Class:</strong> {{ $calamity->age_class }}</p>
+                                                <p><strong>No. of Heads:</strong> {{ $calamity->no_heads }}</p>
+                                                <p><strong>Remarks:</strong> {{ $calamity->remarks }}</p>
+                                                <p><strong>Last Name:</strong> {{ $calamity->lastname }}</p>
+                                                <p><strong>First Name:</strong> {{ $calamity->firstname }}</p>
+                                                <p><strong>Middle Name:</strong> {{ $calamity->middlename }}</p>
+                                                <p><strong>Suffix:</strong> {{ $calamity->suffix }}</p>
+                                                <p><strong>Full Name:</strong> {{ $calamity->fullname }}</p>
+                                                <p><strong>Email:</strong> {{ $calamity->email }}</p>
+                                                <p><strong>Assistance Received:</strong> {{ $calamity->assistance_type }}</p>
+                                                <p><strong>Date Provided:</strong> {{ $calamity->date_provided }}</p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
 
                                 <!-- Modal for Location -->
                                 <div class="modal fade" id="viewLocationModal-{{ $calamity->id }}" tabindex="-1" aria-labelledby="viewLocationModalLabel" aria-hidden="true">

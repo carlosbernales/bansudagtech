@@ -21,31 +21,29 @@ class HomeController extends Controller
 {
 
     public function home()
-{
-    if (!session()->has('user_id')) {
-        return redirect('/');
+    {
+        if (!session()->has('user_id')) {
+            return redirect('/');
+        }
+
+        $userId = session('user_id'); 
+
+        $notifications = AnnouncementUser::where('user_id', $userId)
+            ->where('status', 'unread')
+            ->get();
+
+        $notificationCount = $notifications->count();
+
+        $farms = Farms::where('user_id', $userId)->get(); 
+
+        $locations = $farms->map(function ($farm) {
+            return [
+                'address' => $farm->location, 
+            ];
+        });
+
+        return view('user.home', compact('notificationCount', 'notifications', 'locations'));
     }
-
-    $userId = session('user_id'); 
-
-    $notifications = AnnouncementUser::where('user_id', $userId)
-        ->where('status', 'unread')
-        ->get();
-
-    $notificationCount = $notifications->count();
-
-    // Fetch all farms for the current user
-    $farms = Farms::where('user_id', $userId)->get(); // Get all farms
-
-    // Extract location (address) for each farm
-    $locations = $farms->map(function ($farm) {
-        return [
-            'address' => $farm->location, // Assuming the farm has a 'location' field for the address
-        ];
-    });
-
-    return view('user.home', compact('notificationCount', 'notifications', 'locations'));
-}
 
 
     public function farms()

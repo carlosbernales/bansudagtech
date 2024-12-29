@@ -24,6 +24,7 @@
                                         <th>Farm Type</th>
                                         <th>Location</th>
                                         <th>Image</th>
+                                        <th>Details</th>
                                     </tr>
                                 </thead>
                                 <tbody>
@@ -46,6 +47,11 @@
                                         @else
                                         No Images
                                         @endif
+                                    </td>
+                                    <td>
+                                        <button class="btn btn-link" data-toggle="modal" data-target="#viewDetails-{{ $farmer->id }}">
+                                            <i class="bi bi-eye"></i>
+                                        </button>
                                     </td>
                                 </tr>
 
