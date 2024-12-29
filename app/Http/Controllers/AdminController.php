@@ -28,20 +28,71 @@ class AdminController extends Controller
         $reports = CalamityReport::count();
         $completedReports = CalamityReport::where('status', 'Completed')->count();
 
-        $calamityReportsByMonth = CalamityReport::selectRaw('MONTH(date_reported) as month, COUNT(*) as count')
-            ->groupBy('month')
-            ->orderBy('month')
+        $calamityReportsByMonth = CalamityReport::selectRaw('MONTH(date_reported) as month, YEAR(date_reported) as year, COUNT(*) as count')
+            ->groupBy('year', 'month')
+            ->orderBy('year', 'asc')
+            ->orderBy('month', 'asc')
             ->get();
 
         $chartData = [
-            'labels' => $calamityReportsByMonth->pluck('month')->map(function ($month) {
-                return date('F', mktime(0, 0, 0, $month, 1));
+            'labels' => $calamityReportsByMonth->map(function ($report) {
+                return date('F Y', mktime(0, 0, 0, $report->month, 1, $report->year));
             }),
             'data' => $calamityReportsByMonth->pluck('count'),
         ];
 
-        return view('admin/dashboard', compact('unreadNotifications', 'farmCount', 'farmers', 'reports', 'completedReports', 'chartData'));
+        $farmLocations = Farms::pluck('location');
+        $defaultLocation = Farms::first()->location;
+
+        $calamityReports = CalamityReport::selectRaw('YEAR(date_reported) as year, MONTH(date_reported) as month, crop_type, animal_type, COUNT(*) as count')
+            ->where(function ($query) {
+                $query->whereNotNull('crop_type')
+                    ->where('crop_type', '!=', '')
+                    ->orWhereNotNull('animal_type')
+                    ->where('animal_type', '!=', '');
+            })
+            ->groupBy('year', 'month', 'crop_type', 'animal_type')
+            ->orderBy('year', 'asc')
+            ->orderBy('month', 'asc')
+            ->get();
+
+        $groupedData = $calamityReports->groupBy(function ($report) {
+            return date('F Y', mktime(0, 0, 0, $report->month, 1, $report->year));
+        })->map(function ($group) {
+            return [
+                'crop' => $group->where('crop_type', '!=', null)->sum('count'),
+                'animal' => $group->where('animal_type', '!=', null)->sum('count'),
+            ];
+        });
+
+        $groupedLabels = $groupedData->keys();
+        $groupedCrops = $groupedData->pluck('crop');
+        $groupedAnimals = $groupedData->pluck('animal');
+
+        $totalCrops = $calamityReports->whereNotNull('crop_type')->sum('count');
+    $totalAnimals = $calamityReports->whereNotNull('animal_type')->sum('count');
+
+    $commodityData = [
+        'labels' => ['Crops', 'Animals'],
+        'data' => [$totalCrops, $totalAnimals],
+    ];
+
+        return view('admin/dashboard', compact(
+            'unreadNotifications', 
+            'farmCount', 
+            'farmers', 
+            'reports', 
+            'completedReports', 
+            'chartData', 
+            'farmLocations', 
+            'defaultLocation', 
+            'groupedLabels', 
+            'groupedCrops', 
+            'groupedAnimals',
+            'commodityData'
+        ));
     }
+
 
 
     public function farmers()
@@ -431,5 +482,19 @@ class AdminController extends Controller
             ]);
 
         return response()->json(['data' => $reports]);
+    }
+
+    public function updateStatus(Request $request)
+    {
+
+        $request->validate([
+            'notification_id' => 'required|exists:calamity_report,id',
+        ]);
+
+        $notification = CalamityReport::findOrFail($request->notification_id);
+
+        $notification->update(['notification_status' => 'viewed']);
+        
+        return response()->json(['success' => true]);
     }
 }

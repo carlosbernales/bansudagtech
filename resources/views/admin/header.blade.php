@@ -104,36 +104,34 @@
                 <div class="col-lg-8 col-md-8 col-sm-12 col-xs-12">
                     <div class="header-top-menu">
                         <ul class="nav navbar-nav notika-top-nav">
-                           
-                            
-                        <li class="nav-item nc-al">
-                            <a href="#" data-toggle="dropdown" role="button" aria-expanded="false" class="nav-link dropdown-toggle">
-                                <span>
-                                    <i class="notika-icon notika-alarm"></i>
-                                    @if($unreadNotifications->count() > 0)
-                                        <span class="badge badge-danger">{{ $unreadNotifications->count() }}</span>
-                                    @endif
-                                </span>
-                            </a>
-                            <div role="menu" class="dropdown-menu message-dd notification-dd animated zoomIn">
-                                <div class="hd-mg-tt">
-                                    <h2>Notification</h2>
+                            <li class="nav-item nc-al">
+                                <a href="#" data-toggle="dropdown" role="button" aria-expanded="false" class="nav-link dropdown-toggle">
+                                    <span>
+                                        <i class="notika-icon notika-alarm"></i>
+                                        @if($unreadNotifications->count() > 0)
+                                            <span class="badge badge-danger">{{ $unreadNotifications->count() }}</span>
+                                        @endif
+                                    </span>
+                                </a>
+                                <div role="menu" class="dropdown-menu message-dd notification-dd animated zoomIn">
+                                    <div class="hd-mg-tt">
+                                        <h2>Notification</h2>
+                                    </div>
+                                    <div class="hd-message-info">
+                                        @if($unreadNotifications->count() > 0)
+                                            @foreach($unreadNotifications as $notification)
+                                                <a href="#" class="dropdown-item notification-item" data-id="{{ $notification->id }}" style="border-bottom: 1px solid #ccc; color: black; padding: 10px;">
+                                                    <strong>{{ $notification->fullname }}</strong> sent a calamity report. 
+                                                    <button class="btn btn-sm btn-link mark-as-viewed" style="float: right;">View</button>
+                                                    <br>
+                                                </a>
+                                            @endforeach
+                                        @else
+                                            <p class="dropdown-item" style="padding: 10px; color: black;">No notifications</p>
+                                        @endif
+                                    </div>
                                 </div>
-                                <div class="hd-message-info">
-                                    @foreach($unreadNotifications as $notification)
-                                        <a href="#" class="dropdown-item notification-item" data-id="{{ $notification->id }}" style="border-bottom: 1px solid #ccc; color: black; padding: 10px;">
-                                            <strong>{{ $notification->fullname }}</strong> sent a calamity report. <button class="btn btn-sm btn-link mark-as-viewed" style="float: right;">View</button>
-                                            <br>
-                                        
-                                        </a>
-                                    @endforeach
-                                </div>
-                            </div>
-                        </li>
-
-
-
-
+                            </li>
                             <li class="nav-item">
                                 <a href="/logout" class="nav-link">
                                     <span><i class="fas fa-sign-out-alt"></i></span>
@@ -229,7 +227,40 @@
             </div>
         </div>
     </div>
+    <meta name="csrf-token" content="{{ csrf_token() }}">
     <!-- Main Menu area End-->
 
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script>
+    $(document).on('click', '.mark-as-viewed', function (e) {
+        e.preventDefault();
+        var notificationId = $(this).closest('.notification-item').data('id');
+        var $this = $(this); // Store the current button context in $this
+
+        console.log(notificationId);  // Check if notificationId is valid
+
+        $.ajax({
+            url: '{{ url('/notifications/upstatus') }}',
+            method: 'POST',
+            data: {
+                notification_id: notificationId,
+                _token: '{{ csrf_token() }}'
+            },
+            success: function (response) {
+                if (response.success) {
+                    // Update notification item
+                    $this.closest('.notification-item').css('background-color', '#f0f0f0');
+                    $this.text('Viewed');
+
+                    // Redirect to the calamity reports page
+                    window.location.href = '{{ url('/calamity_reports') }}';
+                }
+            },
+            error: function (xhr, status, error) {
+                console.error(xhr.responseText); // Log any errors
+                alert('Error updating notification status');
+            }
+        });
+    });
+</script>
 

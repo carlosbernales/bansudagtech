@@ -34,7 +34,7 @@
                                     <td>{{ $farmer->commodity }}</td>
                                     <td>{{ $farmer->farm_type }}{{ $farmer->livestock_type }}</td>
                                     <td>
-                                        <button class="btn btn-link" data-toggle="modal" data-target="#viewLocationModal-{{ $farmer->id }}">
+                                        <button class="btn btn-link" data-toggle="modal" data-target="#viewLocationModal-{{ $farmer->id }}" onclick="initMap('{{ $farmer->location }}', '{{ $farmer->id }}')">
                                             <i class="bi bi-eye"></i>
                                         </button>
                                     </td>
@@ -58,7 +58,7 @@
                                             </div>
                                             <div class="modal-body">
                                                 <div id="map-{{ $farmer->id }}" style="height: 400px; width: 100%;"></div>
-                                                <p id="location-address-{{ $farmer->id }}"></p>
+                                                <p id="location-name-{{ $farmer->id }}">{{ $farmer->location }}</p>
                                             </div>
                                         </div>
                                     </div>
@@ -92,7 +92,6 @@
                                         </div>
                                     </div>
                                 </div>
-
                                 @endforeach
                                 </tbody>
                             </table>
@@ -114,55 +113,46 @@
 <script async defer src="googlemapsAPI.js"></script>
 
 <script>
-    document.addEventListener("DOMContentLoaded", function () {
-    // Initialize the Google Map when a location modal is shown
-    $('.modal').on('shown.bs.modal', function (e) {
-        const modalId = $(this).attr('id');
-        if (modalId.startsWith('viewLocationModal')) {
-            const farmerId = modalId.split('-')[1];
-            const location = '{{ $farmer->location }}'; // Fetch location dynamically
+    function initMap(location, calamityId) {
+    console.log("Location:", location); 
 
-            if (location) {
-                geocodeAddress(location, farmerId);
-            }
-        }
-    });
+    var geocoder = new google.maps.Geocoder();
 
-    function geocodeAddress(address, farmerId) {
-        const geocoder = new google.maps.Geocoder();
-        geocoder.geocode({ address: address }, function (results, status) {
-            if (status === 'OK') {
-                const map = new google.maps.Map(document.getElementById('map-' + farmerId), {
-                    zoom: 16,
+    if (location) {
+        geocoder.geocode({ 'address': location }, function(results, status) {
+            if (status == 'OK') {
+                var map = new google.maps.Map(document.getElementById('map-' + calamityId), {
                     center: results[0].geometry.location,
+                    zoom: 15
                 });
-                new google.maps.Marker({
+
+                var marker = new google.maps.Marker({
                     map: map,
-                    position: results[0].geometry.location,
+                    position: results[0].geometry.location
                 });
-                document.getElementById('location-address-' + farmerId).textContent = results[0].formatted_address;
+
+                document.getElementById('location-name-' + calamityId).innerHTML = results[0].formatted_address;
             } else {
-                alert('Geocode was not successful: ' + status);
+                alert('Geocode was not successful for the following reason: ' + status);
             }
         });
-    }
-
-    // Image Carousel Logic
+    } 
+}
+/////////////////////////////////////////
+document.addEventListener("DOMContentLoaded", function () {
     $('.modal').on('show.bs.modal', function (e) {
         const modal = $(this);
         const images = modal.find('.image-gallery-item');
         const modalId = modal.attr('id').split('-')[1];
         let currentIndex = 0;
 
-        // Show the first image
         images.hide().first().show();
         $('#currentImageIndex' + modalId).text(1);
         $('#totalImages' + modalId).text(images.length);
 
-        // Next Button Logic
         modal.find('#nextImageBtn').off('click').on('click', function () {
             images.eq(currentIndex).hide();
-            currentIndex = (currentIndex + 1) % images.length; // Loop to the first image
+            currentIndex = (currentIndex + 1) % images.length; 
             images.eq(currentIndex).show();
             $('#currentImageIndex' + modalId).text(currentIndex + 1);
         });
@@ -170,6 +160,7 @@
 });
 
 
+////////////////////////////////////////////
 
 
 

@@ -53,6 +53,7 @@ Route::match(['get', 'post'], '/add_assistance', [AdminController::class, 'add_a
 Route::delete('/delete_assistance/{id}', [AdminController::class, 'delete_assistance']);
 Route::post('/fetch-calamity-reports', [AdminController::class, 'fetchCalamityReports']);
 
+Route::post('/notifications/upstatus', [AdminController::class, 'updateStatus']);
 
 
 //HOME

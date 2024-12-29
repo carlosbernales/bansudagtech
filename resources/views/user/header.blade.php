@@ -162,27 +162,21 @@
         <ul class="navbar-nav justify-content-end menu-list list-unstyled d-flex gap-md-3 mb-0">
           <li class="nav-item border-dashed active">
             <a href="/home" class="nav-link d-flex align-items-center gap-3 text-dark p-2">
-              <svg width="24" height="24" viewBox="0 0 24 24"><use xlink:href="#fruits"></use></svg>
+              <svg width="24" height="24" viewBox="0 0 24 24"></svg>
               <span>Dashboard</span>
             </a>
           </li>
 
           <li class="nav-item border-dashed">
             <a href="/farms" class="nav-link d-flex align-items-center gap-3 text-dark p-2">
-              <svg width="24" height="24" viewBox="0 0 24 24"><use xlink:href="#meat"></use></svg>
+              <svg width="24" height="24" viewBox="0 0 24 24"></svg>
               <span>My Crops</span>
             </a>
           </li>
           <li class="nav-item border-dashed">
             <a href="/calamity_report" class="nav-link d-flex align-items-center gap-3 text-dark p-2">
-              <svg width="24" height="24" viewBox="0 0 24 24"><use xlink:href="#seafood"></use></svg>
+              <svg width="24" height="24" viewBox="0 0 24 24"></svg>
               <span>Calamity Report</span>
-            </a>
-          </li>
-          <li class="nav-item border-dashed">
-            <a href="index.html" class="nav-link d-flex align-items-center gap-3 text-dark p-2">
-              <svg width="24" height="24" viewBox="0 0 24 24"><use xlink:href="#bakery"></use></svg>
-              <span>My Account</span>
             </a>
           </li>
           
