@@ -59,9 +59,10 @@
             <div class="col-lg-9 col-md-8 col-sm-7 col-xs-12" style="width: 100%;">
                 <div class="sale-statistic-inner notika-shadow mg-tb-30">
                     <div class="curved-inner-pro">
-                        <div class="curved-ctn">
-                            <h2>Farm Locations</h2>
-                        </div>
+                    <div class="curved-ctn" style="display: flex; justify-content: space-between; align-items: center; width: 100%;">
+                        <h2>Farm Locations</h2>
+                        <button class="btn btn-lightgreen lightgreen-icon-notika">Send Alarm</button>
+                    </div>
                     </div>
                     <div id="map" style="height: 330px; width: 100%;"></div>
                 </div>
@@ -184,7 +185,9 @@
         });
     });
 
-     function initMap() {
+    
+
+    function initMap() {
         const farmLocations = @json($farmLocations); 
         const defaultLocation = @json($defaultLocation); 
 
@@ -200,18 +203,24 @@
                 farmLocations.forEach(address => {
                     geocoder.geocode({ address: address }, (results, status) => {
                         if (status === "OK") {
-                            const marker = new google.maps.Marker({
-                                map: map,
-                                position: results[0].geometry.location,
-                                title: address
-                            });
+                            const position = results[0].geometry.location;
 
-                            const infowindow = new google.maps.InfoWindow({
-                                content: `<p>${address}</p>`
-                            });
+                            // Fetch weather data and add marker with temperature label
+                            fetchWeather(position.lat(), position.lng(), (temp) => {
+                                const marker = new google.maps.Marker({
+                                    map: map,
+                                    position: position,
+                                    title: address,
+                                    label: temp + '°C' // Display temperature on marker
+                                });
 
-                            marker.addListener('click', () => {
-                                infowindow.open(map, marker);
+                                const infowindow = new google.maps.InfoWindow({
+                                    content: `<p>${address}</p><p>Temperature: ${temp}°C</p>`
+                                });
+
+                                marker.addListener('click', () => {
+                                    infowindow.open(map, marker);
+                                });
                             });
                         } else {
                             console.error(`Geocode was not successful for the following reason: ${status}`);
@@ -223,6 +232,27 @@
             }
         });
     }
+
+    function fetchWeather(lat, lng, callback) {
+        const apiKey = "4e89cb6596765628fd6138f58d7454e1";
+        const url = `https://api.openweathermap.org/data/2.5/weather?lat=${lat}&lon=${lng}&units=metric&appid=${apiKey}`;
+
+        fetch(url)
+            .then(response => response.json())
+            .then(data => {
+                if (data && data.main && data.main.temp !== undefined) {
+                    callback(data.main.temp); // Pass temperature to callback
+                } else {
+                    console.log('Weather data not found for location.');
+                    callback('N/A');
+                }
+            })
+            .catch(error => {
+                console.error('Error fetching weather:', error);
+                callback('N/A');
+            });
+    }
+
 
     /////////////////////////////////////////////////////////////////
     const ctx = document.getElementById('calamityReportsChart').getContext('2d');

@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: localhost:3306
--- Generation Time: Dec 29, 2024 at 02:33 AM
+-- Generation Time: Dec 29, 2024 at 06:30 AM
 -- Server version: 8.0.30
 -- PHP Version: 8.1.10
 
@@ -29,6 +29,7 @@ SET time_zone = "+00:00";
 
 CREATE TABLE `account` (
   `id` int NOT NULL,
+  `verification_token` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci DEFAULT NULL,
   `firstname` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci DEFAULT NULL,
   `middlename` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci DEFAULT NULL,
   `lastname` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci DEFAULT NULL,
@@ -53,17 +54,18 @@ CREATE TABLE `account` (
   `org_name` varchar(255) DEFAULT NULL,
   `tot_male` int DEFAULT NULL,
   `tot_female` int DEFAULT NULL,
-  `farmer_type` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci DEFAULT NULL
+  `farmer_type` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci DEFAULT NULL,
+  `status` varchar(255) NOT NULL DEFAULT 'not_verified'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
 --
 -- Dumping data for table `account`
 --
 
-INSERT INTO `account` (`id`, `firstname`, `middlename`, `lastname`, `suffix`, `fullname`, `role`, `contact`, `email`, `password`, `birthdate`, `rsbsa`, `fourps`, `indigenous`, `tribe_name`, `pwd`, `sex`, `arb`, `region`, `province`, `municipality`, `barangay`, `org_name`, `tot_male`, `tot_female`, `farmer_type`) VALUES
-(1, 'Admin', NULL, 'Admin', NULL, 'Admin  Admin ', 'admin', NULL, 'admin@admin.com', '$2y$12$8KAHM0a5B0q5bVxTVKV4cOxBB1lfobCrZ.XojQtFnZ5KQKx4qR0.q', NULL, '23-45-79-92-81', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'INDIVIDUAL'),
-(2, 'wqewqe', 'adas', 'dasdas', 'Jr.', 'wqewqe adas dasdas Jr.', 'user', '2345678', 'carlosbernales24@gmail.com', '$2y$12$3EiOYw.R5UhzoHbhyAEBtezV1tQNai7SQXmv7njgrRlpAO4MNc95y', '2024-12-21', 'sd-sf-sg-fg-s2', 'YES', 'NO', NULL, 'YES', 'MALE', 'YES', 'asfsdfsdfsd', 'asdasd', 'asdasdasd', 'sdasd', 'asdasdas', 3, 2, 'GROUP'),
-(6, 'Carlos', 'Laurel', 'Bernales', 'Jr.', 'Carlos Laurel Bernales Jr.', 'user', '09951776920', 'bernalescarlos480@gmail.com', '$2y$12$F4HwmqfEgQK3ijidyvyPJOUNAn6dbil5I/p4vVSEHCe.c8tARzeh2', '2024-12-28', '32-13-21-27-8d-fs', 'NO', 'YES', 'Mangyan', 'NO', 'MALE', 'NO', 'MIMAROPA', 'ORIENTAL MINDORO', 'CALAPAN', 'MASIPIT', 'WALA', 3, 2, 'INDIVIDUAL');
+INSERT INTO `account` (`id`, `verification_token`, `firstname`, `middlename`, `lastname`, `suffix`, `fullname`, `role`, `contact`, `email`, `password`, `birthdate`, `rsbsa`, `fourps`, `indigenous`, `tribe_name`, `pwd`, `sex`, `arb`, `region`, `province`, `municipality`, `barangay`, `org_name`, `tot_male`, `tot_female`, `farmer_type`, `status`) VALUES
+(1, NULL, 'Admin', NULL, 'Admin', NULL, 'Admin  Admin ', 'admin', NULL, 'admin@admin.com', '$2y$12$8KAHM0a5B0q5bVxTVKV4cOxBB1lfobCrZ.XojQtFnZ5KQKx4qR0.q', NULL, '23-45-79-92-81', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'INDIVIDUAL', 'verified'),
+(2, NULL, 'wqewqe', 'adas', 'dasdas', 'Jr.', 'wqewqe adas dasdas Jr.', 'user', '2345678', 'carlosbernales24@gmail.com', '$2y$12$3FBchCHiQyLL0/lFDsiwVufGAU.BMMhgmf54eTj1Bt/Fu/tUUMK82', '2024-12-21', 'sd-sf-sg-fg-s2', 'YES', 'NO', NULL, 'YES', 'MALE', 'YES', 'asfsdfsdfsd', 'asdasd', 'asdasdasd', 'sdasd', 'asdasdas', 3, 2, 'GROUP', 'verified'),
+(6, '8t8O62cicRITvAqQO2wC7L5DrupECikwwG0C70FeQqA6tE8p8R3z1Ew1Osfy', 'Carlos', 'Laurel', 'Bernales', 'Jr.', 'Carlos Laurel Bernales Jr.', 'user', '09951776920', 'sarahelmenzo13@gmail.com', '$2y$12$.6F5hRFr/iCqdDNRIn1uQ.TVU5DU.SaYOn7ci4wHXhEulH82r1RFa', '2024-12-28', '32-13-21-27-8d-fs', 'NO', 'YES', 'Mangyan', 'NO', 'MALE', 'NO', 'MIMAROPA', 'ORIENTAL MINDORO', 'CALAPAN', 'MASIPIT', 'WALA', 3, 2, 'INDIVIDUAL', 'verified');
 
 -- --------------------------------------------------------
 
@@ -76,16 +78,6 @@ CREATE TABLE `announcement` (
   `title` text NOT NULL,
   `content` text NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
-
---
--- Dumping data for table `announcement`
---
-
-INSERT INTO `announcement` (`id`, `title`, `content`) VALUES
-(3, 'dfdgdg', 'fgdgdfgdfg'),
-(5, 'dad', 'asdsadsad'),
-(6, 'sdasd', 'asdasdsad'),
-(7, 'WALA', 'adasdadadasdasdasd');
 
 -- --------------------------------------------------------
 
@@ -100,21 +92,6 @@ CREATE TABLE `announcement_user` (
   `user_id` int NOT NULL,
   `status` enum('viewed','unread') CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL DEFAULT 'unread'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
-
---
--- Dumping data for table `announcement_user`
---
-
-INSERT INTO `announcement_user` (`id`, `title`, `content`, `user_id`, `status`) VALUES
-(1, 'dfdgdg', 'fgdgdfgdfg', 1, 'unread'),
-(2, 'dfdgdg', 'fgdgdfgdfg', 2, 'viewed'),
-(3, 'adsa', 'dasdasd', 1, 'unread'),
-(4, 'adsa', 'dasdasd', 2, 'viewed'),
-(5, 'dad', 'asdsadsad', 2, 'viewed'),
-(6, 'sdasd', 'asdasdsad', 2, 'viewed'),
-(7, 'sdasd', 'asdasdsad', 6, 'unread'),
-(8, 'WALA', 'adasdadadasdasdasd', 2, 'unread'),
-(9, 'WALA', 'adasdadadasdasdasd', 6, 'unread');
 
 -- --------------------------------------------------------
 
@@ -146,23 +123,6 @@ CREATE TABLE `calamity_images` (
   `cal_fk_id` int NOT NULL,
   `image` varchar(255) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
-
---
--- Dumping data for table `calamity_images`
---
-
-INSERT INTO `calamity_images` (`id`, `cal_fk_id`, `image`) VALUES
-(3, 2, 'calamity_676cc6a4092ba.jpg'),
-(4, 2, 'calamity_676cc6a40db60.jpg'),
-(5, 2, 'calamity_676cc6a41015f.jpg'),
-(6, 3, 'calamity_676cc6c8e478b.jpg'),
-(7, 3, 'calamity_676cc6c8e6ec4.jpg'),
-(8, 3, 'calamity_676cc6c8e9016.jpg'),
-(9, 4, 'calamity_676cc7788c681.jpg'),
-(10, 4, 'calamity_676cc7788f32f.jpg'),
-(11, 5, 'calamity_676f56b8072f9.jpg'),
-(12, 5, 'calamity_676f56b80824d.jpg'),
-(13, 5, 'calamity_676f56b808e50.jpg');
 
 -- --------------------------------------------------------
 
@@ -213,16 +173,6 @@ CREATE TABLE `calamity_report` (
   `notification_status` enum('unread','viewed') CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL DEFAULT 'unread'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
---
--- Dumping data for table `calamity_report`
---
-
-INSERT INTO `calamity_report` (`id`, `user_id`, `rsbsa`, `calamity_type`, `farmer_type`, `birthdate`, `region`, `province`, `municipality`, `barangay`, `org_name`, `tot_male`, `tot_female`, `sex`, `indigenous`, `tribe_name`, `pwd`, `arb`, `fourps`, `crop_type`, `partially_damage`, `totally_damage`, `total_area`, `livestock_type`, `animal_type`, `age_class`, `no_heads`, `remarks`, `lastname`, `firstname`, `middlename`, `suffix`, `fullname`, `location`, `assistance_type`, `date_provided`, `status`, `email`, `date_reported`, `notification_status`) VALUES
-(2, 2, 'sd-sf-sg-fg-s2', 'Typhoon', 'GROUP', '2024-12-21', 'asfsdfsdfsd', 'asdasd', 'asdasdasd', 'sdasd', 'asdasdas', 3, 2, 'MALE', 'NO', NULL, 'YES', 'YES', 'YES', 'RICE', 3, NULL, 2, NULL, NULL, NULL, NULL, NULL, 'dasdas', 'wqewqe', 'adas', 'Jr.', 'wqewqe adas dasdas Jr.', '95J9+2C Calapan, Oriental Mindoro, Philippines', 'Cash', '2024-12-25', 'Pending', 'sarahelmenzo13@gmail.com', '2024-12-25 10:59:47', 'viewed'),
-(3, 2, 'sd-sf-sg-fg-s2', 'Typhoon', 'GROUP', '2024-12-21', 'asfsdfsdfsd', 'asdasd', 'asdasdasd', 'sdasd', 'asdasdas', 3, 2, 'MALE', 'NO', NULL, 'YES', 'YES', 'YES', NULL, NULL, NULL, NULL, 'BACKYARD', 'PIG', 3, 6, NULL, 'dasdas', 'wqewqe', 'adas', 'Jr.', 'wqewqe adas dasdas Jr.', '85XV+68 Calapan, Oriental Mindoro, Philippines', 'Seeds', '2024-12-24', 'Pending', 'sarahelmenzo13@gmail.com', '2024-12-24 11:00:24', 'viewed'),
-(4, 2, 'sd-sf-sg-fg-s2', 'Typhoon', 'GROUP', '2024-12-21', 'asfsdfsdfsd', 'asdasd', 'asdasdasd', 'sdasd', 'asdasdas', 3, 2, 'MALE', 'NO', NULL, 'YES', 'YES', 'YES', 'WHEAT', 3, 3, 2, NULL, NULL, NULL, NULL, NULL, 'dasdas', 'wqewqe', 'adas', 'Jr.', 'wqewqe adas dasdas Jr.', '031 Tawagan Rd, Calapan, Oriental Mindoro, Philippines', 'Seeds', '2024-12-27', 'Completed', 'sarahelmenzo13@gmail.com', '2024-12-26 11:03:20', 'viewed'),
-(5, 6, '32-13-21-27-8d-fs', 'Typhoon', 'INDIVIDUAL', '2024-12-28', 'MIMAROPA', 'ORIENTAL MINDORO', 'CALAPAN', 'MASIPIT', 'WALA', 3, 2, 'MALE', 'YES', 'Mangyan', 'NO', 'NO', 'NO', 'CORN', 7, 9, 8, NULL, NULL, 32, 3, NULL, 'Bernales', 'Carlos', 'Laurel', 'Jr.', 'Carlos Laurel Bernales Jr.', '203bde brg pag asa, Bansud, Oriental Mindoro, Philippines', 'Seeds', NULL, 'Ongoing', 'bernalescarlos480@gmail.com', '2024-11-06 09:39:04', 'viewed');
-
 -- --------------------------------------------------------
 
 --
@@ -238,19 +188,17 @@ CREATE TABLE `farms` (
   `farm_type` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci DEFAULT NULL,
   `livestock_type` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci DEFAULT NULL,
   `forms_farm` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci DEFAULT NULL,
-  `location` varchar(255) NOT NULL
+  `location` varchar(255) NOT NULL,
+  `email` varchar(255) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
 --
 -- Dumping data for table `farms`
 --
 
-INSERT INTO `farms` (`id`, `user_id`, `rsbsa`, `fullname`, `commodity`, `farm_type`, `livestock_type`, `forms_farm`, `location`) VALUES
-(1, 2, 'sd-sf-sg-fg-s2', 'wqewqe adas dasdas Jr.', 'CROP', 'WHEAT', NULL, NULL, '031 Tawagan Rd, Calapan, Oriental Mindoro, Philippines'),
-(2, 2, 'sd-sf-sg-fg-s2', 'wqewqe adas dasdas Jr.', 'CROP', 'RICE', NULL, NULL, '95J9+2C Calapan, Oriental Mindoro, Philippines'),
-(3, 2, 'sd-sf-sg-fg-s2', 'wqewqe adas dasdas Jr.', 'LIVESTOCK', NULL, 'PIG', 'BACKYARD', '85XV+68 Calapan, Oriental Mindoro, Philippines'),
-(5, 6, '32-13-21-27-8d-fs', 'Carlos Laurel Bernales Jr.', 'CROP', 'CORN', NULL, NULL, '203bde brg pag asa, Bansud, Oriental Mindoro, Philippines'),
-(6, 6, '32-13-21-27-8d-fs', 'Carlos Laurel Bernales Jr.', 'LIVESTOCK', NULL, 'GOAT', 'BACKYARD', 'RC6M+47 Bansud, Oriental Mindoro, Philippines');
+INSERT INTO `farms` (`id`, `user_id`, `rsbsa`, `fullname`, `commodity`, `farm_type`, `livestock_type`, `forms_farm`, `location`, `email`) VALUES
+(2, 2, 'sd-sf-sg-fg-s2', 'wqewqe adas dasdas Jr.', 'CROP', 'RICE', NULL, NULL, '85MV+3W Calapan, Oriental Mindoro, Philippines', 'carlosbernales24@gmail.com'),
+(3, 6, '32-13-21-27-8d-fs', 'Carlos Laurel Bernales Jr.', 'LIVESTOCK', NULL, 'COW', 'BACKYARD', '57R5+CP Victoria, Oriental Mindoro, Philippines', 'sarahelmenzo13@gmail.com');
 
 -- --------------------------------------------------------
 
@@ -269,19 +217,11 @@ CREATE TABLE `farms_images` (
 --
 
 INSERT INTO `farms_images` (`id`, `farms_fk_id`, `image`) VALUES
-(1, 1, 'farm_676698e30232a5.00722337.jfif'),
-(2, 1, 'farm_676698e3039399.97535099.jfif'),
-(3, 2, 'farm_67669a58d316d2.67095029.jfif'),
-(4, 2, 'farm_67669a58d5d909.39552930.jfif'),
-(5, 2, 'farm_67669a58d673d8.30410061.jfif'),
-(6, 3, 'farm_67669afb6d4199.10961043.jfif'),
-(7, 3, 'farm_67669afb6e3276.55918978.jfif'),
-(8, 3, 'farm_67669afb6f0120.25075207.jfif'),
-(11, 5, 'farm_676f555f570be4.00784003.jpg'),
-(12, 5, 'farm_676f555f5d5094.60521889.jpg'),
-(13, 6, 'farm_676f55c86a94a7.33995399.jpg'),
-(14, 6, 'farm_676f55c86b83d8.96279908.jpg'),
-(15, 6, 'farm_676f55c86c8585.30123200.jpg');
+(3, 2, 'farm_6770e922edbc38.84345920.jpg'),
+(4, 2, 'farm_6770e922ef0ba6.86802369.jpg'),
+(5, 3, 'farm_6770e99c81a8b4.65365454.jpg'),
+(6, 3, 'farm_6770e99c8383b1.12723829.jpg'),
+(7, 3, 'farm_6770e99c84b641.92093584.jpg');
 
 --
 -- Indexes for dumped tables
@@ -349,13 +289,13 @@ ALTER TABLE `account`
 -- AUTO_INCREMENT for table `announcement`
 --
 ALTER TABLE `announcement`
-  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=8;
+  MODIFY `id` int NOT NULL AUTO_INCREMENT;
 
 --
 -- AUTO_INCREMENT for table `announcement_user`
 --
 ALTER TABLE `announcement_user`
-  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=10;
+  MODIFY `id` int NOT NULL AUTO_INCREMENT;
 
 --
 -- AUTO_INCREMENT for table `assistance`
@@ -367,25 +307,25 @@ ALTER TABLE `assistance`
 -- AUTO_INCREMENT for table `calamity_images`
 --
 ALTER TABLE `calamity_images`
-  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=14;
+  MODIFY `id` int NOT NULL AUTO_INCREMENT;
 
 --
 -- AUTO_INCREMENT for table `calamity_report`
 --
 ALTER TABLE `calamity_report`
-  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
+  MODIFY `id` int NOT NULL AUTO_INCREMENT;
 
 --
 -- AUTO_INCREMENT for table `farms`
 --
 ALTER TABLE `farms`
-  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
+  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
 
 --
 -- AUTO_INCREMENT for table `farms_images`
 --
 ALTER TABLE `farms_images`
-  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=16;
+  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=8;
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;

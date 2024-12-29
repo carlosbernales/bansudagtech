@@ -24,7 +24,7 @@ Route::match(['get', 'post'], '/login', [AuthController::class, 'login']);
 Route::match(['get', 'post'], '/login_submit', [AuthController::class, 'login_submit']);
 Route::match(['get', 'post'], '/register', [AuthController::class, 'register']);
 Route::match(['get', 'post'], '/logout', [AuthController::class, 'logout']);
-
+Route::get('/email/verify/{token}', [AuthController::class, 'verifyEmail'])->name('email.verify');
 
 //ADMIN
 Route::match(['get', 'post'], '/dashboard', [AdminController::class, 'dashboard']);
@@ -54,7 +54,7 @@ Route::delete('/delete_assistance/{id}', [AdminController::class, 'delete_assist
 Route::post('/fetch-calamity-reports', [AdminController::class, 'fetchCalamityReports']);
 
 Route::post('/notifications/upstatus', [AdminController::class, 'updateStatus']);
-
+Route::post('/send-alert-email', [AdminController::class, 'sendAlertEmail']);
 
 //HOME
 Route::match(['get', 'post'], '/home', [HomeController::class, 'home']);

@@ -95,6 +95,7 @@ class HomeController extends Controller
 
         $userFullname = $user->fullname;
         $rsbsa = $user->rsbsa;
+        $email = $user->email;
 
         $farm = Farms::create([
             'location' => $request->input('location'),
@@ -105,6 +106,7 @@ class HomeController extends Controller
             'user_id' => $userId, 
             'fullname' => $userFullname, 
             'rsbsa' => $rsbsa,
+            'email' => $email,
         ]);
 
         if ($request->hasFile('image')) {

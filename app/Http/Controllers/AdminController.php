@@ -42,7 +42,7 @@ class AdminController extends Controller
         ];
 
         $farmLocations = Farms::pluck('location');
-        $defaultLocation = Farms::first()->location;
+        $defaultLocation = Farms::first()?->location ?? null;
 
         $calamityReports = CalamityReport::selectRaw('YEAR(date_reported) as year, MONTH(date_reported) as month, crop_type, animal_type, COUNT(*) as count')
             ->where(function ($query) {
@@ -70,12 +70,12 @@ class AdminController extends Controller
         $groupedAnimals = $groupedData->pluck('animal');
 
         $totalCrops = $calamityReports->whereNotNull('crop_type')->sum('count');
-    $totalAnimals = $calamityReports->whereNotNull('animal_type')->sum('count');
+        $totalAnimals = $calamityReports->whereNotNull('animal_type')->sum('count');
 
-    $commodityData = [
-        'labels' => ['Crops', 'Animals'],
-        'data' => [$totalCrops, $totalAnimals],
-    ];
+        $commodityData = [
+            'labels' => ['Crops', 'Animals'],
+            'data' => [$totalCrops, $totalAnimals],
+        ];
 
         return view('admin/dashboard', compact(
             'unreadNotifications', 
@@ -497,4 +497,6 @@ class AdminController extends Controller
         
         return response()->json(['success' => true]);
     }
+
+    
 }

@@ -8,7 +8,9 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Session;
-
+use Illuminate\Support\Str; // for generating a random token
+use Illuminate\Support\Facades\Mail;
+use Illuminate\Support\Facades\URL;
 class AuthController extends Controller
 {
 
@@ -41,23 +43,29 @@ class AuthController extends Controller
 
         $account = Accounts::where('email', $request->email)->first();
 
-        if ($account && !Hash::check($request->password, $account->password)) {
-            return redirect()->back()->with('error', 'Incorrect password');
-        }
         if ($account) {
+            if ($account->status != 'verified') {
+                return redirect()->back()->with('error', 'Your account is not verified');
+            }
+
+            if (!Hash::check($request->password, $account->password)) {
+                return redirect()->back()->with('error', 'Incorrect password');
+            }
+
             session()->flush();
 
             if ($account->role == 'user') {
-                session(['user_id' => $account->id]); 
-                return redirect('/home'); 
+                session(['user_id' => $account->id]);
+                return redirect('/home');
             } elseif ($account->role == 'admin') {
-                session(['admin_id' => $account->id]); 
-                return redirect('/dashboard'); 
+                session(['admin_id' => $account->id]);
+                return redirect('/dashboard');
             }
         } else {
             return redirect()->back()->with('error', 'Account not found');
         }
     }
+
 
     public function register(Request $request)
     {
@@ -75,7 +83,7 @@ class AuthController extends Controller
 
         if (Accounts::where('email', $request->email)->exists()) {
             return redirect()->back()
-                ->withErrors(['email' => 'The email existed.'], 'register_error')
+                ->withErrors(['email' => 'The email already exists.'], 'register_error')
                 ->withInput();
         }
 
@@ -89,9 +97,39 @@ class AuthController extends Controller
         $account->update([
             'email' => $request->email,
             'password' => Hash::make($request->password),
+            'verification_token' => Str::random(60),
         ]);
 
-        return redirect()->back()->with('success', 'Registration successful!');
+        $url = URL::route(
+            'email.verify', 
+            ['token' => $account->verification_token]
+        );
+
+        Mail::send('email.activation', [
+            'url' => $url,
+        ], function ($message) use ($account) {
+            $message->to($account->email)
+                    ->subject('Email Verification');
+        });
+
+        return redirect()->back()->with('success', 'Registration successful! Please check your email for the verification link.');
+    }
+
+    public function verifyEmail(Request $request, $token)
+    {
+        $account = Accounts::where('verification_token', $token)->first();
+
+        if (!$account) {
+            return redirect('/login')->with('success', 'Invalid verification token or account already verified.');
+        }
+
+        $account->update([
+            'verification_token' => null, 
+            'status' => 'verified', 
+        ]);
+
+
+        return redirect('/login')->with('success', 'Your email has been verified. You can now login.');
     }
 
     public function logout()

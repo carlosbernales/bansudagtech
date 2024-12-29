@@ -32,40 +32,67 @@
   function initMap() {
     var locations = @json($locations); 
 
-    if (locations.length > 0) {
-      var mapCenter = { lat: 0, lng: 0 }; 
+    var mapCenter = locations.length > 0 ? { lat: 0, lng: 0 } : { lat: 20.5937, lng: 78.9629 }; 
 
-      var map = new google.maps.Map(document.getElementById('map'), {
-        zoom: 8,
+    var map = new google.maps.Map(document.getElementById('map'), {
+        zoom: locations.length > 0 ? 8 : 4, 
         center: mapCenter
-      });
-
-      var geocoder = new google.maps.Geocoder();
-
-      locations.forEach(function(location) {
-        geocodeAddress(geocoder, map, location.address);
-      });
-    } else {
-      console.log('No farm locations found.');
-    }
-  }
-
-  function geocodeAddress(geocoder, map, address) {
-    geocoder.geocode({ 'address': address }, function(results, status) {
-      if (status === 'OK') {
-        var marker = new google.maps.Marker({
-          map: map,
-          position: results[0].geometry.location
-        });
-
-        map.setCenter(results[0].geometry.location);
-      } else {
-        console.log('Geocode was not successful for the following reason: ' + status);
-      }
     });
-  }
 
-  window.onload = initMap;
+    if (locations.length > 0) {
+        var geocoder = new google.maps.Geocoder();
+
+        locations.forEach(function(location) {
+            geocodeAddress(geocoder, map, location.address);
+        });
+    } else {
+        console.log('No farm locations found.');
+    }
+}
+
+function geocodeAddress(geocoder, map, address) {
+    geocoder.geocode({ 'address': address }, function(results, status) {
+        if (status === 'OK') {
+            var position = results[0].geometry.location;
+
+            fetchWeather(position.lat(), position.lng(), function(temp) {
+                var marker = new google.maps.Marker({
+                    map: map,
+                    position: position,
+                    label: temp + '°C' 
+                });
+
+                map.setCenter(position);
+            });
+        } else {
+            console.log('Geocode was not successful for the following reason: ' + status);
+        }
+    });
+}
+
+function fetchWeather(lat, lng, callback) {
+    var apiKey = "4e89cb6596765628fd6138f58d7454e1";
+    var url = `https://api.openweathermap.org/data/2.5/weather?lat=${lat}&lon=${lng}&units=metric&appid=${apiKey}`;
+
+    fetch(url)
+        .then(response => response.json())
+        .then(data => {
+            if (data && data.main && data.main.temp !== undefined) {
+                callback(data.main.temp); 
+            } else {
+                console.log('Weather data not found for location.');
+                callback('N/A');
+            }
+        })
+        .catch(error => {
+            console.error('Error fetching weather:', error);
+            callback('N/A');
+        });
+}
+
+window.onload = initMap;
+
+
 </script>
 @include('user/footer')
 
