@@ -8,7 +8,7 @@
         <div class="row">
             <div class="col-md-12">
                 <div class="section-header d-flex flex-wrap justify-content-between my-4">
-                    <h2 class="section-title">Pending Reports</h2>
+                    <h2 class="section-title">Completed Reports</h2>
                     <div class="d-flex align-items-center">
                         <a href="#" class="btn btn-primary me-2" data-bs-toggle="modal" data-bs-target="#AddReportModal">Add Report</a>
                     </div>

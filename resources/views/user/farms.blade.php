@@ -52,7 +52,12 @@
                                     <!-- Action Buttons -->
                                     <div class="button-area p-3 pt-0">
                                         <div class="row g-1 mt-2">
-                                            <div class="col-3"></div>
+                                            <div class="col-3">
+                                            <button type="button" class="btn btn-link" data-bs-toggle="modal" data-bs-target="#viewDetailsModal{{ $farmer->id }}">
+                                                <i class="fas fa-eye"></i>
+                                            </button>
+                                            </div>
+
                                             <div class="col-7">
                                                 <a href="#" class="btn btn-primary rounded-1 p-2 fs-7 btn-cart" data-location="{{ $farmer->location }}" data-bs-toggle="modal" data-bs-target="#viewLocationModal">
                                                     View Location
@@ -77,6 +82,52 @@
                             </div>
                         </div>
 
+
+                        <div class="modal fade" id="viewDetailsModal{{ $farmer->id }}" tabindex="-1" aria-labelledby="viewDetailsModalLabel" aria-hidden="true">
+                            <div class="modal-dialog modal-lg">
+                                <div class="modal-content">
+                                    <div class="modal-header">
+                                        <h5 class="modal-title" id="viewDetailsModalLabel">My Farm Details</h5>
+                                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                    </div>
+                                    <div class="modal-body">
+                                        <table class="table table-bordered">
+                                            <thead>
+                                                <tr>
+                                                    <th>Field</th>
+                                                    <th>Value</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                <tr><td>RSBSA</td><td>{{ $farmer->rsbsa }}</td></tr>
+                                                <tr><td>Email</td><td>{{ $farmer->email }}</td></tr>
+                                                <tr><td>Firstname</td><td>{{ $farmer->firstname }}</td></tr>
+                                                <tr><td>Middlename</td><td>{{ $farmer->middlename }}</td></tr>
+                                                <tr><td>Lastname</td><td>{{ $farmer->lastname }}</td></tr>
+                                                <tr><td>Suffix</td><td>{{ $farmer->suffix }}</td></tr>
+                                                <tr><td>Sex</td><td>{{ $farmer->sex }}</td></tr>
+                                                <tr><td>Birthdate</td><td>{{ \Carbon\Carbon::parse($farmer->birthdate)->format('F d, Y') }}</td></tr>
+                                                <tr><td>Contact</td><td>{{ $farmer->contact }}</td></tr>
+                                                <tr><td>4Ps</td><td>{{ $farmer->fourps }}</td></tr>
+                                                <tr><td>Indigenous</td><td>{{ $farmer->indigenous }}</td></tr>
+                                                <tr><td>PWD</td><td>{{ $farmer->pwd }}</td></tr>
+                                                <tr><td>Commodity</td><td>{{ $farmer->commodity }}</td></tr>
+                                                <tr><td>Crop Type</td><td>{{ $farmer->farm_type ?? 'N/A' }}</td></tr>
+                                                <tr><td>Animal Type</td><td>{{ $farmer->livestock_type ?? 'N/A' }}</td></tr>
+                                                <tr><td>Type of Farm</td><td>{{ $farmer->forms_farm ?? 'N/A' }}</td></tr>
+                                                <tr><td>Region</td><td>{{ $farmer->region }}</td></tr>
+                                                <tr><td>Province</td><td>{{ $farmer->province }}</td></tr>
+                                                <tr><td>Municipality</td><td>{{ $farmer->municipality }}</td></tr>
+                                                <tr><td>Barangay</td><td>{{ $farmer->barangay }}</td></tr>
+                                                <tr><td>Farm Area</td><td>{{ $farmer->farm_area }}</td></tr>
+                                                <tr><td>Area Planted</td><td>{{ $farmer->area_planted }}</td></tr>
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
                         <!-- Modal for Viewing Image -->
                         <div class="modal fade" id="viewImageModal{{ $farmer->id }}" tabindex="-1" aria-labelledby="viewImageModalLabel" aria-hidden="true">
                             <div class="modal-dialog modal-dialog-centered">
@@ -93,15 +144,18 @@
                                                     <span id="totalImages{{ $farmer->id }}">{{ count($farmer->farmImages) }}</span>
                                                 </div>
                                                 @foreach ($farmer->farmImages as $index => $image)
-                                                    <div class="image-gallery-item {{ $index == 0 ? 'active' : '' }}" style="display: {{ $index == 0 ? 'block' : 'none' }};" data-index="{{ $index }}">
-                                                        <img src="{{ asset('farms_images/' . $image->image) }}" alt="Farm Image" class="img-fluid" style="max-width: 100%; max-height: 400px; object-fit: contain;">
+                                                    <div class="image-gallery-item {{ $index == 0 ? 'active' : '' }}" 
+                                                        style="display: {{ $index == 0 ? 'block' : 'none' }};" 
+                                                        data-index="{{ $index }}">
+                                                        <img src="{{ asset('farms_images/' . $image->image) }}" alt="Farm Image" 
+                                                            class="img-fluid" style="max-width: 100%; max-height: 400px; object-fit: contain;">
                                                     </div>
                                                 @endforeach
                                             </div>
                                         </div>
                                     </div>
                                     <div class="modal-footer">
-                                        <button type="button" class="btn btn-primary" id="nextImageBtn">Next</button>
+                                        <button type="button" class="btn btn-primary" id="nextImageBtn{{ $farmer->id }}">Next</button>
                                     </div>
                                 </div>
                             </div>
@@ -120,7 +174,7 @@
 
 <!-- Add Farm Modal -->
 <div class="modal fade" id="addFarmModal" tabindex="-1" aria-labelledby="addFarmModalLabel" aria-hidden="true">
-  <div class="modal-dialog">
+  <div class="modal-dialog modals-default" role="document">
     <div class="modal-content">
       <div class="modal-header">
         <h5 class="modal-title" id="addFarmModalLabel">Add Farm</h5>
@@ -136,6 +190,40 @@
             <button type="button" class="btn btn-secondary" data-bs-toggle="modal" data-bs-target="#mapModal">Select Location</button>
             </div>
         </div>
+
+        <div class="row">
+            <div class="col-md-6 mb-3">
+                <label for="region" class="form-label">Region</label>
+                <input type="text" class="form-control" id="region" name="region" >
+            </div>
+            <div class="col-md-6 mb-3">
+                <label for="municipality" class="form-label">Municipality</label>
+                <input type="text" class="form-control" id="municipality" name="municipality" >
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-md-6 mb-3">
+                <label for="province" class="form-label">Province</label>
+                <input type="text" class="form-control" id="province" name="province" >
+            </div>
+            <div class="col-md-6 mb-3">
+                <label for="barangay" class="form-label">Barangay</label>
+                <input type="text" class="form-control" id="barangay" name="barangay" >
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-md-6 mb-3">
+                <label for="farm_area" class="form-label">Farm Area</label>
+                <input type="text" class="form-control" id="farm_area" name="farm_area" >
+            </div>
+            <div class="col-md-6 mb-3">
+                <label for="area_planted" class="form-label">Area Planted</label>
+                <input type="text" class="form-control" id="area_planted" name="area_planted" >
+            </div>
+        </div>
+        
         <div class="mb-3">
             <label for="commodity" class="form-label">Commodity</label>
             <select class="form-control" id="commodity" name="commodity" required>
@@ -221,7 +309,40 @@
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/alertifyjs@1.13.1/build/css/themes/default.min.css" />
 <script src="https://cdn.jsdelivr.net/npm/alertifyjs@1.13.1/build/alertify.min.js"></script>
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        const modalId = '{{ $farmer->id }}';
+        const totalImages = {{ count($farmer->farmImages) }};
+        let currentIndex = 0;
 
+        const nextButton = document.getElementById(`nextImageBtn${modalId}`);
+        const currentImageIndexSpan = document.getElementById(`currentImageIndex${modalId}`);
+        
+        nextButton.addEventListener("click", function() {
+            if (currentIndex < totalImages - 1) {
+                currentIndex++;
+                updateImageDisplay();
+            } else {
+                currentIndex = 0; 
+                updateImageDisplay();
+            }
+        });
+
+        function updateImageDisplay() {
+            const images = document.querySelectorAll(`#viewImageModal${modalId} .image-gallery-item`);
+            images.forEach(function(image) {
+                image.style.display = 'none';
+            });
+
+            const activeImage = document.querySelector(`#viewImageModal${modalId} .image-gallery-item[data-index="${currentIndex}"]`);
+            if (activeImage) {
+                activeImage.style.display = 'block';
+            }
+
+            currentImageIndexSpan.textContent = currentIndex + 1;
+        }
+    });
+</script>
 <script>
     alertify.set('notifier', 'position', 'top-right');
 
@@ -275,46 +396,7 @@ function confirmDelete(id) {
 
     
     
-document.addEventListener("DOMContentLoaded", function() {
-    const modals = document.querySelectorAll('.modal');
 
-    modals.forEach(modal => {
-        const nextButton = modal.querySelector('.btn-primary'); // Next button for each modal
-
-        nextButton.addEventListener("click", function() {
-            const images = modal.querySelectorAll('.image-gallery-item'); // Get all images in the modal
-            let activeImage = modal.querySelector('.image-gallery-item.active'); // Find the currently active image
-
-            let nextImage = activeImage ? activeImage.nextElementSibling : images[0];
-            if (!nextImage) {
-                nextImage = images[0]; // If no next image, loop back to the first one
-            }
-
-            activeImage.classList.remove('active');
-            activeImage.style.display = 'none';
-
-            nextImage.classList.add('active');
-            nextImage.style.display = 'block';
-
-            const currentIndex = Array.from(images).indexOf(nextImage) + 1;
-            const modalId = modal.getAttribute('id').replace('viewImageModal', '');
-            document.getElementById('currentImageIndex' + modalId).textContent = currentIndex; // Update current image number
-        });
-    });
-
-    modals.forEach(modal => {
-        const images = modal.querySelectorAll('.image-gallery-item');
-        images.forEach((image, index) => {
-            if (index !== 0) {
-                image.classList.remove('active');
-                image.style.display = 'none'; // Hide all except the first
-            }
-        });
-
-        const modalId = modal.getAttribute('id').replace('viewImageModal', '');
-        document.getElementById('currentImageIndex' + modalId).textContent = 1; // Start with the first image
-    });
-});
 
 
 

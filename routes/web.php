@@ -52,9 +52,13 @@ Route::match(['get', 'post'], '/assistances', [AdminController::class, 'assistan
 Route::match(['get', 'post'], '/add_assistance', [AdminController::class, 'add_assistance']);
 Route::delete('/delete_assistance/{id}', [AdminController::class, 'delete_assistance']);
 Route::post('/fetch-calamity-reports', [AdminController::class, 'fetchCalamityReports']);
-
 Route::post('/notifications/upstatus', [AdminController::class, 'updateStatus']);
 Route::post('/send-alert-email', [AdminController::class, 'sendAlertEmail']);
+Route::put('/updateToDisregarded/{id}', [AdminController::class, 'updateToDisregarded']);
+Route::match(['get', 'post'], '/disregarded_reports', [AdminController::class, 'disregarded_reports']);
+Route::put('/updateToPending/{id}', [AdminController::class, 'updateToPending']);
+
+
 
 //HOME
 Route::match(['get', 'post'], '/home', [HomeController::class, 'home']);
@@ -67,7 +71,21 @@ Route::match(['get', 'post'], '/submit_calamity_report', [HomeController::class,
 Route::delete('/delete_report/{id}', [HomeController::class, 'delete_report']);
 
 Route::post('/notifications/update-status', [HomeController::class, 'updateNotifStatus']);
+Route::match(['get', 'post'], '/updateMyProfile', [HomeController::class, 'updateMyProfile']);
+Route::match(['get', 'post'], '/ongoingreports', [HomeController::class, 'ongoingreports']);
+Route::match(['get', 'post'], '/completedreports', [HomeController::class, 'completedreports']);
 
+
+
+
+
+
+Route::match(['get', 'post'], '/emailOTP', [HomeController::class, 'emailOTP']);
+
+Route::match(['get', 'post'], '/change_email', [HomeController::class, 'change_email']);
+
+// In web.php
+Route::post('/verify-otp', [HomeController::class, 'verifyOtp']);
 
 
 

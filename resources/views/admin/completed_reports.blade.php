@@ -208,7 +208,7 @@
 <!-- Include Flatpickr JS -->
 <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
 <script>
-    $(document).ready(function() {
+$(document).ready(function() {
     $('#fromDate').flatpickr({
         dateFormat: 'Y-m-d', // This ensures it's in the correct format
     });
@@ -235,13 +235,16 @@ $('#reportForm').submit(function(e) {
             _token: '{{ csrf_token() }}', // CSRF token for security
         },
         success: function(response) {
-            generateExcel(response.data, fromDate, toDate);
+            // Filter the response to include only reports where the status is 'Completed'
+            const completedReports = response.data.filter(report => report.status === 'Completed');
+            generateExcel(completedReports, fromDate, toDate); // Pass only completed reports
         },
         error: function(xhr, status, error) {
             alert('Error generating report');
         }
     });
 });
+
 
 
 function generateExcel(data, fromDate, toDate) {
@@ -327,7 +330,7 @@ function generateExcel(data, fromDate, toDate) {
     ws['AF1'] = { v: 'DATE PROVIDED', t: 's' }; // Set value for AF1 to AF4
     ws['AG1'] = { v: 'DATE REPORTED', t: 's' };
 
-    const fileName = `calamity_report_${fromDate}_to_${toDate}.xlsx`; // Set dynamic filename
+    const fileName = `completed_calamity_report_${fromDate}_to_${toDate}.xlsx`; // Set dynamic filename
     XLSX.writeFile(wb, fileName);
 }
 

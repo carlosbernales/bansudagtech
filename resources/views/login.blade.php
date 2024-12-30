@@ -13,6 +13,7 @@ License URL: http://creativecommons.org/licenses/by/3.0/
 <head>
 	<title>Agi Tech</title>
 	<!-- Meta tag Keywords -->
+    <link rel="shortcut icon" type="image/x-icon" href="agtech.png">
 	<meta name="viewport" content="width=device-width, initial-scale=1">
 	<meta charset="UTF-8" />
 	<meta name="keywords" content="Triple Forms Responsive Widget,Login form widgets, Sign up Web forms , Login signup Responsive web form,Flat Pricing table,Flat Drop downs,Registration Forms,News letter Forms,Elements" />

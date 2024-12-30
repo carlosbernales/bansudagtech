@@ -12,7 +12,7 @@
                     <div class="data-table-list">
                         <div class="basic-tb-hd">
                             <div class="card-header" style="display: flex; justify-content: space-between;">
-                                <h2>Shortlisted Reports</h2>
+                                <h2>Disregarded Reports</h2>
                                 <button id="update-status-btn" class="btn btn-lightgreen lightgreen-icon-notika" style="display: none;">
                                     <i class="notika-icon notika-checked"></i>
                                 </button>
@@ -22,7 +22,6 @@
                             <table id="data-table-basic" class="table table-striped">
                                 <thead>
                                     <tr>
-                                    <th><input type="checkbox" id="select-all"></th>
                                         <th>RSBSA</th>
                                         <th>Full Name</th>
                                         <th>Farm Type</th>
@@ -36,9 +35,6 @@
                                 <tbody>
                                 @foreach ($calamities as $calamity)
                                 <tr>
-                                    <td>
-                                        <input type="checkbox" class="row-checkbox" value="{{ $calamity->id }}">
-                                    </td>
                                     <td>{{ $calamity->rsbsa }}</td>
                                     <td>{{ $calamity->fullname }}</td>
                                     <td>{{ $calamity->crop_type }}{{ $calamity->animal_type }}</td>
@@ -62,18 +58,13 @@
                                             <i class="bi bi-eye"></i>
                                         </button>
                                     </td>
-                                    <td>
-                                        <button data-toggle="modal" data-target="#editModal{{ $calamity->id }}"class="btn btn-lightgreen lightgreen-icon-notika">
-                                            <i class="notika-icon notika-checked"></i>
+                                    <td><form action="/updateToPending/{{ $calamity->id }}" method="POST">
+                                        @csrf
+                                        @method('PUT')
+                                        <button type="submit" class="btn btn-lightgreen lightgreen-icon-notika">
+                                            <i class="notika-icon notika-refresh"></i>
                                         </button>
-                                        <form action="/updateToDisregarded/{{ $calamity->id }}" method="POST" id="disregard-form-{{ $calamity->id }}" style="display: inline-block;">
-                                            @csrf
-                                            @method('PUT')
-                                            <button type="button" onclick="confirmDisregard({{ $calamity->id }})" class="btn btn-deeporange deeporange-icon-notika">
-                                                <i class="notika-icon notika-close"></i>
-                                            </button>
-                                        </form>
-                                    </td>
+                                    </form></td>
                                 </tr>
 
                                 <div class="modal fade" id="viewDetails-{{ $calamity->id }}" tabindex="-1" aria-labelledby="viewDetailsLabel" aria-hidden="true">
@@ -119,7 +110,7 @@
                                         </div>
                                     </div>
                                 </div>
-
+                                
                                 <!-- Modal for Location -->
                                 <div class="modal fade" id="viewLocationModal-{{ $calamity->id }}" tabindex="-1" aria-labelledby="viewLocationModalLabel" aria-hidden="true">
                                     <div class="modal-dialog modal-dialog-centered">
@@ -165,41 +156,6 @@
                                     </div>
                                 </div>
 
-
-                                 <!-- Edit Modal -->
-                                 <div class="modal fade" id="editModal{{ $calamity->id }}" tabindex="-1" role="dialog" aria-labelledby="editModalLabel{{ $calamity->id }}" aria-hidden="true">
-                                    <div class="modal-dialog modal-sm" role="document">
-                                        <div class="modal-content">
-                                            <div class="modal-header">
-                                                <h5 class="modal-title" id="editModalLabel{{ $calamity->id }}"></h5>
-                                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                                                    <span aria-hidden="true">&times;</span>
-                                                </button>
-                                            </div>
-                                            <div class="modal-body">
-                                            <form action="/updateToOngoing/{{ $calamity->id }}" method="POST">
-                                                @csrf
-                                                @method('PUT')
-                                                <div class="row">
-                                                    <div class="col-md-6 mb-3">
-                                                        <label for="assistance-type">Type of Assistance</label>
-                                                        <select name="assistance_type" id="assistance-type-dropdown" class="form-control">
-                                                            <option value="">Select Assistance Type</option>
-                                                            @foreach ($assistanceTypes as $type)
-                                                                <option value="{{ $type->assistance_type }}" {{ $calamity->assistance_type == $type->assistance_type ? 'selected' : '' }}>
-                                                                    {{ $type->assistance_type }}
-                                                                </option>
-                                                            @endforeach
-                                                        </select>
-                                                    </div>
-                                                </div>
-                                                <div class="modal-footer">
-                                                    <button type="submit" class="btn btn-primary" id="save-btn-{{ $calamity->id }}">Okay</button>
-                                                </div>
-                                            </form>
-                                        </div>
-                                    </div>
-                                </div>
                                 @endforeach
                                 </tbody>
                             </table>
@@ -210,30 +166,6 @@
         </div>
     </div>
 
-
-    <div class="modal fade" id="assistanceModal" role="dialog">
-        <div class="modal-dialog modal-md">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <button type="button" class="close" data-dismiss="modal">&times;</button>
-                </div>
-                <div class="modal-body">
-                    <select id="assistance-type-dropdown" class="form-control">
-                        <option value="">Select Assistance Type</option>
-                        @foreach ($assistanceTypes as $type)
-                            <option value="{{ $type->assistance_type }}">{{ $type->assistance_type }}</option>
-                        @endforeach
-                    </select>
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                    <button type="button" class="btn btn-primary" id="submit-assistance-type">Update Status</button>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    
 
 
 
@@ -259,86 +191,6 @@
 
 
 <script>
-    
-document.addEventListener('DOMContentLoaded', () => {
-    const updateBtn = document.getElementById('update-status-btn');
-    const checkboxes = document.querySelectorAll('.row-checkbox');
-    const selectAll = document.getElementById('select-all');
-    const assistanceModal = $('#assistanceModal'); // Use jQuery for Bootstrap modal
-    const submitAssistanceTypeBtn = document.getElementById('submit-assistance-type');
-    const assistanceTypeDropdown = document.getElementById('assistance-type-dropdown');
-    const csrfToken = document.querySelector('meta[name="csrf-token"]').content;
-
-    const toggleButton = () => {
-        const anyChecked = Array.from(checkboxes).some(checkbox => checkbox.checked);
-        updateBtn.style.display = anyChecked ? 'inline-block' : 'none';
-    };
-
-    checkboxes.forEach(checkbox => {
-        checkbox.addEventListener('change', toggleButton);
-    });
-
-    selectAll.addEventListener('change', () => {
-        const isChecked = selectAll.checked;
-        checkboxes.forEach(checkbox => {
-            checkbox.checked = isChecked;
-        });
-        toggleButton();
-    });
-
-    updateBtn.addEventListener('click', () => {
-        const selectedIds = Array.from(checkboxes)
-            .filter(checkbox => checkbox.checked)
-            .map(checkbox => checkbox.value);
-
-        if (selectedIds.length > 0) {
-            assistanceModal.modal('show');
-        }
-    });
-
-    submitAssistanceTypeBtn.addEventListener('click', () => {
-        const selectedIds = Array.from(checkboxes)
-            .filter(checkbox => checkbox.checked)
-            .map(checkbox => checkbox.value);
-        const assistanceType = assistanceTypeDropdown.value;
-
-        if (assistanceType) {
-            const form = document.createElement('form');
-            form.method = 'POST';
-            form.action = '/multipleUpdateToOngoing';
-
-            const csrfInput = document.createElement('input');
-            csrfInput.type = 'hidden';
-            csrfInput.name = '_token';
-            csrfInput.value = csrfToken;
-            form.appendChild(csrfInput);
-
-            selectedIds.forEach(id => {
-                const input = document.createElement('input');
-                input.type = 'hidden';
-                input.name = 'ids[]';
-                input.value = id;
-                form.appendChild(input);
-            });
-
-            const assistanceInput = document.createElement('input');
-            assistanceInput.type = 'hidden';
-            assistanceInput.name = 'assistance_type';
-            assistanceInput.value = assistanceType;
-            form.appendChild(assistanceInput);
-
-            document.body.appendChild(form);
-            form.submit();
-
-            assistanceModal.modal('hide');
-        } else {
-            alert('Please select an assistance type.');
-        }
-    });
-});
-
-
-
 
 //////////////////////////////////////////////////////////////////////////
     
@@ -392,7 +244,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
 
 ///////////////////////////////////////
-function confirmDisregard(id) {
+function confirmDelete(id) {
     Swal.fire({
         title: 'Are you sure?',
         text: "You won't be able to revert this!",
@@ -400,10 +252,10 @@ function confirmDisregard(id) {
         showCancelButton: true,
         confirmButtonColor: '#3085d6',
         cancelButtonColor: '#d33',
-        confirmButtonText: 'Yes!'
+        confirmButtonText: 'Yes!',
     }).then((result) => {
         if (result.isConfirmed) {
-            document.getElementById('disregard-form-' + id).submit();  // Submit the form
+            document.getElementById('delete-form-' + id).submit();
         }
     });
 }

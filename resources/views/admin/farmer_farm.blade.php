@@ -12,6 +12,9 @@
                         <div class="basic-tb-hd">
                             <div class="card-header" style="display: flex; justify-content: space-between;">
                                 <h2>Farmers Farm</h2>
+                                <button id="generateReport" class="btn btn-lightgreen lightgreen-icon-notika">
+                                    Report
+                                </button>
                             </div>
                         </div>
                         <div class="table-responsive">
@@ -54,6 +57,41 @@
                                         </button>
                                     </td>
                                 </tr>
+
+                                <div class="modal fade" id="viewDetails-{{ $farmer->id }}" tabindex="-1" aria-labelledby="viewDetailsLabel" aria-hidden="true">
+                                    <div class="modal-dialog modal-dialog-centered">
+                                        <div class="modal-content">
+                                            <div class="modal-header">
+                                                <h5 class="modal-title" id="viewDetailsLabel">Farm Full Details</h5>
+                                            </div>
+                                            <div class="modal-body">
+                                                <p><strong>RSBSA:</strong> {{ $farmer->rsbsa }}</p>
+                                                <p><strong>Email:</strong> {{ $farmer->email }}</p>
+                                                <p><strong>Firstname:</strong> {{ $farmer->firstname }}</p>
+                                                <p><strong>Middlename:</strong> {{ $farmer->middlename }}</p>
+                                                <p><strong>Lastname:</strong> {{ $farmer->lastname }}</p>
+                                                <p><strong>Suffix:</strong> {{ $farmer->suffix }}</p>
+                                                <p><strong>Sex:</strong> {{ $farmer->sex }}</p>
+                                                <p><strong>Birthdate:</strong> {{ \Carbon\Carbon::parse($farmer->birthdate)->format('F d, Y') }}</p>
+                                                <p><strong>Contact:</strong> {{ $farmer->contact }}</p>
+                                                <p><strong>4Ps:</strong> {{ $farmer->fourps }}</p>
+                                                <p><strong>Indigenous:</strong> {{ $farmer->indigenous }}</p>
+                                                <p><strong>PWD:</strong> {{ $farmer->pwd }}</p>
+                                                <p><strong>Commodity:</strong> {{ $farmer->commodity }}</p>
+                                                <p><strong>Crop Type:</strong> {{ $farmer->farm_type ?? 'N/A' }}</p>
+                                                <p><strong>Animal Type:</strong> {{ $farmer->livestock_type ?? 'N/A' }}</p>
+                                                <p><strong>Type of Farm:</strong> {{ $farmer->forms_farm ?? 'N/A' }}</p>
+                                                <p><strong>Region:</strong> {{ $farmer->region }}</p>
+                                                <p><strong>Province:</strong> {{ $farmer->province }}</p>
+                                                <p><strong>Municipality:</strong> {{ $farmer->municipality }}</p>
+                                                <p><strong>Barangay:</strong> {{ $farmer->barangay	 }}</p>
+                                                <p><strong>Farm Area:</strong> {{ $farmer->farm_area }}</p>
+                                                <p><strong>Area Planted:</strong> {{ $farmer->area_planted }}</p>
+                                                
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
 
                                 <!-- Modal for Location -->
                                 <div class="modal fade" id="viewLocationModal-{{ $farmer->id }}" tabindex="-1" aria-labelledby="viewLocationModalLabel" aria-hidden="true">
@@ -110,8 +148,7 @@
 
 
 
-
-
+<script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/alertifyjs@1.13.1/build/css/alertify.min.css" />
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/alertifyjs@1.13.1/build/css/themes/default.min.css" />
 <script src="https://cdn.jsdelivr.net/npm/alertifyjs@1.13.1/build/alertify.min.js"></script>
@@ -119,7 +156,44 @@
 <script async defer src="googlemapsAPI.js"></script>
 
 <script>
-    function initMap(location, calamityId) {
+
+document.getElementById("generateReport").addEventListener("click", function () {
+    const tableData = [
+        ['SYSTEM GENERATED RSBSA NUMBER', 'LASTNAME', 'FIRSTNAME', 'MIDDLENAME', 'SUFFIX', 'BARANGAY', 'MUNICIPALITY', 'PROVINCE', 'REGION', 'BIRTHDATE', 
+        'SEX', 'CONTACT NO', '4Ps', 'INDIGENOUS', 'PWD', 'FARM AREA', 'AREA PLANTED', 'COMMODITY'],
+        @foreach($farmers as $farmer)
+        [
+            '{{ $farmer->rsbsa }}',
+            '{{ $farmer->lastname }}',
+            '{{ $farmer->firstname }}',
+            '{{ $farmer->middlename }}',
+            '{{ $farmer->suffix }}',
+            '{{ $farmer->barangay }}',
+            '{{ $farmer->municipality }}',
+            '{{ $farmer->province }}',
+            '{{ $farmer->region }}',
+            '{{ $farmer->birthdate }}',
+            '{{ $farmer->sex }}',
+            '{{ $farmer->contact }}',
+            '{{ $farmer->fourps }}',
+            '{{ $farmer->indigenous }}',
+            '{{ $farmer->pwd }}',
+            '{{ $farmer->farm_area }}',
+            '{{ $farmer->area_planted }}',
+            '{{ $farmer->farm_type }}{{ $farmer->livestock_type }}',
+        ],
+        @endforeach
+    ];
+
+    const worksheet = XLSX.utils.aoa_to_sheet(tableData);
+
+    const workbook = XLSX.utils.book_new();
+    XLSX.utils.book_append_sheet(workbook, worksheet, "Farmers Report");
+
+    XLSX.writeFile(workbook, "Farmers_Report.xlsx");
+});
+
+function initMap(location, calamityId) {
     console.log("Location:", location); 
 
     var geocoder = new google.maps.Geocoder();

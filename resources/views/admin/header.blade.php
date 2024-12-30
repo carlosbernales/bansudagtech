@@ -9,7 +9,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <!-- favicon
 		============================================ -->
-    <link rel="shortcut icon" type="image/x-icon" href="admin_template/img/favicon.ico">
+    <link rel="shortcut icon" type="image/x-icon" href="agtech.png">
     <!-- Google Fonts
 		============================================ -->
     <link href="https://fonts.googleapis.com/css?family=Roboto:100,300,400,700,900" rel="stylesheet">
@@ -172,6 +172,8 @@
                                         </li>
                                         <li><a href="/completed_reports">Completed</a>
                                         </li>
+                                        <li><a href="/disregarded_reports">Disregarded</a>
+                                        </li>
                                     </ul>
                                 </li>
                             </ul>
@@ -209,7 +211,7 @@
                     </ul>
                     <div class="tab-content custom-menu-content">
                         <div id="Tables" class="tab-pane {{ request()->is('calamity_reports') || request()->is('shortlisted_reports') 
-                        || request()->is('ongoing_reports') || request()->is('completed_reports') ? 'active' : '' }}
+                        || request()->is('ongoing_reports') || request()->is('disregarded_reports') || request()->is('completed_reports') ? 'active' : '' }}
                             notika-tab-menu-bg animated flipInX">
                             <ul class="notika-main-menu-dropdown">
                                 <li><a href="/calamity_reports">Reports</a>
@@ -219,6 +221,8 @@
                                 <li><a href="/ongoing_reports">Ongoing</a>
                                 </li>
                                 <li><a href="/completed_reports">Completed</a>
+                                </li>
+                                <li><a href="/disregarded_reports">Disregarded</a>
                                 </li>
                             </ul>
                         </div>

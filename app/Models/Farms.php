@@ -31,7 +31,23 @@ class Farms extends Model
                             'location',
                             'forms_farm',
                             'livestock_type',
-                            'email'
+                            'email',
+                            'region',
+                            'municipality',
+                            'province',
+                            'barangay',
+                            'farm_area',
+                            'area_planted',
+                            'firstname',
+                            'middlename',
+                            'lastname',
+                            'suffix',
+                            'sex',
+                            'contact',
+                            'fourps',
+                            'indigenous',
+                            'pwd',
+                            'birthdate',
                         ];
     // Define the guarded attributes (not mass assignable)
     // protected $guarded = ['id']

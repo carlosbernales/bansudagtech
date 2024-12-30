@@ -100,7 +100,7 @@ class AdminController extends Controller
         if (!session()->has('admin_id')) {
             return redirect('/');
         }
-        $accounts = Accounts::all();
+        $accounts = Accounts::where('role', 'user')->get();
         $unreadNotifications = CalamityReport::where('notification_status', 'unread')->get();
 
         return view('admin/farmers', compact('accounts','unreadNotifications'));
@@ -309,6 +309,26 @@ class AdminController extends Controller
         return redirect()->back()->with('success', 'Success!');
     }
 
+    public function updateToDisregarded($id)
+    {
+        $calamity = CalamityReport::findOrFail($id);
+
+        $calamity->status = 'Disregarded';
+        $calamity->save();
+
+        return redirect()->back()->with('success', 'Success!');
+    }
+
+    public function updateToPending($id)
+    {
+        $calamity = CalamityReport::findOrFail($id);
+
+        $calamity->status = 'Pending';
+        $calamity->save();
+
+        return redirect()->back()->with('success', 'Success!');
+    }
+
 
     public function multipleUpdateToShorlisted(Request $request)
     {
@@ -322,6 +342,22 @@ class AdminController extends Controller
         return redirect()->back()->with('error', 'No calamities were selected.');
     }
 
+    public function disregarded_reports()
+    {
+        if (!session()->has('admin_id')) {
+            return redirect('/');
+        }
+        $unreadNotifications = CalamityReport::where('notification_status', 'unread')->get();
+
+        $calamities = CalamityReport::with('calamityImages')
+                                    ->where('status', 'Disregarded')
+                                    ->get(); 
+
+        $assistanceTypes = Assistance::all();  
+        
+    
+        return view('admin/disregarded_reports', compact('calamities', 'assistanceTypes','unreadNotifications'));
+    }
 
     public function shortlisted_reports()
     {

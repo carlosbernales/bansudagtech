@@ -13,6 +13,7 @@
     <meta name="author" content="">
     <meta name="keywords" content="">
     <meta name="description" content="">
+    <link rel="shortcut icon" type="image/x-icon" href="agtech.png">
 
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@9/swiper-bundle.min.css">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-KK94CHFLLe+nY2dmCWGMq91rCGa5gtU4mk92HdvYe+M/SXH301p5ILy+dN9+nJOZ" crossorigin="anonymous">
@@ -173,11 +174,21 @@
               <span>My Crops</span>
             </a>
           </li>
+
           <li class="nav-item border-dashed">
-            <a href="/calamity_report" class="nav-link d-flex align-items-center gap-3 text-dark p-2">
-              <svg width="24" height="24" viewBox="0 0 24 24"></svg>
-              <span>Calamity Report</span>
-            </a>
+            <button class="btn btn-toggle dropdown-toggle position-relative w-100 d-flex justify-content-between align-items-center text-dark p-2" data-bs-toggle="collapse" data-bs-target="#beverages-collapse" aria-expanded="false">
+              <div class="d-flex gap-3">
+                <svg width="24" height="24" viewBox="0 0 24 24"></svg>
+                <span>Calamity Report</span>
+              </div>
+            </button>
+            <div class="collapse" id="beverages-collapse">
+              <ul class="btn-toggle-nav list-unstyled fw-normal ps-5 pb-1">
+                <li class="border-bottom py-2"><a href="/calamity_report" class="dropdown-item">Pending</a></li>
+                <li class="border-bottom py-2"><a href="/ongoingreports" class="dropdown-item">Ongoing</a></li>
+                <li class="border-bottom py-2"><a href="/completedreports" class="dropdown-item">Completed</a></li>
+              </ul>
+            </div>
           </li>
           
         </ul>
@@ -193,7 +204,8 @@
           <div class="col-sm-4 col-lg-2 text-center text-sm-start d-flex gap-3 justify-content-center justify-content-md-start">
             <div class="d-flex align-items-center my-3 my-sm-0">
               <a href="index.html">
-                <img src="images/logo.svg" alt="logo" class="img-fluid">
+              <img src="agtech.png" alt="logo" style="width: 30px; height: auto;">
+
               </a>
             </div>
             <button class="navbar-toggler" type="button" data-bs-toggle="offcanvas" data-bs-target="#offcanvasNavbar"
@@ -214,7 +226,7 @@
           <div class="col-sm-8 col-lg-2 d-flex gap-5 align-items-center justify-content-center justify-content-sm-end">
             <ul class="d-flex justify-content-end list-unstyled m-0">
             <li>
-                <a href="#" class="p-2 mx-1">
+                <a class="p-2 mx-1" data-toggle="modal" data-target="#editMyProfileModal">
                     <i class="fas fa-user"></i>
                 </a>
             </li>
@@ -288,12 +300,214 @@
 
         </div>
       </div>
+
+      <div class="modal fade" id="editMyProfileModal" tabindex="-1" role="dialog" aria-labelledby="editMyProfileModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-lg" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="editMyProfileModalLabel">My Profile</h5>
+                </div>
+                <div class="modal-body">
+                    <form action="/updateMyProfile" method="POST">
+                    @csrf
+                    <div class="row">
+                        <div class="col-md-6 mb-3">
+                            <label for="rsbsa">RSBSA</label>
+                            <input type="hidden" class="form-control" id="id" value="{{ $account->id }}" name="id">
+                            <input type="text" class="form-control"  value="{{ $account->rsbsa }}"name="rsbsa" autocomplete="off" readonly>
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <label for="farmer_type">Type of Farmer</label>
+                            <select class="form-control" id="farmer_type" name="farmer_type">
+                                <option value="{{ $account->farmer_type }}">{{ $account->farmer_type }}</option>
+                                <option value="INDIVIDUAL">INDIVIDUAL</option>
+                                <option value="GROUP">GROUP</option>
+                            </select>
+                        </div>
+                    </div>
+
+
+                    <div class="row">
+                        <div class="col-md-4 mb-3">
+                            <label for="firstname">Firstname</label>
+                            <input type="text" class="form-control" id="firstname" value="{{ $account->firstname }}" name="firstname">
+                        </div>
+                        <div class="col-md-4 mb-3">
+                            <label for="middlename">Middlename</label>
+                            <input type="text" class="form-control" id="middlename" value="{{ $account->middlename }}" name="middlename">
+                        </div>
+                        <div class="col-md-4 mb-3">
+                            <label for="lastname">Lastname</label>
+                            <input type="text" class="form-control" id="lastname" value="{{ $account->lastname }}" name="lastname">
+                        </div>
+                    </div>
+                    <!-- -------------------------->
+                    <div class="row">
+                        <div class="col-md-4 mb-3">
+                            <label for="suffix">Suffix</label>
+                            <select class="form-control" id="suffix" name="suffix">
+                                <option value="{{ $account->suffix }}">{{ $account->suffix }}</option>
+                                <option value="Jr.">Jr.</option>
+                                <option value="Sr.">Sr.</option>
+                                <option value="I">I</option>
+                                <option value="II">II</option>
+                                <option value="III">III</option>
+                                <option value="IV">IV</option>
+                                <!-- Add more suffixes as needed -->
+                            </select>
+                        </div>
+
+                        <div class="col-md-4 mb-3">
+                            <label for="contact">Contact</label>
+                            <input type="text" class="form-control" id="contact" value="{{ $account->contact }}" name="contact">
+                        </div>
+                        <div class="col-md-4 mb-3">
+                            <label for="birthdate">Birthdate</label>
+                            <input type="date" class="form-control" id="birthdate" value="{{ $account->birthdate }}" name="birthdate">
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-md-3 mb-3">
+                            <label for="sex">Sex</label>
+                            <select class="form-control" id="sex" name="sex">
+                                <option value="{{ $account->sex }}">{{ $account->sex }}</option>
+                                <option value="MALE">MALE</option>
+                                <option value="FEMALE">FEMALE</option>
+                            </select>
+                        </div>
+                        <div class="col-md-3 mb-3">
+                            <label for="fourps">4Ps</label>
+                            <select class="form-control" id="fourps" name="fourps">
+                                <option value="{{ $account->fourps }}">{{ $account->fourps }}</option>
+                                <option value="YES">YES</option>
+                                <option value="NO">NO</option>
+                            </select>
+                        </div>
+                        <div class="col-md-3 mb-3">
+                            <label for="pwd">PWD</label>
+                            <select class="form-control" id="pwd" name="pwd">
+                                <option value="{{ $account->pwd }}">{{ $account->pwd }}</option>
+                                <option value="YES">YES</option>
+                                <option value="NO">NO</option>
+                            </select>
+                        </div>
+                        <div class="col-md-3 mb-3">
+                            <label for="arb">ARB</label>
+                            <select class="form-control" id="arb" name="arb">
+                                <option value="{{ $account->arb }}">{{ $account->arb }}</option>
+                                <option value="YES">YES</option>
+                                <option value="NO">NO</option>
+                            </select>
+                        </div>
+                    </div>
+
+
+                    <div class="row">
+                        <div class="col-md-4 mb-3">
+                            <label for="indigenous">Indigenous</label>
+                            <select class="form-control" id="indigenous" name="indigenous" onchange="toggleTribeInput()">
+                                <option value="{{ $account->indigenous }}">{{ $account->indigenous }}</option>
+                                <option value="YES">YES</option>
+                                <option value="NO">NO</option>
+                            </select>
+                        </div>
+
+                        <div class="col-md-4 mb-3">
+                            <label for="tribe_name">Name of Tribe</label>
+                            <input type="text" class="form-control" id="tribe_name" value="{{ $account->tribe_name }}" name="tribe_name" disabled>
+                        </div>
+                        
+                        <div class="col-md-4 mb-3">
+                            <label for="region">Region</label>
+                            <input type="text" class="form-control" id="region" value="{{ $account->region }}" name="region">
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-md-4 mb-3">
+                            <label for="province">Province</label>
+                            <input type="text" class="form-control" id="province" value="{{ $account->province }}" name="province">
+                        </div>
+                        <div class="col-md-4 mb-3">
+                            <label for="municipality">Municipality</label>
+                            <input type="text" class="form-control" id="municipality" value="{{ $account->municipality }}" name="municipality">
+                        </div>
+                        <div class="col-md-4 mb-3">
+                            <label for="barangay">Barangay</label>
+                            <input type="text" class="form-control" id="barangay" value="{{ $account->barangay }}" name="barangay">
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-md-4 mb-3">
+                            <label for="org_name">Organization Name</label>
+                            <input type="text" class="form-control" id="org_name" value="{{ $account->org_name }}" name="org_name">
+                        </div>
+                        <div class="col-md-4 mb-3">
+                            <label for="tot_male">Total No. of Male</label>
+                            <input type="text" class="form-control" id="tot_male"  value="{{ $account->tot_male }}"name="tot_male">
+                        </div>
+                        <div class="col-md-4 mb-3">
+                            <label for="tot_female">Total No. of Female</label>
+                            <input type="text" class="form-control" id="tot_female" value="{{ $account->tot_female }}" name="tot_female">
+                        </div>
+                    </div>
+
+                    
+                    <div class="row">
+                        <div class="col-md-4 mb-3">
+                            <label for="email">Email</label>
+                            <input type="text" class="form-control" id="email" value="{{ $account->email }}" name="email">
+                        </div>
+                        <div class="col-md-4 mb-3">
+                            <label for="password">Password</label>
+                            <input type="password" class="form-control" id="password" name="password">
+                            <div id="error_message" style="color: red; display: none;">Passwords do not match.</div>
+                        </div>
+                        <div class="col-md-4 mb-3">
+                            <label for="confirm_password">Confirm Password</label>
+                            <input type="password" class="form-control" id="confirm_password" name="confirm_password">
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="submit" class="btn btn-primary" id="addFarmerBtn">Update</button>
+                </div>
+              </form>
+            </div>
+        </div>
+    </div>
     </header>
    
 
 
 
 <script>
+
+  
+  function toggleTribeInput() {
+      const indigenous = document.getElementById("indigenous");
+      const tribeName = document.getElementById("tribe_name");
+      tribeName.disabled = indigenous.value === "NO";
+  }
+
+  document.getElementById("confirm_password").addEventListener("input", function() {
+      var password = document.getElementById("password").value;
+      var confirmPassword = document.getElementById("confirm_password").value;
+      var errorMessage = document.getElementById("error_message");
+      const submitButton = document.getElementById('addFarmerBtn');
+
+      // Check if password is not empty before comparing
+      if (password && confirmPassword && password !== confirmPassword) {
+          errorMessage.style.display = "block"; 
+          submitButton.disabled = true; 
+      } else {
+          errorMessage.style.display = "none"; 
+          submitButton.disabled = false; 
+      }
+  });
+
     const bellIcon = document.getElementById('bell-icon');
     const dropdown = document.getElementById('notification-dropdown');
 
@@ -335,9 +549,18 @@
         });
     });
 </script>
+<script>
+    alertify.set('notifier', 'position', 'top-right');
 
+    @if(session('success'))
+        alertify.success('{{ session('success') }}');
+    @endif
+</script>
 
 <!-- Add Bootstrap JS before closing body tag -->
 <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
 <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/alertifyjs@1.13.1/build/css/alertify.min.css" />
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/alertifyjs@1.13.1/build/css/themes/default.min.css" />
+<script src="https://cdn.jsdelivr.net/npm/alertifyjs@1.13.1/build/alertify.min.js"></script>

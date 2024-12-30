@@ -35,6 +35,18 @@ class HomeController extends Controller
         $notificationCount = $notifications->count();
 
         $farms = Farms::where('user_id', $userId)->get(); 
+        $tot_reports = CalamityReport::where('user_id', $userId)->get(); 
+        $completed_reports = CalamityReport::where('user_id', $userId)
+                         ->where('status', 'Completed')
+                         ->get();
+
+
+        $farmCount = $farms->count();
+        $totReports = $tot_reports->count();
+        $completedReports = $completed_reports->count();
+
+
+        $account = Accounts::find($userId);
 
         $locations = $farms->map(function ($farm) {
             return [
@@ -42,8 +54,8 @@ class HomeController extends Controller
             ];
         });
 
-        return view('user.home', compact('notificationCount', 'notifications', 'locations'));
-    }
+        return view('user.home', compact('notificationCount', 'notifications', 'locations', 'account', 'farmCount','totReports','completedReports'));
+    }   
 
 
     public function farms()
@@ -64,13 +76,10 @@ class HomeController extends Controller
         
         $notificationCount = $notifications->count();
 
-        // Share the notification count and notifications with the view
-        return view('user.farms', compact('farmers', 'notificationCount', 'notifications'));
+        $account = Accounts::find($userId);
+
+        return view('user.farms', compact('farmers', 'notificationCount', 'notifications','account'));
     }
-
-
-    
-    
 
     public function add_farms(Request $request)
     {
@@ -107,6 +116,23 @@ class HomeController extends Controller
             'fullname' => $userFullname, 
             'rsbsa' => $rsbsa,
             'email' => $email,
+            'region' => $request->input('region'),
+            'municipality' => $request->input('municipality'),
+            'province' => $request->input('province'),
+            'barangay' => $request->input('barangay'),
+            'farm_area' => $request->input('farm_area'),
+            'area_planted' => $request->input('area_planted'),
+            'firstname' => $user->firstname,
+            'middlename' => $user->middlename,
+            'lastname' => $user->lastname,
+            'suffix' => $user->suffix,
+            'sex' => $user->sex,
+            'contact' => $user->contact,
+            'fourps' => $user->fourps,
+            'indigenous' => $user->indigenous,
+            'pwd' => $user->pwd,
+            'fourps' => $user->fourps,
+            'birthdate' => $user->birthdate,
         ]);
 
         if ($request->hasFile('image')) {
@@ -162,13 +188,73 @@ class HomeController extends Controller
                     ->get(['id', 'location', 'forms_farm', 'farm_type', 'livestock_type']);
 
         $calamities = CalamityReport::with('calamityImages')
-                                    ->where('user_id', $userId) 
-                                    ->get();
+                ->where('user_id', $userId)
+                ->whereIn('status', ['Pending', 'Disregarded','Shortlisted'])
+                ->get();
+                
         $notificationCount = $notifications->count();
+        $account = Accounts::find($userId);
 
-        return view('user/calamityReport', compact('farms', 'calamities','notificationCount', 'notifications'));
+
+        return view('user/calamityReport', compact('farms', 'calamities','notificationCount', 'notifications','account'));
 
     }
+
+    public function ongoingreports()
+    {
+        if (!session()->has('user_id')) {
+            return redirect('/');
+        }
+
+        $userId = session('user_id'); 
+        
+        $notifications = AnnouncementUser::where('user_id', $userId)
+        ->where('status', 'unread')
+        ->get();
+
+        $farms = Farms::where('user_id', $userId)
+                    ->get(['id', 'location', 'forms_farm', 'farm_type', 'livestock_type']);
+
+        $calamities = CalamityReport::with('calamityImages')
+                ->where('user_id', $userId)
+                ->whereIn('status', ['Ongoing'])
+                ->get();
+                
+        $notificationCount = $notifications->count();
+        $account = Accounts::find($userId);
+
+
+        return view('user/ongoingreports', compact('farms', 'calamities','notificationCount', 'notifications','account'));
+
+    }
+
+    public function completedreports()
+    {
+        if (!session()->has('user_id')) {
+            return redirect('/');
+        }
+
+        $userId = session('user_id'); 
+        
+        $notifications = AnnouncementUser::where('user_id', $userId)
+        ->where('status', 'unread')
+        ->get();
+
+        $farms = Farms::where('user_id', $userId)
+                    ->get(['id', 'location', 'forms_farm', 'farm_type', 'livestock_type']);
+
+        $calamities = CalamityReport::with('calamityImages')
+                ->where('user_id', $userId)
+                ->whereIn('status', ['Completed'])
+                ->get();
+                
+        $notificationCount = $notifications->count();
+        $account = Accounts::find($userId);
+
+
+        return view('user/completedreports', compact('farms', 'calamities','notificationCount', 'notifications','account'));
+    }
+
 
 
     public function submit_calamity_report(Request $request)
@@ -271,6 +357,45 @@ class HomeController extends Controller
 
         return response()->json(['success' => false, 'message' => 'Notification not found'], 404);
     }
+
+    public function updateMyProfile(Request $request)
+    {
+        $account = Accounts::findOrFail($request->input('id'));
+
+        $account->update([
+            'farmer_type' => $request->input('farmer_type'),
+            'firstname' => $request->input('firstname'),
+            'middlename' => $request->input('middlename'),
+            'lastname' => $request->input('lastname'),
+            'suffix' => $request->input('suffix'),
+            'contact' => $request->input('contact'),
+            'birthdate' => $request->input('birthdate'),
+            'sex' => $request->input('sex'),
+            'fourps' => $request->input('fourps'),
+            'pwd' => $request->input('pwd'),
+            'arb' => $request->input('arb'),
+            'indigenous' => $request->input('indigenous'),
+            'tribe_name' => $request->input('tribe_name'),
+            'region' => $request->input('region'),
+            'province' => $request->input('province'),
+            'municipality' => $request->input('municipality'),
+            'barangay' => $request->input('barangay'),
+            'org_name' => $request->input('org_name'),
+            'tot_male' => $request->input('tot_male'),
+            'tot_female' => $request->input('tot_female'),
+            'email' => $request->input('email'),
+        ]);
+
+        if ($request->filled('password')) {
+            $account->password = bcrypt($request->input('password'));
+            $account->save();
+        }
+
+        return redirect()->back()->with('success', 'Account updated successfully!');
+    }
+
+
+
 
 
     
