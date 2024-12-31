@@ -38,80 +38,81 @@
           </div>
 
           <div class="col-md-2 col-sm-6">
-            <div class="footer-menu">
-              <h5 class="widget-title">Organic</h5>
-              <ul class="menu-list list-unstyled">
-                <li class="menu-item">
-                  <a href="#" class="nav-link">About us</a>
-                </li>
-                <li class="menu-item">
-                  <a href="#" class="nav-link">Conditions </a>
-                </li>
-                <li class="menu-item">
-                  <a href="#" class="nav-link">Our Journals</a>
-                </li>
-                <li class="menu-item">
-                  <a href="#" class="nav-link">Careers</a>
-                </li>
-                <li class="menu-item">
-                  <a href="#" class="nav-link">Affiliate Programme</a>
-                </li>
-                <li class="menu-item">
-                  <a href="#" class="nav-link">Ultras Press</a>
-                </li>
-              </ul>
-            </div>
+              <div class="footer-menu">
+                  <h5 class="widget-title">Organic Farming</h5>
+                  <ul class="menu-list list-unstyled">
+                      <li class="menu-item">
+                          <a href="#" class="nav-link">About Us</a>
+                      </li>
+                      <li class="menu-item">
+                          <a href="#" class="nav-link">Farming Practices</a>
+                      </li>
+                      <li class="menu-item">
+                          <a href="#" class="nav-link">Research Journals</a>
+                      </li>
+                      <li class="menu-item">
+                          <a href="#" class="nav-link">Career Opportunities</a>
+                      </li>
+                      <li class="menu-item">
+                          <a href="#" class="nav-link">Partnership Programs</a>
+                      </li>
+                      <li class="menu-item">
+                          <a href="#" class="nav-link">Agricultural Insights</a>
+                      </li>
+                  </ul>
+              </div>
           </div>
           <div class="col-md-2 col-sm-6">
-            <div class="footer-menu">
-              <h5 class="widget-title">Quick Links</h5>
-              <ul class="menu-list list-unstyled">
-                <li class="menu-item">
-                  <a href="#" class="nav-link">Offers</a>
-                </li>
-                <li class="menu-item">
-                  <a href="#" class="nav-link">Discount Coupons</a>
-                </li>
-                <li class="menu-item">
-                  <a href="#" class="nav-link">Stores</a>
-                </li>
-                <li class="menu-item">
-                  <a href="#" class="nav-link">Track Order</a>
-                </li>
-                <li class="menu-item">
-                  <a href="#" class="nav-link">Shop</a>
-                </li>
-                <li class="menu-item">
-                  <a href="#" class="nav-link">Info</a>
-                </li>
-              </ul>
-            </div>
+              <div class="footer-menu">
+                  <h5 class="widget-title">Resources</h5>
+                  <ul class="menu-list list-unstyled">
+                      <li class="menu-item">
+                          <a href="#" class="nav-link">Seasonal Offers</a>
+                      </li>
+                      <li class="menu-item">
+                          <a href="#" class="nav-link">Best Practices</a>
+                      </li>
+                      <li class="menu-item">
+                          <a href="#" class="nav-link">Local Markets</a>
+                      </li>
+                      <li class="menu-item">
+                          <a href="#" class="nav-link">Crop Tracking</a>
+                      </li>
+                      <li class="menu-item">
+                          <a href="#" class="nav-link">Shop Supplies</a>
+                      </li>
+                      <li class="menu-item">
+                          <a href="#" class="nav-link">Information Hub</a>
+                      </li>
+                  </ul>
+              </div>
           </div>
           <div class="col-md-2 col-sm-6">
-            <div class="footer-menu">
-              <h5 class="widget-title">Customer Service</h5>
-              <ul class="menu-list list-unstyled">
-                <li class="menu-item">
-                  <a href="#" class="nav-link">FAQ</a>
-                </li>
-                <li class="menu-item">
-                  <a href="#" class="nav-link">Contact</a>
-                </li>
-                <li class="menu-item">
-                  <a href="#" class="nav-link">Privacy Policy</a>
-                </li>
-                <li class="menu-item">
-                  <a href="#" class="nav-link">Returns & Refunds</a>
-                </li>
-                <li class="menu-item">
-                  <a href="#" class="nav-link">Cookie Guidelines</a>
-                </li>
-                <li class="menu-item">
-                  <a href="#" class="nav-link">Delivery Information</a>
-                </li>
-              </ul>
-            </div>
+              <div class="footer-menu">
+                  <h5 class="widget-title">Support</h5>
+                  <ul class="menu-list list-unstyled">
+                      <li class="menu-item">
+                          <a href="#" class="nav-link">FAQ</a>
+                      </li>
+                      <li class="menu-item">
+                          <a href="#" class="nav-link">Contact Us</a>
+                      </li>
+                      <li class="menu-item">
+                          <a href="#" class="nav-link">Sustainability Policies</a>
+                      </li>
+                      <li class="menu-item">
+                          <a href="#" class="nav-link">Returns & Exchanges</a>
+                      </li>
+                      <li class="menu-item">
+                          <a href="#" class="nav-link">Cookie Guidelines</a>
+                      </li>
+                      <li class="menu-item">
+                          <a href="#" class="nav-link">Delivery Information</a>
+                      </li>
+                  </ul>
+              </div>
           </div>
+
           <div class="col-lg-3 col-md-6 col-sm-6">
             <div class="footer-menu">
               <h5 class="widget-title">Subscribe Us</h5>
