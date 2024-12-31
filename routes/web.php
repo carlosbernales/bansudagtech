@@ -77,6 +77,12 @@ Route::match(['get', 'post'], '/completedreports', [HomeController::class, 'comp
 
 
 
+Route::post('/reset_password', [AuthController::class, 'sendResetLink']);
+Route::get('/reset_password/{token}', [AuthController::class, 'showResetForm']);
+Route::post('/reset_password/{token}', [AuthController::class, 'resetPassword']);
+
+
+
 
 
 

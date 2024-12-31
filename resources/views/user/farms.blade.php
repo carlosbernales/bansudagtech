@@ -311,37 +311,48 @@
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <script>
     document.addEventListener("DOMContentLoaded", function () {
+    @if(isset($farmer) && $farmer->id)
         const modalId = '{{ $farmer->id }}';
-        const totalImages = {{ count($farmer->farmImages) }};
+        const totalImages = {{ count($farmer->farmImages ?? []) }};
         let currentIndex = 0;
 
         const nextButton = document.getElementById(`nextImageBtn${modalId}`);
         const currentImageIndexSpan = document.getElementById(`currentImageIndex${modalId}`);
         
-        nextButton.addEventListener("click", function() {
-            if (currentIndex < totalImages - 1) {
-                currentIndex++;
-                updateImageDisplay();
-            } else {
-                currentIndex = 0; 
-                updateImageDisplay();
-            }
-        });
-
-        function updateImageDisplay() {
-            const images = document.querySelectorAll(`#viewImageModal${modalId} .image-gallery-item`);
-            images.forEach(function(image) {
-                image.style.display = 'none';
+        if (nextButton && currentImageIndexSpan) {
+            nextButton.addEventListener("click", function() {
+                if (currentIndex < totalImages - 1) {
+                    currentIndex++;
+                    updateImageDisplay();
+                } else {
+                    currentIndex = 0; 
+                    updateImageDisplay();
+                }
             });
 
-            const activeImage = document.querySelector(`#viewImageModal${modalId} .image-gallery-item[data-index="${currentIndex}"]`);
-            if (activeImage) {
-                activeImage.style.display = 'block';
-            }
+            function updateImageDisplay() {
+                const images = document.querySelectorAll(`#viewImageModal${modalId} .image-gallery-item`);
+                if (images.length === 0) {
+                    return; 
+                }
 
-            currentImageIndexSpan.textContent = currentIndex + 1;
+                images.forEach(function(image) {
+                    image.style.display = 'none';
+                });
+
+                const activeImage = document.querySelector(`#viewImageModal${modalId} .image-gallery-item[data-index="${currentIndex}"]`);
+                if (activeImage) {
+                    activeImage.style.display = 'block';
+                }
+
+                currentImageIndexSpan.textContent = currentIndex + 1;
+            }
         }
-    });
+    @else
+        console.warn("Farmer data is not available.");
+    @endif
+});
+
 </script>
 <script>
     alertify.set('notifier', 'position', 'top-right');

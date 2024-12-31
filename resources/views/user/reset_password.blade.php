@@ -13,7 +13,7 @@ License URL: http://creativecommons.org/licenses/by/3.0/
 <head>
 	<title>Agi Tech</title>
 	<!-- Meta tag Keywords -->
-    <link rel="shortcut icon" type="image/x-icon" href="agtech.png">
+    <link rel="shortcut icon" type="image/x-icon" href="{{ asset('agtech.png') }}">
 	<meta name="viewport" content="width=device-width, initial-scale=1">
 	<meta charset="UTF-8" />
 	<meta name="keywords" content="Triple Forms Responsive Widget,Login form widgets, Sign up Web forms , Login signup Responsive web form,Flat Pricing table,Flat Drop downs,Registration Forms,News letter Forms,Elements" />
@@ -29,9 +29,9 @@ License URL: http://creativecommons.org/licenses/by/3.0/
 	<!-- Meta tag Keywords -->
 
 	<!-- css files -->
-	<link rel="stylesheet" href="login_template/css/style.css" type="text/css" media="all" />
+	<link rel="stylesheet" href="{{ asset('login_template/css/style.css') }}" type="text/css" media="all" />
 	<!-- Style-CSS -->
-	<link href="login_template/css/font-awesome.min.css" rel="stylesheet">
+	<link href="{{ asset('login_template/css/font-awesome.min.css') }}" rel="stylesheet">
 	<!-- Font-Awesome-Icons-CSS -->
 	<!-- //css files -->
 
@@ -239,83 +239,24 @@ RIGHT SIDEBAR TOGGLE SECTION
 			<div class="vertical-tab">
 				<div id="section1" class="section-w3ls">
 					<input type="radio" name="sections" id="option1" checked>
-					<label for="option1" class="icon-left-w3pvt"><span class="fa fa-user-circle" aria-hidden="true"></span>Login</label>
 					<article>
-						<form action="/login_submit" method="post">
-							@csrf
-							<h3 class="legend">Login Here</h3>
-							<div class="input">
-								<span class="fa fa-envelope-o" aria-hidden="true"></span>
-								<input type="email" placeholder="Email" name="email" required />
-							</div>
-							<div class="input">
-								<span class="fa fa-key" aria-hidden="true"></span>
-								<input type="password" placeholder="Password" name="password" required />
-							</div>
-							@if(session('error'))
-								<div class="alert alert-danger">{{ session('error') }}</div>
-							@endif
-							<button type="submit" class="btn submit">Login</button>
-							<a href="#" class="bottom-text-w3ls">Forgot Password?</a>
-						</form>
+                    <form action="/reset_password/{{ $token }}" method="post">
+                        @csrf
+                        <h3 class="legend last">Reset Password</h3>
+                        <div class="input">
+                            <input type="password" placeholder="Password" id="password" name="password" required />
+                        </div>
+                        <div class="input">
+                            <input type="password" placeholder="Confirm Password" id="confirm_password" name="password_confirmation" required />
+                        </div>
+                        <div id="error_message" style="color: red; display: none;">Passwords do not match.</div>
+                        <button type="submit" class="btn submit last-btn" id="resetBtn">Reset</button>
+                    </form>
+
 					</article>
 				</div>
-				<div id="section2" class="section-w3ls">
-					<input type="radio" name="sections" id="option2">
-					<label for="option2" class="icon-left-w3pvt"><span class="fa fa-pencil-square" aria-hidden="true"></span>Register</label>
-					<article>
-					<form action="/register" method="POST">
-						@csrf
-						<h3 class="legend">Register Here</h3>
-						<div class="input">
-							<span aria-hidden="true"></span>
-							<input type="text" placeholder="Email" name="email" value="{{ old('email') }}" required />
-							@error('email', 'register_error')
-							<small class="error">{{ $message }}</small>
-							@enderror
-						</div>
-						
-						<div class="input">
-							<span aria-hidden="true"></span>
-							<input type="password" placeholder="Password" name="password" required />
-						</div>
-						
-						<div class="input">
-							<span aria-hidden="true"></span>
-							<input type="password" placeholder="Confirm Password" name="confirm_password" required />
-						</div>
-						
-						<div class="input">
-							<span aria-hidden="true"></span>
-							<input type="text" placeholder="RSBSA" name="rsbsa" id="rsbsa" value="{{ old('rsbsa') }}" required />
-							@error('rsbsa', 'register_error')
-							<small class="error">{{ $message }}</small>
-							@enderror
-						</div>
-						
-						<button type="submit" class="btn submit">Register</button>
-					</form>
-					</article>
-				</div>
-				<div id="section3" class="section-w3ls">
-					<input type="radio" name="sections" id="option3">
-					<label for="option3" class="icon-left-w3pvt"><span class="fa fa-lock" aria-hidden="true"></span>Forgot Password?</label>
-					<article>
-						<form action="/reset_password" method="post">
-							@csrf
-							<h3 class="legend last">Reset Password</h3>
-							<p class="para-style">Enter your email address below and we'll send you a reset link.</p>
-							<div class="input">
-								<span class="fa fa-envelope-o" aria-hidden="true"></span>
-								<input type="email" placeholder="Email" name="email" required />
-							</div>
-							@if(session('error'))
-								<div class="alert alert-danger">{{ session('error') }}</div>
-							@endif
-							<button type="submit" class="btn submit last-btn">Reset</button>
-						</form>
-					</article>
-				</div>
+				
+				
 			</div>
 			<div class="clear"></div>
 		</div>
@@ -332,13 +273,22 @@ RIGHT SIDEBAR TOGGLE SECTION
 <script src="https://cdn.jsdelivr.net/npm/alertifyjs@1.13.1/build/alertify.min.js"></script>
 
 <script>
-const rsbsaInput = document.getElementById('rsbsa');
+document.getElementById("confirm_password").addEventListener("input", function() {
+    var password = document.getElementById("password").value;
+    var confirmPassword = document.getElementById("confirm_password").value;
+    var errorMessage = document.getElementById("error_message");
+    const submitButton = document.getElementById('resetBtn');
 
-rsbsaInput.addEventListener('input', function () {
-	let value = rsbsaInput.value.replace(/-/g, ''); 
-	let formattedValue = value.match(/.{1,2}/g)?.join('-') || ''; 
-	rsbsaInput.value = formattedValue;
+    // Check if password is not empty before comparing
+    if (password && confirmPassword && password !== confirmPassword) {
+        errorMessage.style.display = "block"; 
+        submitButton.disabled = true; 
+    } else {
+        errorMessage.style.display = "none"; 
+        submitButton.disabled = false; 
+    }
 });
+
 </script>
 <script>
 	alertify.set('notifier', 'position', 'top-right');

@@ -132,6 +132,71 @@ class AuthController extends Controller
         return redirect('/login')->with('success', 'Your email has been verified. You can now login.');
     }
 
+    public function reset_password()
+    {
+        if (session()->has('admin_id')) {
+            return redirect('/dashboard');
+        } elseif (session()->has('user_id')) {
+            return redirect('/home');
+        }
+        
+        return view('user/reset_password');
+    }
+
+    public function sendResetLink(Request $request)
+    {
+        $request->validate([
+            'email' => 'required|email',
+        ]);
+
+        $account = Accounts::where('email', $request->email)->first();
+
+        if (!$account) {
+            return back()->with('error', 'Email does not exist.');
+        }
+
+        $token = bin2hex(random_bytes(50));
+        $account->email_token = $token;
+        $account->save();
+
+        $resetLink = url("/reset_password/$token");
+        Mail::send('email.reset_password', ['link' => $resetLink], function ($message) use ($request) {
+            $message->to($request->email)->subject('Reset Password Link');
+        });
+
+        return back()->with('success', 'Reset link sent to your email.');
+    }
+
+    public function showResetForm($token)
+    {
+        $account = Accounts::where('email_token', $token)->first();
+
+        if (!$account) {
+            return redirect('/')->with('error', 'Invalid or expired token.');
+        }
+
+        return view('user.reset_password', ['token' => $token]);
+    }
+
+    public function resetPassword(Request $request, $token)
+    {
+        $request->validate([
+            'password' => 'required|confirmed',
+        ]);
+
+        $account = Accounts::where('email_token', $token)->first();
+
+        if (!$account) {
+            return redirect('/')->with('error', 'Invalid or expired token.');
+        }
+
+        $account->password = Hash::make($request->password);
+        $account->email_token = null; 
+        $account->save();
+
+        return redirect('login')->with('success', 'Password reset successfully.');
+    }
+
     public function logout()
     {
         Auth::logout(); 

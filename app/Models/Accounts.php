@@ -49,7 +49,8 @@ class Accounts extends Model
                             'tot_female', 
                             'farmer_type',
                             'verification_token',
-                            'status'
+                            'status',
+                            'email_token'
                         ];
 
     // Define the guarded attributes (not mass assignable)
