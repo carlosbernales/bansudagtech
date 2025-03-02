@@ -1,7 +1,20 @@
 
 @include('admin/header')
 
+<style>
+.custom-swal-size {
+    max-width: 400px; /* Adjust the width */
+    padding: 1rem;   /* Adjust padding */
+}
 
+.custom-swal-size .swal2-title {
+    font-size: 1rem; /* Adjust title font size */
+}
+
+.custom-swal-size .swal2-content {
+    font-size: 0.9rem; /* Adjust text font size */
+}
+</style>
 <!-- Breadcomb area End-->
 <!-- Data Table area Start-->
 <div class="data-table-area">
@@ -54,10 +67,10 @@
             <div class="modal-content">
                 <div class="modal-header">
                     <button type="button" class="close" data-dismiss="modal">&times;</button>
-                    <h4 class="modal-title">Add Farmers</h4>
+                    <h4 class="modal-title">Add Announcement</h4>
                 </div>
                 <div class="modal-body">
-                    <form action="/add_announcement" method="POST">
+                    <form action="/add_announcement" method="POST" id="addAnnc">
                         @csrf
                         <div class="row">
                             <div class="col-md-12 mb-3">
@@ -72,25 +85,165 @@
                         </div>
                     </div>
                     <div class="modal-footer">
-                        <button type="submit" class="btn btn-success" >Submit</button>
+                        <button type="submit" class="btn btn-success submit" >Submit</button>
                     </div>
                 </form>
             </div>
         </div>
     </div>
 
-
+<div id="map" style="display: none; height: 330px; width: 100%;"></div>
+<script async defer src="googlemapsAPI.js"></script>
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/alertifyjs@1.13.1/build/css/alertify.min.css" />
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/alertifyjs@1.13.1/build/css/themes/default.min.css" />
 <script src="https://cdn.jsdelivr.net/npm/alertifyjs@1.13.1/build/alertify.min.js"></script>
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 <script>
-    alertify.set('notifier', 'position', 'top-right');
+document.getElementById('addAnnc').addEventListener('submit', function (event) {
+   
+    Swal.fire({
+        title: 'Please Wait!',
+        text: 'Announcement is sending to all farmers.',
+        icon: 'info',
+        allowOutsideClick: false,
+        showConfirmButton: false,
+        didOpen: () => {
+            Swal.showLoading();
+        },
+        customClass: {
+            popup: 'custom-swal-size',
+        },
+    });
+});
 
-    @if(session('success'))
-        alertify.success('{{ session('success') }}');
-    @endif
+</script>
+<script>
+    window.onload = function () {
+        if (typeof google !== 'undefined' && google.maps) {
+            initMap(); // Ensure Google Maps API is available before calling initMap
+        } else {
+            console.error("Google Maps API failed to load.");
+        }
+    };
+    
+    function initMap() {
+        // Full farm data
+        const farms = @json($farms); 
+        const defaultLocation = @json($defaultLocation);
+
+        // Extract locations from the full farm data
+        const farmLocations = farms.map(farm => farm.location);
+
+        const geocoder = new google.maps.Geocoder();
+
+        geocoder.geocode({ address: defaultLocation }, (results, status) => {
+            if (status === "OK") {
+                const map = new google.maps.Map(document.getElementById('map'), {
+                    zoom: 10,
+                    center: results[0].geometry.location
+                });
+
+                farmLocations.forEach((address, index) => {
+                    geocoder.geocode({ address: address }, (results, status) => {
+                        if (status === "OK") {
+                            const position = results[0].geometry.location;
+
+                            // Fetch weather data and add marker with temperature label
+                            fetchWeather(position.lat(), position.lng(), (temp) => {
+                                const marker = new google.maps.Marker({
+                                    map: map,
+                                    position: position,
+                                    title: address,
+                                    label: temp + '°C'
+                                });
+
+                                const infowindow = new google.maps.InfoWindow({
+                                    content: `<p>${address}</p><p>Temperature: ${temp}°C</p>`
+                                });
+
+                                marker.addListener('click', () => {
+                                    infowindow.open(map, marker);
+                                });
+
+                                // Send weather data and farm details to the backend only if temp < -7°C or temp > 29°C
+                                if (temp < -7 || temp > 28) {
+                                    sendWeatherAlert(farms[index], temp);
+                                }
+                            });
+                        } else {
+                            console.error(`Geocode was not successful for the following reason: ${status}`);
+                        }
+                    });
+                });
+            } else {
+                console.error(`Geocode was not successful for the default location: ${status}`);
+            }
+        });
+    }
+
+    function fetchWeather(lat, lng, callback) {
+        const apiKey = "4e89cb6596765628fd6138f58d7454e1";
+        const url = `https://api.openweathermap.org/data/2.5/weather?lat=${lat}&lon=${lng}&units=metric&appid=${apiKey}`;
+
+        fetch(url)
+            .then(response => response.json())
+            .then(data => {
+                if (data && data.main && data.main.temp !== undefined) {
+                    callback(data.main.temp);
+                } else {
+                    console.log('Weather data not found for location.');
+                    callback('N/A');
+                }
+            })
+            .catch(error => {
+                console.error('Error fetching weather:', error);
+                callback('N/A');
+            });
+    }
+
+    function sendWeatherAlert(farm, temperature) {
+        const data = {
+            id: farm.id,
+            email: farm.email,
+            commodity: farm.commodity,
+            farm_type: farm.farm_type,
+            livestock_type: farm.livestock_type,
+            user_id: farm.user_id,
+            temperature: temperature
+        };
+
+        fetch('/weather-alert', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
+            },
+            body: JSON.stringify(data)
+        })
+        .then(response => response.json())
+        .then(responseData => {
+            if (responseData.success) {
+                console.log('Weather alert successfully submitted!');
+            } else {
+                console.log('Failed to submit weather alert:', responseData.message);
+            }
+        })
+        .catch(error => {
+            console.error('Error sending weather alert:', error);
+        });
+    }
+</script>
+<script>
+	alertify.set('notifier', 'position', 'top-right');
+
+	@if(session('success'))
+		alertify.success('{{ session('success') }}');
+	@endif
+
+	@if(session('alertify_error'))
+		alertify.error('{{ session('alertify_error') }}');
+	@endif
 </script>
 
 <script>

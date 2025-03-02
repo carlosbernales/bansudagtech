@@ -11,6 +11,13 @@ use Illuminate\Support\Facades\Session;
 use Illuminate\Support\Str; // for generating a random token
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\URL;
+use App\Models\Farms;
+use App\Models\Announcement;
+use App\Mail\RegisterVerification;
+use App\Mail\ResetPassword;
+
+
+
 class AuthController extends Controller
 {
 
@@ -21,7 +28,11 @@ class AuthController extends Controller
         } elseif (session()->has('user_id')) {
             return redirect('/home');
         }
-        return view('landing_page');
+        $farms = Farms::all();
+        $announcements = Announcement::orderBy('id', 'desc')->take(3)->get();
+        $defaultLocation = Farms::first()?->location ?? null;
+        
+        return view('landing_page', compact('farms','defaultLocation','announcements'));
     }
 
     public function login()
@@ -31,7 +42,10 @@ class AuthController extends Controller
         } elseif (session()->has('user_id')) {
             return redirect('/home');
         }
-        return view('login');
+        $farms = Farms::all();
+        $defaultLocation = Farms::first()?->location ?? null;
+        
+        return view('login', compact('farms','defaultLocation'));
     }
 
     public function login_submit(Request $request)
@@ -74,53 +88,54 @@ class AuthController extends Controller
             'password' => 'required|min:6',
             'rsbsa' => 'required',
         ]);
-
+    
         if ($validator->fails()) {
             return redirect()->back()
                 ->withErrors($validator, 'register_error')
                 ->withInput();
         }
-
+    
         if (Accounts::where('email', $request->email)->exists()) {
             return redirect()->back()
                 ->withErrors(['email' => 'The email already exists.'], 'register_error')
                 ->withInput();
         }
-
+    
         $account = Accounts::where('rsbsa', $request->rsbsa)->first();
         if (!$account) {
             return redirect()->back()
                 ->withErrors(['rsbsa' => 'The RSBSA record was not found.'], 'register_error')
                 ->withInput();
         }
-
+    
+        $verificationToken = Str::random(60);
+        $url = URL::route('email.verify', ['token' => $verificationToken]);
+    
+        try {
+            Mail::to($request->email)->send(new RegisterVerification($url));
+        } catch (\Exception $e) {
+            return redirect()->back()
+                ->with('alertify_error', 'Failed to send verification email. Try to contact the administrator.')
+                ->withInput();
+        }
+    
         $account->update([
             'email' => $request->email,
+            'status' => 'not_verified',
             'password' => Hash::make($request->password),
-            'verification_token' => Str::random(60),
+            'verification_token' => $verificationToken,
         ]);
-
-        $url = URL::route(
-            'email.verify', 
-            ['token' => $account->verification_token]
-        );
-
-        Mail::send('email.activation', [
-            'url' => $url,
-        ], function ($message) use ($account) {
-            $message->to($account->email)
-                    ->subject('Email Verification');
-        });
-
+    
         return redirect()->back()->with('success', 'Registration successful! Please check your email for the verification link.');
     }
+
 
     public function verifyEmail(Request $request, $token)
     {
         $account = Accounts::where('verification_token', $token)->first();
 
         if (!$account) {
-            return redirect('/login')->with('success', 'Invalid verification token or account already verified.');
+            return redirect('/login')->with('alertify_error', 'Invalid link.');
         }
 
         $account->update([
@@ -148,22 +163,25 @@ class AuthController extends Controller
         $request->validate([
             'email' => 'required|email',
         ]);
-
+    
         $account = Accounts::where('email', $request->email)->first();
-
+    
         if (!$account) {
-            return back()->with('error', 'Email does not exist.');
+            return back()->with('alertify_error', 'Email does not exist.');
         }
-
+    
         $token = bin2hex(random_bytes(50));
         $account->email_token = $token;
         $account->save();
-
+    
         $resetLink = url("/reset_password/$token");
-        Mail::send('email.reset_password', ['link' => $resetLink], function ($message) use ($request) {
-            $message->to($request->email)->subject('Reset Password Link');
-        });
-
+    
+        try {
+            Mail::to($request->email)->send(new ResetPassword($resetLink));
+        } catch (\Exception $e) {
+            return back()->with('alertify_error', 'Failed to send reset email. Please try again later.');
+        }
+    
         return back()->with('success', 'Reset link sent to your email.');
     }
 
@@ -172,7 +190,7 @@ class AuthController extends Controller
         $account = Accounts::where('email_token', $token)->first();
 
         if (!$account) {
-            return redirect('/')->with('error', 'Invalid or expired token.');
+            return redirect('/login')->with('alertify_error', 'Invalid link.');
         }
 
         return view('user.reset_password', ['token' => $token]);
@@ -187,7 +205,7 @@ class AuthController extends Controller
         $account = Accounts::where('email_token', $token)->first();
 
         if (!$account) {
-            return redirect('/')->with('error', 'Invalid or expired token.');
+            return redirect('/login')->with('alertify_error', 'Invalid link.');
         }
 
         $account->password = Hash::make($request->password);

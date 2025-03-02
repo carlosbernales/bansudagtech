@@ -330,15 +330,15 @@
                     <div class="row">
                         <div class="col-md-4 mb-3">
                             <label for="firstname">Firstname</label>
-                            <input type="text" class="form-control" id="firstname" value="{{ $account->firstname }}" name="firstname">
+                            <input type="text" class="form-control" id="firstname" value="{{ $account->firstname }}" name="firstname" oninput="this.value = this.value.toUpperCase()">
                         </div>
                         <div class="col-md-4 mb-3">
                             <label for="middlename">Middlename</label>
-                            <input type="text" class="form-control" id="middlename" value="{{ $account->middlename }}" name="middlename">
+                            <input type="text" class="form-control" id="middlename" value="{{ $account->middlename }}" name="middlename" oninput="this.value = this.value.toUpperCase()">
                         </div>
                         <div class="col-md-4 mb-3">
                             <label for="lastname">Lastname</label>
-                            <input type="text" class="form-control" id="lastname" value="{{ $account->lastname }}" name="lastname">
+                            <input type="text" class="form-control" id="lastname" value="{{ $account->lastname }}" name="lastname" oninput="this.value = this.value.toUpperCase()">
                         </div>
                     </div>
                     <!-- -------------------------->
@@ -347,8 +347,8 @@
                             <label for="suffix">Suffix</label>
                             <select class="form-control" id="suffix" name="suffix">
                                 <option value="{{ $account->suffix }}">{{ $account->suffix }}</option>
-                                <option value="Jr.">Jr.</option>
-                                <option value="Sr.">Sr.</option>
+                                <option value="JR.">Jr.</option>
+                                <option value="SS.">Sr.</option>
                                 <option value="I">I</option>
                                 <option value="II">II</option>
                                 <option value="III">III</option>
@@ -359,7 +359,7 @@
 
                         <div class="col-md-4 mb-3">
                             <label for="contact">Contact</label>
-                            <input type="text" class="form-control" id="contact" value="{{ $account->contact }}" name="contact">
+                            <input type="text" class="form-control" id="contact" value="{{ $account->contact }}" name="contact" oninput="this.value = this.value.replace(/[^0-9]/g, '')">
                         </div>
                         <div class="col-md-4 mb-3">
                             <label for="birthdate">Birthdate</label>
@@ -415,42 +415,42 @@
 
                         <div class="col-md-4 mb-3">
                             <label for="tribe_name">Name of Tribe</label>
-                            <input type="text" class="form-control" id="tribe_name" value="{{ $account->tribe_name }}" name="tribe_name" disabled>
+                            <input type="text" class="form-control" id="tribe_name" value="{{ $account->tribe_name }}" name="tribe_name" oninput="this.value = this.value.toUpperCase()" disabled >
                         </div>
                         
                         <div class="col-md-4 mb-3">
                             <label for="region">Region</label>
-                            <input type="text" class="form-control" id="region" value="{{ $account->region }}" name="region">
+                            <input type="text" class="form-control" id="region" value="{{ $account->region }}" oninput="this.value = this.value.toUpperCase()" name="region">
                         </div>
                     </div>
 
                     <div class="row">
                         <div class="col-md-4 mb-3">
                             <label for="province">Province</label>
-                            <input type="text" class="form-control" id="province" value="{{ $account->province }}" name="province">
+                            <input type="text" class="form-control" id="province" value="{{ $account->province }}" oninput="this.value = this.value.toUpperCase()" name="province">
                         </div>
                         <div class="col-md-4 mb-3">
                             <label for="municipality">Municipality</label>
-                            <input type="text" class="form-control" id="municipality" value="{{ $account->municipality }}" name="municipality">
+                            <input type="text" class="form-control" value="{{ $account->municipality }}" oninput="this.value = this.value.toUpperCase()" name="municipality">
                         </div>
                         <div class="col-md-4 mb-3">
                             <label for="barangay">Barangay</label>
-                            <input type="text" class="form-control" id="barangay" value="{{ $account->barangay }}" name="barangay">
+                            <input type="text" class="form-control" value="{{ $account->barangay }}" oninput="this.value = this.value.toUpperCase()" name="barangay">
                         </div>
                     </div>
 
                     <div class="row">
                         <div class="col-md-4 mb-3">
                             <label for="org_name">Organization Name</label>
-                            <input type="text" class="form-control" id="org_name" value="{{ $account->org_name }}" name="org_name">
+                            <input type="text" class="form-control" id="org_name" value="{{ $account->org_name }}" oninput="this.value = this.value.toUpperCase()" name="org_name">
                         </div>
                         <div class="col-md-4 mb-3">
                             <label for="tot_male">Total No. of Male</label>
-                            <input type="text" class="form-control" id="tot_male"  value="{{ $account->tot_male }}"name="tot_male">
+                            <input type="text" class="form-control" id="tot_male"  value="{{ $account->tot_male }}"name="tot_male" oninput="this.value = this.value.replace(/[^0-9]/g, '')">
                         </div>
                         <div class="col-md-4 mb-3">
                             <label for="tot_female">Total No. of Female</label>
-                            <input type="text" class="form-control" id="tot_female" value="{{ $account->tot_female }}" name="tot_female">
+                            <input type="text" class="form-control" id="tot_female" value="{{ $account->tot_female }}" name="tot_female" oninput="this.value = this.value.replace(/[^0-9]/g, '')">
                         </div>
                     </div>
 
@@ -490,6 +490,7 @@
       const indigenous = document.getElementById("indigenous");
       const tribeName = document.getElementById("tribe_name");
       tribeName.disabled = indigenous.value === "NO";
+      document.getElementById('tribe_name').value = "";
   }
 
   document.getElementById("confirm_password").addEventListener("input", function() {

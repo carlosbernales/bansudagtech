@@ -147,13 +147,118 @@
     </div>
 
 
-
+<div id="weather_alert_map" style="display: none; height: 330px; width: 100%;"></div>
+ <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyA-6lStYy7YLcsM1hg5Po9DuUht8N-eO1Y&callback=initMap" async defer></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/alertifyjs@1.13.1/build/css/alertify.min.css" />
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/alertifyjs@1.13.1/build/css/themes/default.min.css" />
 <script src="https://cdn.jsdelivr.net/npm/alertifyjs@1.13.1/build/alertify.min.js"></script>
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-<script async defer src="googlemapsAPI.js"></script>
+<script>
+    window.onload = function () {
+        if (typeof google !== 'undefined' && google.maps) {
+            initFarmWeatherMap(); // Updated function name
+        } else {
+            console.error("Google Maps API failed to load.");
+        }
+    };
+
+    function initFarmWeatherMap() {
+        const farms = @json($farms);
+        const defaultLocation = @json($defaultLocation);
+        const farmLocations = farms.map(farm => farm.location);
+        const geocoder = new google.maps.Geocoder();
+
+        geocoder.geocode({ address: defaultLocation }, (results, status) => {
+            if (status === "OK") {
+                const map = new google.maps.Map(document.getElementById('weather_alert_map'), {
+                    zoom: 10,
+                    center: results[0].geometry.location
+                });
+
+                farmLocations.forEach((address, index) => {
+                    geocoder.geocode({ address: address }, (results, status) => {
+                        if (status === "OK") {
+                            const position = results[0].geometry.location;
+
+                            fetchWeather(position.lat(), position.lng(), (temp) => {
+                                const marker = new google.maps.Marker({
+                                    map: map,
+                                    position: position,
+                                    title: address,
+                                    label: temp + '°C'
+                                });
+
+                                const infowindow = new google.maps.InfoWindow({
+                                    content: `<p>${address}</p><p>Temperature: ${temp}°C</p>`
+                                });
+
+                                marker.addListener('click', () => {
+                                    infowindow.open(map, marker);
+                                });
+
+                                if (temp < -7 || temp > 28) {
+                                    sendWeatherAlert(farms[index], temp);
+                                }
+                            });
+                        } else {
+                            console.error(`Geocode was not successful for: ${status}`);
+                        }
+                    });
+                });
+            } else {
+                console.error(`Geocode failed for default location: ${status}`);
+            }
+        });
+    }
+
+    function fetchWeather(lat, lng, callback) {
+        const apiKey = "4e89cb6596765628fd6138f58d7454e1";
+        const url = `https://api.openweathermap.org/data/2.5/weather?lat=${lat}&lon=${lng}&units=metric&appid=${apiKey}`;
+
+        fetch(url)
+            .then(response => response.json())
+            .then(data => {
+                if (data && data.main && data.main.temp !== undefined) {
+                    callback(data.main.temp);
+                } else {
+                    callback('N/A');
+                }
+            })
+            .catch(() => callback('N/A'));
+    }
+
+    function sendWeatherAlert(farm, temperature) {
+        const data = {
+            id: farm.id,
+            email: farm.email,
+            commodity: farm.commodity,
+            farm_type: farm.farm_type,
+            livestock_type: farm.livestock_type,
+            user_id: farm.user_id,
+            temperature: temperature
+        };
+
+        fetch('/weather-alert', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
+            },
+            body: JSON.stringify(data)
+        })
+        .then(response => response.json())
+        .then(responseData => {
+            if (responseData.success) {
+                console.log('Weather alert submitted successfully.');
+            } else {
+                console.log('Failed to submit weather alert.');
+            }
+        })
+        .catch(() => console.error('Error sending weather alert.'));
+    }
+</script>
+
 
 <script>
 

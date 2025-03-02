@@ -100,43 +100,154 @@
                                                 </tr>
                                             </thead>
                                             <tbody>
+                                                @if(!empty($calamity->rsbsa))
                                                 <tr><td>RSBSA</td><td>{{ $calamity->rsbsa }}</td></tr>
+                                                @endif
+                                                
+                                                @if(!empty($calamity->calamity_type))
                                                 <tr><td>Calamity Type</td><td>{{ $calamity->calamity_type }}</td></tr>
+                                                @endif
+                                                
+                                                @if(!empty($calamity->farmer_type))
                                                 <tr><td>Farmer Type</td><td>{{ $calamity->farmer_type }}</td></tr>
+                                                @endif
+                                                
+                                                @if(!empty($calamity->birthdate))
                                                 <tr><td>Birthdate</td><td>{{ $calamity->birthdate }}</td></tr>
+                                                @endif
+                                                
+                                                @if(!empty($calamity->region))
                                                 <tr><td>Region</td><td>{{ $calamity->region }}</td></tr>
+                                                @endif
+                                                
+                                                @if(!empty($calamity->province))
                                                 <tr><td>Province</td><td>{{ $calamity->province }}</td></tr>
+                                                @endif
+                                                
+                                                @if(!empty($calamity->municipality))
                                                 <tr><td>Municipality</td><td>{{ $calamity->municipality }}</td></tr>
+                                                @endif
+                                                
+                                                @if(!empty($calamity->barangay))
                                                 <tr><td>Barangay</td><td>{{ $calamity->barangay }}</td></tr>
+                                                @endif
+                                                
+                                                @if(!empty($calamity->org_name))
                                                 <tr><td>Organization Name</td><td>{{ $calamity->org_name }}</td></tr>
+                                                @endif
+                                                
+                                                @if(!empty($calamity->tot_male))
                                                 <tr><td>Total Male</td><td>{{ $calamity->tot_male }}</td></tr>
+                                                @endif
+                                                
+                                                @if(!empty($calamity->tot_female))
                                                 <tr><td>Total Female</td><td>{{ $calamity->tot_female }}</td></tr>
+                                                @endif
+                                                
+                                                @if(!empty($calamity->sex))
                                                 <tr><td>Sex</td><td>{{ $calamity->sex }}</td></tr>
+                                                @endif
+                                                
+                                                @if(!empty($calamity->indigenous))
                                                 <tr><td>Indigenous</td><td>{{ $calamity->indigenous }}</td></tr>
+                                                @endif
+                                                
+                                                @if(!empty($calamity->tribe_name))
                                                 <tr><td>Tribe Name</td><td>{{ $calamity->tribe_name }}</td></tr>
+                                                @endif
+                                                
+                                                @if(!empty($calamity->pwd))
                                                 <tr><td>PWD</td><td>{{ $calamity->pwd }}</td></tr>
+                                                @endif
+                                                
+                                                @if(!empty($calamity->arb))
                                                 <tr><td>ARB</td><td>{{ $calamity->arb }}</td></tr>
+                                                @endif
+                                                
+                                                @if(!empty($calamity->fourps))
                                                 <tr><td>4Ps</td><td>{{ $calamity->fourps }}</td></tr>
+                                                @endif
+                                                
+                                                @if(!empty($calamity->crop_type))
                                                 <tr><td>Crop Type</td><td>{{ $calamity->crop_type }}</td></tr>
+                                                @endif
+                                                
+                                                @if(!empty($calamity->partially_damage))
                                                 <tr><td>Partially Damaged (ha)</td><td>{{ $calamity->partially_damage }}</td></tr>
+                                                @endif
+                                                
+                                                @if(!empty($calamity->totally_damage))
                                                 <tr><td>Totally Damaged (ha)</td><td>{{ $calamity->totally_damage }}</td></tr>
+                                                @endif
+                                                
+                                                @if(!empty($calamity->total_area))
                                                 <tr><td>Total Area (ha)</td><td>{{ $calamity->total_area }}</td></tr>
+                                                @endif
+                                                
+                                                @if(!empty($calamity->livestock_type))
                                                 <tr><td>Livestock Type</td><td>{{ $calamity->livestock_type }}</td></tr>
+                                                @endif
+                                                
+                                                @if(!empty($calamity->animal_type))
                                                 <tr><td>Animal Type</td><td>{{ $calamity->animal_type }}</td></tr>
+                                                @endif
+                                                
+                                                @if(!empty($calamity->age_class))
                                                 <tr><td>Age Class</td><td>{{ $calamity->age_class }}</td></tr>
+                                                @endif
+                                                
+                                                @if(!empty($calamity->no_heads))
                                                 <tr><td>No. of Heads</td><td>{{ $calamity->no_heads }}</td></tr>
+                                                @endif
+                                                
+                                                @if(!empty($calamity->remarks))
                                                 <tr><td>Remarks</td><td>{{ $calamity->remarks }}</td></tr>
+                                                @endif
+                                                
+                                                @if(!empty($calamity->lastname))
                                                 <tr><td>Last Name</td><td>{{ $calamity->lastname }}</td></tr>
+                                                @endif
+                                                
+                                                @if(!empty($calamity->firstname))
                                                 <tr><td>First Name</td><td>{{ $calamity->firstname }}</td></tr>
+                                                @endif
+                                                
+                                                @if(!empty($calamity->middlename))
                                                 <tr><td>Middle Name</td><td>{{ $calamity->middlename }}</td></tr>
+                                                @endif
+                                                
+                                                @if(!empty($calamity->suffix))
                                                 <tr><td>Suffix</td><td>{{ $calamity->suffix }}</td></tr>
+                                                @endif
+                                                
+                                                @if(!empty($calamity->fullname))
                                                 <tr><td>Full Name</td><td>{{ $calamity->fullname }}</td></tr>
+                                                @endif
+                                                
+                                                @if(!empty($calamity->location))
                                                 <tr><td>Location</td><td>{{ $calamity->location }}</td></tr>
-                                                <tr><td>Assistance Type</td><td>{{ $calamity->assistance_type }}</td></tr>
+                                                @endif
+                                                
+                                                @if(!empty($calamity->assistance_type))
+                                                <tr><td>Assistance Received</td><td>{{ $calamity->assistance_type }}</td></tr>
+                                                @endif
+                                                
+                                                @if(!empty($calamity->other_assistances))
+                                                <tr><td>Other Assistance</td><td>{{ $calamity->other_assistances }}</td></tr>
+                                                @endif
+                                                
+                                                @if(!empty($calamity->date_provided))
                                                 <tr><td>Date Provided</td><td>{{ $calamity->date_provided }}</td></tr>
-                                                <tr><td>Status</td><td>{{ $calamity->status }}</td></tr>
+                                                @endif
+                                                
+                                                @if(!empty($calamity->email))
                                                 <tr><td>Email</td><td>{{ $calamity->email }}</td></tr>
+                                                @endif
+                                                
+                                                @if(!empty($calamity->date_reported))
                                                 <tr><td>Date Reported</td><td>{{ \Carbon\Carbon::parse($calamity->date_reported)->format('F j, Y') }}</td></tr>
+                                                @endif
+
                                             </tbody>
                                         </table>
                                     </div>
@@ -202,55 +313,66 @@
         <div class="row">
             <div class="col-md-6 mb-3">
                 <label for="calamity_type">Calamity</label>
-                <input type="text" class="form-control" id="calamity_type" name="calamity_type" >
+                <select class="form-control" id="calamity_type" name="calamity_type" required>
+                    <option value="" selected disabled>-- Select Calamity Type --</option>
+                    <option value="DROUGHT">DROUGHT</option>
+                    <option value="PEST AND DISEASES">PEST AND DISEASES</option>
+                    <option value="FLOOD">FLOOD</option>
+                    <option value="EXTREME TEMPERATURE">EXTREME TEMPERATURE</option>
+                    <option value="HEAT STRESS">HEAT STRESS</option>
+                    <option value="DROWNED">DROWNED</option>
+                </select>
             </div>
+
             <div class="col-md-6 mb-3">
                 <label for="location">Location</label>
-                <input type="text" class="form-control" id="location" name="location" readonly data-bs-toggle="modal" data-bs-target="#locationModal">
+                <input type="text" class="form-control" id="location" name="location" readonly data-bs-toggle="modal" data-bs-target="#locationModal" required>
             </div>
         </div>
 
         <div class="row">
-            <div class="col-md-6 mb-3">
+            <div class="col-md-6 mb-3" id="crop_type_container">
                 <label for="crop_type">Type of Crop</label>
-                <input type="text" class="form-control" id="crop_type" name="crop_type" readonly>
+                <input type="text" class="form-control" id="crop_type" name="crop_type" readonly onchange="toggleFields()">
             </div>
-            <div class="col-md-6 mb-3">
+            <div class="col-md-6 mb-3" id="partially_damage_container">
                 <label for="partially_damage">Partially Damaged Area (ha)</label>
-                <input type="text" class="form-control" id="partially_damage" name="partially_damage" >
+                <input type="text" class="form-control" id="partially_damage" name="partially_damage" oninput="this.value = this.value.replace(/[^0-9]/g, '')">
             </div>
         </div>
 
         <div class="row">
-            <div class="col-md-6 mb-3">
+            <div class="col-md-6 mb-3" id="totally_damage_container">
                 <label for="totally_damage">Totally Damaged Area (ha)</label>
-                <input type="text" class="form-control" id="totally_damage" name="totally_damage" >
+                <input type="text" class="form-control" id="totally_damage" name="totally_damage" oninput="this.value = this.value.replace(/[^0-9]/g, '')">
             </div>
-            <div class="col-md-6 mb-3">
+            <div class="col-md-6 mb-3" id="total_area_container">
                 <label for="total_area">Total Area Affected (ha)</label>
-                <input type="text" class="form-control" id="total_area" name="total_area" >
+                <input type="text" class="form-control" id="total_area" name="total_area" oninput="this.value = this.value.replace(/[^0-9]/g, '')">
             </div>
         </div>
 
         <div class="row">
-            <div class="col-md-6 mb-3">
-                <label for="livestock_type">Type of Farm</label>
-                <input type="text" class="form-control" id="livestock_type" name="livestock_type" readonly>
+            <div class="col-md-6 mb-3" id="livestock_type_container">
+                <label for="livestock_type">Type of Farm</label>   
+                <input type="text" class="form-control" id="livestock_type" name="livestock_type" readonly onchange="toggleFields()">
             </div>
-            <div class="col-md-6 mb-3">
-                <label for="animal_type">Animal Type</label>
+            
+            <div class="col-md-6 mb-3" id="age_class_container">
+                <label for="age_class">Age Classification</label>
+                <input type="text" class="form-control" id="age_class" name="age_class" oninput="this.value = this.value.replace(/[^0-9]/g, '')">
+            </div>
+        </div>
+
+        <div class="row" >
+            <div class="col-md-6 mb-3" id="animal_type_container">
+                <label for="animal_type" >Animal Type</label>
                 <input type="text" class="form-control" id="animal_type" name="animal_type" readonly>
             </div>
-        </div>
-
-        <div class="row">
-            <div class="col-md-6 mb-3">
-                <label for="age_class">Age Classification</label>
-                <input type="text" class="form-control" id="age_class" name="age_class" >
-            </div>
-            <div class="col-md-6 mb-3">
+            
+            <div class="col-md-6 mb-3" id="no_heads_container">
                 <label for="no_heads">No of Heads Affected</label>
-                <input type="text" class="form-control" id="no_heads" name="no_heads" >
+                <input type="text" class="form-control" id="no_heads" name="no_heads" oninput="this.value = this.value.replace(/[^0-9]/g, '')">
             </div>
         </div>
 
@@ -305,7 +427,7 @@
 
 
 
-<script async defer src="googlemapsAPI.js"></script>
+<script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyA-6lStYy7YLcsM1hg5Po9DuUht8N-eO1Y&callback=initMap" async defer></script>
 
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/alertifyjs@1.13.1/build/css/alertify.min.css" />
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/alertifyjs@1.13.1/build/css/themes/default.min.css" />
@@ -313,45 +435,55 @@
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 
 <script>
-document.addEventListener("DOMContentLoaded", function () {
-    const modalId = '{{ $calamity->id ?? null }}'; // Set modalId to null if $calamity->id is not available
-    const calamityImages = {!! json_encode($calamity->calamityImages ?? []) !!}; // Handle empty or null calamityImages
-    const totalImages = calamityImages.length;
-    let currentIndex = 0;
+    document.addEventListener("DOMContentLoaded", function () {
+        @if(isset($calamities) && count($calamities) > 0)
+            @foreach($calamities as $calamity)
+                (function() {
+                    const modalId = '{{ $calamity->id }}';
+                    const calamityImages = {!! json_encode($calamity->calamityImages ?? []) !!};
+                    const totalImages = calamityImages.length;
+                    let currentIndex = 0;
 
-    if (!modalId || totalImages === 0) {
-        return; // Exit early if no calamity data or no images
-    }
+                    if (!modalId || totalImages === 0) {
+                        return; // Skip this calamity if no ID or images
+                    }
 
-    const nextButton = document.getElementById(`nextImageBtn${modalId}`);
-    const currentImageIndexSpan = document.getElementById(`currentImageIndex${modalId}`);
-    
-    nextButton.addEventListener("click", function() {
-        if (currentIndex < totalImages - 1) {
-            currentIndex++;
-            updateImageDisplay();
-        } else {
-            currentIndex = 0; 
-            updateImageDisplay();
-        }
+                    const nextButton = document.getElementById(`nextImageBtn${modalId}`);
+                    const currentImageIndexSpan = document.getElementById(`currentImageIndex${modalId}`);
+
+                    if (nextButton && currentImageIndexSpan) {
+                        nextButton.addEventListener("click", function() {
+                            if (currentIndex < totalImages - 1) {
+                                currentIndex++;
+                                updateImageDisplay();
+                            } else {
+                                currentIndex = 0;
+                                updateImageDisplay();
+                            }
+                        });
+
+                        function updateImageDisplay() {
+                            const images = document.querySelectorAll(`#viewImageModal${modalId} .image-gallery-item`);
+                            images.forEach(function(image) {
+                                image.style.display = 'none';
+                            });
+
+                            const activeImage = document.querySelector(`#viewImageModal${modalId} .image-gallery-item[data-index="${currentIndex}"]`);
+                            if (activeImage) {
+                                activeImage.style.display = 'block';
+                            }
+
+                            currentImageIndexSpan.textContent = currentIndex + 1;
+                        }
+                    }
+                })();
+            @endforeach
+        @else
+            console.warn("No calamity data is available.");
+        @endif
     });
-
-    function updateImageDisplay() {
-        const images = document.querySelectorAll(`#viewImageModal${modalId} .image-gallery-item`);
-        images.forEach(function(image) {
-            image.style.display = 'none';
-        });
-
-        const activeImage = document.querySelector(`#viewImageModal${modalId} .image-gallery-item[data-index="${currentIndex}"]`);
-        if (activeImage) {
-            activeImage.style.display = 'block';
-        }
-
-        currentImageIndexSpan.textContent = currentIndex + 1;
-    }
-});
-
 </script>
+
 <script>
     alertify.set('notifier', 'position', 'top-right');
 
@@ -396,52 +528,133 @@ document.getElementById("viewlocationReport").addEventListener("show.bs.modal", 
 ////////////////////////////////////////////////////////////////////
 
 
+window.onload = function () {
+    if (typeof google !== 'undefined' && google.maps) {
+        initMap(); 
+    } else {
+        console.error("Google Maps API failed to load.");
+    }
+
+    toggleFields();
+};
+
+function toggleFields() {
+    const cropType = document.getElementById("crop_type").value;
+    const livestockType = document.getElementById("livestock_type").value;
+    const animalType = document.getElementById("animal_type").value;
+
+    if (!cropType) {
+        document.getElementById("crop_type_container").style.display = "none";
+        document.getElementById("partially_damage_container").style.display = "none";
+        document.getElementById("totally_damage_container").style.display = "none";
+        document.getElementById("total_area_container").style.display = "none";
+
+        clearInputs(["partially_damage_container", "totally_damage_container", "total_area_container"]);
+    } else {
+        document.getElementById("crop_type_container").style.display = "block";
+        document.getElementById("partially_damage_container").style.display = "block";
+        document.getElementById("totally_damage_container").style.display = "block";
+        document.getElementById("total_area_container").style.display = "block";
+    }
+
+    if (!livestockType) {
+        document.getElementById("livestock_type_container").style.display = "none";
+        document.getElementById("animal_type_container").style.display = "none";
+        document.getElementById("age_class_container").style.display = "none";
+        document.getElementById("no_heads_container").style.display = "none";
+
+        clearInputs(["age_class_container", "no_heads_container"]);
+    } else {
+        document.getElementById("livestock_type_container").style.display = "block";
+        document.getElementById("animal_type_container").style.display = "block";
+        document.getElementById("age_class_container").style.display = "block";
+        document.getElementById("no_heads_container").style.display = "block";
+    }
+
+    if (!animalType) {
+        document.getElementById("animal_type_container").style.display = "none";
+    } else {
+        document.getElementById("animal_type_container").style.display = "block";
+    }
+}
+
+function clearInputs(containerIds) {
+    containerIds.forEach(containerId => {
+        const container = document.getElementById(containerId);
+        const inputs = container.querySelectorAll("input, select, textarea");
+
+        inputs.forEach(input => {
+            if (input.type === "checkbox" || input.type === "radio") {
+                input.checked = false;
+            } else {
+                input.value = "";
+            }
+        });
+    });
+}
+
+
 let map;
 let geocoder;
 let markers = [];
-const farms = @json($farms); // Fetch farms data passed from the controller.
+const farms = @json($farms); 
 
 function initMap() {
-    map = new google.maps.Map(document.getElementById("map"), {
-        center: { lat: 10.3157, lng: 123.8854 }, // Default center (Cebu City, Philippines)
-        zoom: 8,
-    });
-
     geocoder = new google.maps.Geocoder();
 
-    farms.forEach(farm => {
-        geocodeFarm(farm);
-    });
+    geocodeFarm(farms[0]).then(() => {
+        map = new google.maps.Map(document.getElementById("map"), {
+            center: { lat: markers[0].marker.getPosition().lat(), lng: markers[0].marker.getPosition().lng() }, // Set center to the first farm's coordinates
+            zoom: 8,
+        });
 
-    document.getElementById('locationSearch').addEventListener('input', searchMarkers);
+        farms.forEach(farm => {
+            geocodeFarm(farm);
+        });
+
+        document.getElementById('locationSearch').addEventListener('input', searchMarkers);
+    }).catch(error => {
+        console.error("Error geocoding default farm:", error);
+        
+        map = new google.maps.Map(document.getElementById("map"), {
+            center: { lat: 10.3157, lng: 123.8854 },
+            zoom: 8,
+        });
+    });
 }
 
 function geocodeFarm(farm) {
-    geocoder.geocode({ address: farm.location }, (results, status) => {
-        if (status === "OK") {
-            const marker = new google.maps.Marker({
-                map: map,
-                position: results[0].geometry.location,
-                title: farm.location,
-            });
+    return new Promise((resolve, reject) => {
+        geocoder.geocode({ address: farm.location }, (results, status) => {
+            if (status === "OK") {
+                const marker = new google.maps.Marker({
+                    map: map,
+                    position: results[0].geometry.location,
+                    title: farm.location,
+                });
 
-            markers.push({ marker, farm });
+                markers.push({ marker, farm });
 
-            marker.addListener("click", () => {
-                document.getElementById("location").value = farm.location;
-                document.getElementById("crop_type").value = farm.farm_type || '';
-                document.getElementById("animal_type").value = farm.livestock_type || '';
-                document.getElementById("livestock_type").value = farm.forms_farm || '';
+                marker.addListener("click", () => {
+                    document.getElementById("location").value = farm.location;
+                    document.getElementById("crop_type").value = farm.farm_type || '';
+                    document.getElementById("animal_type").value = farm.livestock_type || '';
+                    document.getElementById("livestock_type").value = farm.forms_farm || '';
 
-                const modal = bootstrap.Modal.getInstance(document.getElementById("locationModal"));
-                const modals = bootstrap.Modal.getInstance(document.getElementById("AddReportModal"));
-                modal.hide();
-                modals.show();
+                    const modal = bootstrap.Modal.getInstance(document.getElementById("locationModal"));
+                    const modals = bootstrap.Modal.getInstance(document.getElementById("AddReportModal"));
+                    modal.hide();
+                    modals.show();
 
-            });
-        } else {
-            console.error("Geocode was not successful for the following reason: " + status);
-        }
+                    toggleFields();
+                });
+
+                resolve(); 
+            } else {
+                console.error("Geocode was not successful for the location: " + farm.location + ", reason: " + status);
+                reject(status); 
+            }
+        });
     });
 }
 
@@ -453,16 +666,16 @@ function searchMarkers() {
         if (farm.location.toLowerCase().includes(query)) {
             marker.setVisible(true);
             map.setCenter(marker.getPosition());
-            map.setZoom(12); // Set the zoom level to 12 for a more detailed view
+            map.setZoom(12); 
             found = true;
         } else {
-            marker.setVisible(false); // Hide the marker if it doesn't match the search
+            marker.setVisible(false); 
         }
     });
 
     if (!found && query) {
-        map.setCenter({ lat: 10.3157, lng: 123.8854 }); // Default center (Cebu City)
-        map.setZoom(8); // Zoom out to a default level
+        map.setCenter({ lat: 10.3157, lng: 123.8854 }); 
+        map.setZoom(8); 
     }
 }
 

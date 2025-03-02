@@ -65,21 +65,23 @@ class HomeController extends Controller
         }
         
         $userId = session('user_id'); 
-
+    
         $notifications = AnnouncementUser::where('user_id', $userId)
                                         ->where('status', 'unread')
                                         ->get();
-
+    
         $farmers = Farms::with('farmImages')
                         ->where('user_id', $userId) 
                         ->get(); 
         
         $notificationCount = $notifications->count();
-
         $account = Accounts::find($userId);
-
-        return view('user.farms', compact('farmers', 'notificationCount', 'notifications','account'));
+    
+        $municipalities = config('municipalities');
+    
+        return view('user.farms', compact('farmers', 'notificationCount', 'notifications', 'account', 'municipalities'));
     }
+
 
     public function add_farms(Request $request)
     {

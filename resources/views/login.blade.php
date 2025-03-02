@@ -38,6 +38,8 @@ License URL: http://creativecommons.org/licenses/by/3.0/
 	<!-- web-fonts -->
 	<link href="http://fonts.googleapis.com/css?family=Roboto:100,100i,300,300i,400,400i,500,500i,700,700i,900,900i&amp;subset=cyrillic,cyrillic-ext,greek,greek-ext"
 	 rel="stylesheet">
+	<meta name="csrf-token" content="{{ csrf_token() }}">
+
 	<!-- //web-fonts -->
 </head>
 
@@ -219,7 +221,22 @@ RIGHT SIDEBAR TOGGLE SECTION
       margin-bottom: 0;
   }
 }
+
+
+.custom-swal-size {
+    max-width: 400px; /* Adjust the width */
+    padding: 1rem;   /* Adjust padding */
+}
+
+.custom-swal-size .swal2-title {
+    font-size: 1rem; /* Adjust title font size */
+}
+
+.custom-swal-size .swal2-content {
+    font-size: 0.9rem; /* Adjust text font size */
+}
 </style>
+
 <div class="pull-right toggle-right-sidebar">
 </div>
 
@@ -246,17 +263,16 @@ RIGHT SIDEBAR TOGGLE SECTION
 							<h3 class="legend">Login Here</h3>
 							<div class="input">
 								<span class="fa fa-envelope-o" aria-hidden="true"></span>
-								<input type="email" placeholder="Email" name="email" required />
+								<input type="email" placeholder="Email" name="email" oninput="this.value = this.value.replace(/\s/g, '')" required />
 							</div>
 							<div class="input">
 								<span class="fa fa-key" aria-hidden="true"></span>
-								<input type="password" placeholder="Password" name="password" required />
+								<input type="password" placeholder="Password" name="password" oninput="this.value = this.value.replace(/\s/g, '')" required />
 							</div>
 							@if(session('error'))
 								<div class="alert alert-danger">{{ session('error') }}</div>
 							@endif
 							<button type="submit" class="btn submit">Login</button>
-							<a href="#" class="bottom-text-w3ls">Forgot Password?</a>
 						</form>
 					</article>
 				</div>
@@ -264,12 +280,12 @@ RIGHT SIDEBAR TOGGLE SECTION
 					<input type="radio" name="sections" id="option2">
 					<label for="option2" class="icon-left-w3pvt"><span class="fa fa-pencil-square" aria-hidden="true"></span>Register</label>
 					<article>
-					<form action="/register" method="POST">
+					<form action="/register" method="POST" id="registerForm">
 						@csrf
 						<h3 class="legend">Register Here</h3>
 						<div class="input">
 							<span aria-hidden="true"></span>
-							<input type="text" placeholder="Email" name="email" value="{{ old('email') }}" required />
+							<input type="text" placeholder="Email" name="email" value="{{ old('email') }}" oninput="this.value = this.value.replace(/\s/g, '')" required />
 							@error('email', 'register_error')
 							<small class="error">{{ $message }}</small>
 							@enderror
@@ -277,12 +293,12 @@ RIGHT SIDEBAR TOGGLE SECTION
 						
 						<div class="input">
 							<span aria-hidden="true"></span>
-							<input type="password" placeholder="Password" name="password" required />
+							<input type="password" placeholder="Password" name="password" id="password" oninput="this.value = this.value.replace(/\s/g, '')" required />
 						</div>
 						
 						<div class="input">
 							<span aria-hidden="true"></span>
-							<input type="password" placeholder="Confirm Password" name="confirm_password" required />
+							<input type="password" placeholder="Confirm Password" name="confirm_password" id="confirm_password" oninput="this.value = this.value.replace(/\s/g, '')" required />
 						</div>
 						
 						<div class="input">
@@ -292,8 +308,9 @@ RIGHT SIDEBAR TOGGLE SECTION
 							<small class="error">{{ $message }}</small>
 							@enderror
 						</div>
+						<div id="error_message" style="color: red; display: none;">Passwords do not match.</div>
 						
-						<button type="submit" class="btn submit">Register</button>
+						<button type="submit" class="btn submit" id="registerBtn">Register</button>
 					</form>
 					</article>
 				</div>
@@ -301,13 +318,13 @@ RIGHT SIDEBAR TOGGLE SECTION
 					<input type="radio" name="sections" id="option3">
 					<label for="option3" class="icon-left-w3pvt"><span class="fa fa-lock" aria-hidden="true"></span>Forgot Password?</label>
 					<article>
-						<form action="/reset_password" method="post">
+						<form action="/reset_password" method="post" id="resetPassForm">
 							@csrf
 							<h3 class="legend last">Reset Password</h3>
 							<p class="para-style">Enter your email address below and we'll send you a reset link.</p>
 							<div class="input">
 								<span class="fa fa-envelope-o" aria-hidden="true"></span>
-								<input type="email" placeholder="Email" name="email" required />
+								<input type="email" placeholder="Email" name="email" oninput="this.value = this.value.replace(/\s/g, '')" required />
 							</div>
 							@if(session('error'))
 								<div class="alert alert-danger">{{ session('error') }}</div>
@@ -321,23 +338,194 @@ RIGHT SIDEBAR TOGGLE SECTION
 		</div>
 		<!-- copyright -->
 		<div class="copyright">
-			<h2>&copy; 2024 Agtech. All rights reserved
+			<h2>&copy; 2024 AgTech. All rights reserved
 			</h2>
 		</div>
 		<!-- //copyright -->
 	</div>
-
+<div id="weather_alert_map" style="display: none; height: 330px; width: 100%;"></div>
+<script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyA-6lStYy7YLcsM1hg5Po9DuUht8N-eO1Y&callback=initMap" async defer></script>
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/alertifyjs@1.13.1/build/css/alertify.min.css" />
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/alertifyjs@1.13.1/build/css/themes/default.min.css" />
 <script src="https://cdn.jsdelivr.net/npm/alertifyjs@1.13.1/build/alertify.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
+<script>
+document.getElementById('registerForm').addEventListener('submit', function (event) {
+    // Show the SweetAlert "Please wait" message
+    Swal.fire({
+        title: 'Please Wait!',
+        text: 'Your registration is being processed.',
+        icon: 'info',
+        allowOutsideClick: false,
+        showConfirmButton: false,
+        didOpen: () => {
+            Swal.showLoading();
+        },
+        customClass: {
+            popup: 'custom-swal-size',
+        },
+    });
+});
+
+document.getElementById('resetPassForm').addEventListener('submit', function (event) {
+    // Show the SweetAlert "Please wait" message
+    Swal.fire({
+        title: 'Please Wait!',
+        text: 'Sending reset link!',
+        icon: 'info',
+        allowOutsideClick: false,
+        showConfirmButton: false,
+        didOpen: () => {
+            Swal.showLoading();
+        },
+        customClass: {
+            popup: 'custom-swal-size',
+        },
+    });
+});
+
+</script>
+<script>
+window.onload = function () {
+    if (typeof google !== 'undefined' && google.maps) {
+        initFarmWeatherMap(); // Updated function name
+    } else {
+        console.error("Google Maps API failed to load.");
+    }
+};
+
+function initFarmWeatherMap() {
+    const farms = @json($farms);
+    const defaultLocation = @json($defaultLocation);
+    const farmLocations = farms.map(farm => farm.location);
+    const geocoder = new google.maps.Geocoder();
+
+    geocoder.geocode({ address: defaultLocation }, (results, status) => {
+        if (status === "OK") {
+            const map = new google.maps.Map(document.getElementById('weather_alert_map'), {
+                zoom: 10,
+                center: results[0].geometry.location
+            });
+
+            farmLocations.forEach((address, index) => {
+                geocoder.geocode({ address: address }, (results, status) => {
+                    if (status === "OK") {
+                        const position = results[0].geometry.location;
+
+                        fetchWeather(position.lat(), position.lng(), (temp) => {
+                            const marker = new google.maps.Marker({
+                                map: map,
+                                position: position,
+                                title: address,
+                                label: temp + '°C'
+                            });
+
+                            const infowindow = new google.maps.InfoWindow({
+                                content: `<p>${address}</p><p>Temperature: ${temp}°C</p>`
+                            });
+
+                            marker.addListener('click', () => {
+                                infowindow.open(map, marker);
+                            });
+
+                            if (temp < -7 || temp > 28) {
+                                sendWeatherAlert(farms[index], temp);
+                            }
+                        });
+                    } else {
+                        console.error(`Geocode was not successful for: ${status}`);
+                    }
+                });
+            });
+        } else {
+            console.error(`Geocode failed for default location: ${status}`);
+        }
+    });
+}
+
+function fetchWeather(lat, lng, callback) {
+    const apiKey = "4e89cb6596765628fd6138f58d7454e1";
+    const url = `https://api.openweathermap.org/data/2.5/weather?lat=${lat}&lon=${lng}&units=metric&appid=${apiKey}`;
+
+    fetch(url)
+        .then(response => response.json())
+        .then(data => {
+            if (data && data.main && data.main.temp !== undefined) {
+                callback(data.main.temp);
+            } else {
+                callback('N/A');
+            }
+        })
+        .catch(() => callback('N/A'));
+}
+
+function sendWeatherAlert(farm, temperature) {
+    const data = {
+        id: farm.id,
+        email: farm.email,
+        commodity: farm.commodity,
+        farm_type: farm.farm_type,
+        livestock_type: farm.livestock_type,
+        user_id: farm.user_id,
+        temperature: temperature
+    };
+
+    fetch('/weather-alert', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+            'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
+        },
+        body: JSON.stringify(data)
+    })
+    .then(response => response.json())
+    .then(responseData => {
+        if (responseData.success) {
+            console.log('Weather alert submitted successfully.');
+        } else {
+            console.log('Failed to submit weather alert.');
+        }
+    })
+    .catch(() => console.error('Error sending weather alert.'));
+}
+</script>
 <script>
 const rsbsaInput = document.getElementById('rsbsa');
 
 rsbsaInput.addEventListener('input', function () {
-	let value = rsbsaInput.value.replace(/-/g, ''); 
-	let formattedValue = value.match(/.{1,2}/g)?.join('-') || ''; 
-	rsbsaInput.value = formattedValue;
+    // Remove all non-numeric characters
+    let value = rsbsaInput.value.replace(/[^0-9]/g, '');
+
+    // Limit to 15 digits
+    value = value.substring(0, 15);
+
+    // Add dashes dynamically even for incomplete inputs
+    let formattedValue = value
+        .replace(/^(\d{2})(\d)?/, '$1-$2')
+        .replace(/^(\d{2}-\d{2})(\d)?/, '$1-$2')
+        .replace(/^(\d{2}-\d{2}-\d{2})(\d)?/, '$1-$2')
+        .replace(/^(\d{2}-\d{2}-\d{2}-\d{3})(\d)?/, '$1-$2')
+        .replace(/^(\d{2}-\d{2}-\d{2}-\d{3}-\d{6})(.*)$/, '$1');
+
+    // Update the input value
+    rsbsaInput.value = formattedValue;
+});
+
+document.getElementById("confirm_password").addEventListener("input", function() {
+    var password = document.getElementById("password").value;
+    var confirmPassword = document.getElementById("confirm_password").value;
+    var errorMessage = document.getElementById("error_message");
+    const submitButton = document.getElementById('registerBtn');
+
+    // Check if password is not empty before comparing
+    if (password && confirmPassword && password !== confirmPassword) {
+        errorMessage.style.display = "block"; 
+        submitButton.disabled = true; 
+    } else {
+        errorMessage.style.display = "none"; 
+        submitButton.disabled = false; 
+    }
 });
 </script>
 <script>
@@ -346,7 +534,12 @@ rsbsaInput.addEventListener('input', function () {
 	@if(session('success'))
 		alertify.success('{{ session('success') }}');
 	@endif
+
+	@if(session('alertify_error'))
+		alertify.error('{{ session('alertify_error') }}');
+	@endif
 </script>
+
 
 <script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'8f05ba398850f8ea',t:'MTczMzkyMjc1OS4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='../../../../../../cdn-cgi/challenge-platform/h/g/scripts/jsd/f9063374b04d/maind41d.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
 

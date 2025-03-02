@@ -70,7 +70,7 @@
                         <div class="row">
                             <div class="col-md-12 mb-3">
                                 <label for="Assitance Type">Assitance Type</label>
-                                <input type="text" class="form-control" id="Assitance Type" name="assistance_type" placeholder="Enter Assistance Type" required>
+                                <input type="text" class="form-control" id="Assitance Type" name="assistance_type" placeholder="Enter Assistance Type" oninput="this.value = this.value.toUpperCase()" required>
                             </div>
                             
                         </div>

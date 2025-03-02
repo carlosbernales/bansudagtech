@@ -57,8 +57,9 @@ Route::post('/send-alert-email', [AdminController::class, 'sendAlertEmail']);
 Route::put('/updateToDisregarded/{id}', [AdminController::class, 'updateToDisregarded']);
 Route::match(['get', 'post'], '/disregarded_reports', [AdminController::class, 'disregarded_reports']);
 Route::put('/updateToPending/{id}', [AdminController::class, 'updateToPending']);
-
-
+Route::post('/weather-alert', [AdminController::class, 'weather_alert']);
+Route::put('/archive_farmer/{id}', [AdminController::class, 'archive_farmer']);
+Route::put('/active_farmer/{id}', [AdminController::class, 'active_farmer']);
 
 //HOME
 Route::match(['get', 'post'], '/home', [HomeController::class, 'home']);

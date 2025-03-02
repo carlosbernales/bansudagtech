@@ -57,6 +57,7 @@ class CalamityReport extends Model
                             'fullname',
                             'location',
                             'assistance_type',
+                            'other_assistances',
                             'date_provided',
                             'status',
                             'email',

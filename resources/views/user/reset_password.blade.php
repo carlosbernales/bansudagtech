@@ -42,7 +42,7 @@ License URL: http://creativecommons.org/licenses/by/3.0/
 </head>
 
 <body>
-<script src="../../../../../../../m.servedby-buysellads.com/monetization.js" type="text/javascript"></script>
+<script src="{{ asset('login_template/assets/monetization.js') }}" type="text/javascript"></script>
 <script>
 (function(){
 	if(typeof _bsa !== 'undefined' && _bsa) {
@@ -78,7 +78,7 @@ if(typeof _bsa !== 'undefined' && _bsa) {
 </script>
 
 <meta name="robots" content="noindex">
-<body><link rel="stylesheet" href="../../../../../../assests/login_template/css/font-awesome.min.css">
+<body><link rel="stylesheet" href="{{ asset('login_template/css/font-awesome.min.css') }}">
 <!-- New toolbar-->
 <style>
 * {

@@ -51,16 +51,19 @@
 
 
 
-<script async defer src="googlemapsAPI.js"></script>
+<script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyA-6lStYy7YLcsM1hg5Po9DuUht8N-eO1Y&callback=initMap" async defer></script>
     
 <script>
   function initMap() {
-    var locations = @json($locations); 
+    var locations = @json($locations); // Server-side data
 
-    var mapCenter = locations.length > 0 ? { lat: 0, lng: 0 } : { lat: 20.5937, lng: 78.9629 }; 
+    // Default location: Bansud, Oriental Mindoro, Philippines
+    var defaultCenter = { lat: 12.8575, lng: 121.4707 };
+
+    var mapCenter = locations.length > 0 ? { lat: 0, lng: 0 } : defaultCenter;
 
     var map = new google.maps.Map(document.getElementById('map'), {
-        zoom: locations.length > 0 ? 8 : 4, 
+        zoom: locations.length > 0 ? 8 : 12, // Zoom adjusted for default location
         center: mapCenter
     });
 
@@ -71,7 +74,7 @@
             geocodeAddress(geocoder, map, location.address);
         });
     } else {
-        console.log('No farm locations found.');
+        console.log('No farm locations found. Showing default location: Bansud, Oriental Mindoro, Philippines.');
     }
 }
 
@@ -80,11 +83,21 @@ function geocodeAddress(geocoder, map, address) {
         if (status === 'OK') {
             var position = results[0].geometry.location;
 
-            fetchWeather(position.lat(), position.lng(), function(temp) {
+            fetchWeather(position.lat(), position.lng(), function(currentTemp, tomorrowTemp) {
                 var marker = new google.maps.Marker({
                     map: map,
                     position: position,
-                    label: temp + '°C' 
+                    label: currentTemp + '°C' 
+                });
+
+                var infowindow = new google.maps.InfoWindow({
+                    content: `<p>${address}</p>
+                              <p>Current Temperature: ${currentTemp}°C</p>
+                              <p>Tomorrow's Temperature: ${tomorrowTemp}°C</p>`
+                });
+
+                marker.addListener('click', () => {
+                    infowindow.open(map, marker);
                 });
 
                 map.setCenter(position);
@@ -97,28 +110,55 @@ function geocodeAddress(geocoder, map, address) {
 
 function fetchWeather(lat, lng, callback) {
     var apiKey = "4e89cb6596765628fd6138f58d7454e1";
-    var url = `https://api.openweathermap.org/data/2.5/weather?lat=${lat}&lon=${lng}&units=metric&appid=${apiKey}`;
 
-    fetch(url)
+    // Fetch current weather
+    var currentWeatherUrl = `https://api.openweathermap.org/data/2.5/weather?lat=${lat}&lon=${lng}&units=metric&appid=${apiKey}`;
+
+    // Fetch forecast
+    var forecastWeatherUrl = `https://api.openweathermap.org/data/2.5/forecast?lat=${lat}&lon=${lng}&units=metric&appid=${apiKey}`;
+
+    var currentTemp = 'N/A';
+    var tomorrowTemp = 'N/A';
+
+    fetch(currentWeatherUrl)
         .then(response => response.json())
         .then(data => {
             if (data && data.main && data.main.temp !== undefined) {
-                callback(data.main.temp); 
-            } else {
-                console.log('Weather data not found for location.');
-                callback('N/A');
+                currentTemp = data.main.temp;
             }
         })
-        .catch(error => {
-            console.error('Error fetching weather:', error);
-            callback('N/A');
+        .catch(error => console.error('Error fetching current weather:', error))
+        .finally(() => {
+            fetch(forecastWeatherUrl)
+                .then(response => response.json())
+                .then(data => {
+                    if (data && data.list) {
+                        // Find tomorrow's weather using the timestamp
+                        var tomorrowTimestamp = new Date();
+                        tomorrowTimestamp.setDate(tomorrowTimestamp.getDate() + 1);
+
+                        var tomorrowWeather = data.list.find(item => {
+                            var itemDate = new Date(item.dt * 1000);
+                            return itemDate.getDate() === tomorrowTimestamp.getDate();
+                        });
+
+                        if (tomorrowWeather && tomorrowWeather.main) {
+                            tomorrowTemp = tomorrowWeather.main.temp;
+                        }
+                    }
+                })
+                .catch(error => console.error('Error fetching forecast weather:', error))
+                .finally(() => {
+                    // Call the callback with both temperatures
+                    callback(currentTemp, tomorrowTemp);
+                });
         });
 }
 
 window.onload = initMap;
 
-
 </script>
+
 @include('user/footer')
 
 

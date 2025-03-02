@@ -194,29 +194,36 @@
         <div class="row">
             <div class="col-md-6 mb-3">
                 <label for="region" class="form-label">Region</label>
-                <input type="text" class="form-control" id="region" name="region" >
+                <input type="text" class="form-control" value="IV-B"  name="region" oninput="this.value = this.value.toUpperCase()">
             </div>
             <div class="col-md-6 mb-3">
                 <label for="municipality" class="form-label">Municipality</label>
-                <input type="text" class="form-control" id="municipality" name="municipality" >
+                <select class="form-control" id="municipality" name="municipality" onchange="updateBarangays()">
+                    <option value="">Select Municipality</option>
+                    @foreach($municipalities as $municipality => $barangays)
+                        <option value="{{ $municipality }}">{{ $municipality }}</option>
+                    @endforeach
+                </select>
             </div>
         </div>
 
         <div class="row">
             <div class="col-md-6 mb-3">
                 <label for="province" class="form-label">Province</label>
-                <input type="text" class="form-control" id="province" name="province" >
+                <input type="text" class="form-control"  value="ORIENTAL MINDORO" name="province" oninput="this.value = this.value.toUpperCase()">
             </div>
             <div class="col-md-6 mb-3">
                 <label for="barangay" class="form-label">Barangay</label>
-                <input type="text" class="form-control" id="barangay" name="barangay" >
+                <select class="form-control" id="barangay" name="barangay">
+                    <option value="">Select Barangay</option>
+                </select>
             </div>
         </div>
 
         <div class="row">
             <div class="col-md-6 mb-3">
                 <label for="farm_area" class="form-label">Farm Area</label>
-                <input type="text" class="form-control" id="farm_area" name="farm_area" >
+                <input type="text" class="form-control" id="farm_area" name="farm_area" oninput="this.value = this.value.toUpperCase()">
             </div>
             <div class="col-md-6 mb-3">
                 <label for="area_planted" class="form-label">Area Planted</label>
@@ -245,12 +252,12 @@
 
         <div class="mb-3" id="livestockTypeDiv"  style="display: none;">
             <label for="livestock_type" class="form-label">Livestock Type</label>
-            <input type="text" class="form-control" id="livestock_type" name="livestock_type" placeholder="eg: PIG">
+            <input type="text" class="form-control" id="livestock_type" name="livestock_type" placeholder="eg: PIG" oninput="this.value = this.value.toUpperCase()">
         </div>
 
         <div class="mb-3" id="cropTypeDiv"  style="display: none;">
             <label for="farm_type" class="form-label">Crop Type</label>
-            <input type="text" class="form-control" id="farm_type" name="farm_type" placeholder="eg: RICE">
+            <input type="text" class="form-control" id="farm_type" name="farm_type" placeholder="eg: RICE" oninput="this.value = this.value.toUpperCase()">
         </div>
         <div class="mb-3">
             <label for="image" class="form-label">Images</label>
@@ -303,57 +310,82 @@
 </div>
 
 
-<script async defer src="googlemapsAPI.js"></script>
+ <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyA-6lStYy7YLcsM1hg5Po9DuUht8N-eO1Y&callback=initMap" async defer></script>
 
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/alertifyjs@1.13.1/build/css/alertify.min.css" />
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/alertifyjs@1.13.1/build/css/themes/default.min.css" />
 <script src="https://cdn.jsdelivr.net/npm/alertifyjs@1.13.1/build/alertify.min.js"></script>
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <script>
-    document.addEventListener("DOMContentLoaded", function () {
-    @if(isset($farmer) && $farmer->id)
-        const modalId = '{{ $farmer->id }}';
-        const totalImages = {{ count($farmer->farmImages ?? []) }};
-        let currentIndex = 0;
+  
+    const municipalitiesData = @json($municipalities);
 
-        const nextButton = document.getElementById(`nextImageBtn${modalId}`);
-        const currentImageIndexSpan = document.getElementById(`currentImageIndex${modalId}`);
+    function updateBarangays() {
+        const municipality = document.getElementById('municipality').value;
+        const barangaySelect = document.getElementById('barangay');
         
-        if (nextButton && currentImageIndexSpan) {
-            nextButton.addEventListener("click", function() {
-                if (currentIndex < totalImages - 1) {
-                    currentIndex++;
-                    updateImageDisplay();
-                } else {
-                    currentIndex = 0; 
-                    updateImageDisplay();
-                }
+        barangaySelect.innerHTML = '<option value="">Select Barangay</option>';
+
+        if (municipality) {
+            const barangays = municipalitiesData[municipality];
+            barangays.forEach(function(barangay) {
+                const option = document.createElement('option');
+                option.value = barangay;
+                option.textContent = barangay;
+                barangaySelect.appendChild(option);
             });
-
-            function updateImageDisplay() {
-                const images = document.querySelectorAll(`#viewImageModal${modalId} .image-gallery-item`);
-                if (images.length === 0) {
-                    return; 
-                }
-
-                images.forEach(function(image) {
-                    image.style.display = 'none';
-                });
-
-                const activeImage = document.querySelector(`#viewImageModal${modalId} .image-gallery-item[data-index="${currentIndex}"]`);
-                if (activeImage) {
-                    activeImage.style.display = 'block';
-                }
-
-                currentImageIndexSpan.textContent = currentIndex + 1;
-            }
         }
-    @else
-        console.warn("Farmer data is not available.");
-    @endif
-});
-
+    }
 </script>
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        @if(isset($farmers) && count($farmers) > 0)
+            @foreach($farmers as $farmer)
+                (function() {
+                    const modalId = '{{ $farmer->id }}';
+                    const totalImages = {{ count($farmer->farmImages ?? []) }};
+                    let currentIndex = 0;
+
+                    const nextButton = document.getElementById(`nextImageBtn${modalId}`);
+                    const currentImageIndexSpan = document.getElementById(`currentImageIndex${modalId}`);
+
+                    if (nextButton && currentImageIndexSpan) {
+                        nextButton.addEventListener("click", function() {
+                            if (currentIndex < totalImages - 1) {
+                                currentIndex++;
+                                updateImageDisplay();
+                            } else {
+                                currentIndex = 0;
+                                updateImageDisplay();
+                            }
+                        });
+
+                        function updateImageDisplay() {
+                            const images = document.querySelectorAll(`#viewImageModal${modalId} .image-gallery-item`);
+                            if (images.length === 0) {
+                                return;
+                            }
+
+                            images.forEach(function(image) {
+                                image.style.display = 'none';
+                            });
+
+                            const activeImage = document.querySelector(`#viewImageModal${modalId} .image-gallery-item[data-index="${currentIndex}"]`);
+                            if (activeImage) {
+                                activeImage.style.display = 'block';
+                            }
+
+                            currentImageIndexSpan.textContent = currentIndex + 1;
+                        }
+                    }
+                })();
+            @endforeach
+        @else
+            console.warn("Farmers data is not available.");
+        @endif
+    });
+</script>
+
 <script>
     alertify.set('notifier', 'position', 'top-right');
 
@@ -365,24 +397,28 @@
 <script>
 
 document.getElementById('commodity').addEventListener('change', function () {
-        const farmTypeDiv = document.getElementById('farmTypeDiv');
-        const livestockTypeDiv = document.getElementById('livestockTypeDiv');
-        const cropTypeDiv = document.getElementById('cropTypeDiv');
+    const farmTypeDiv = document.getElementById('farmTypeDiv');
+    const livestockTypeDiv = document.getElementById('livestockTypeDiv');
+    const cropTypeDiv = document.getElementById('cropTypeDiv');
+    
+    document.getElementById('forms_farm').value = "";
+    document.getElementById('livestock_type').value = "";
+    document.getElementById('farm_type').value = "";
 
-        if (this.value === 'LIVESTOCK') {
-            farmTypeDiv.style.display = 'block'; // Hide the "Farm Type" dropdown
-            livestockTypeDiv.style.display = 'block'; // Show the "Livestock Type" input
-            cropTypeDiv.style.display = 'none'; // Hide the "Crop Type" input
-        } else if (this.value === 'CROP') {
-            farmTypeDiv.style.display = 'none'; // Show the "Farm Type" dropdown
-            livestockTypeDiv.style.display = 'none'; // Hide the "Livestock Type" input
-            cropTypeDiv.style.display = 'block'; // Show the "Crop Type" input
-        } else {
-            farmTypeDiv.style.display = 'none'; // Hide both
-            livestockTypeDiv.style.display = 'none';
-            cropTypeDiv.style.display = 'none';
-        }
-    });
+    if (this.value === 'LIVESTOCK') {
+        farmTypeDiv.style.display = 'block'; // Hide the "Farm Type" dropdown
+        livestockTypeDiv.style.display = 'block'; // Show the "Livestock Type" input
+        cropTypeDiv.style.display = 'none'; // Hide the "Crop Type" input
+    } else if (this.value === 'CROP') {
+        farmTypeDiv.style.display = 'none'; // Show the "Farm Type" dropdown
+        livestockTypeDiv.style.display = 'none'; // Hide the "Livestock Type" input
+        cropTypeDiv.style.display = 'block'; // Show the "Crop Type" input
+    } else {
+        farmTypeDiv.style.display = 'none'; // Hide both
+        livestockTypeDiv.style.display = 'none';
+        cropTypeDiv.style.display = 'none';
+    }
+});
 
 
 function confirmDelete(id) {
@@ -413,16 +449,24 @@ function confirmDelete(id) {
 
 
 
+window.onload = function () {
+    if (typeof google !== 'undefined' && google.maps) {
+        initMap(); 
+    } else {
+        console.error("Google Maps API failed to load.");
+    }
+};
+
 let map;
 let marker;
 let geocoder;
 
 function initMap() {
-    const initialLocation = { lat: -34.397, lng: 150.644 };
+    const initialLocation = { lat: 12.8578, lng: 121.4526 }; 
 
     map = new google.maps.Map(document.getElementById('map'), {
         center: initialLocation,
-        zoom: 8,
+        zoom: 12,
     });
 
     geocoder = new google.maps.Geocoder();
@@ -430,23 +474,23 @@ function initMap() {
     marker = new google.maps.Marker({
         position: initialLocation,
         map: map,
-        draggable: true,  // Make the marker draggable
+        draggable: true, 
     });
 
-    google.maps.event.addListener(marker, 'dragend', function() {
+    google.maps.event.addListener(marker, 'dragend', function () {
         const position = marker.getPosition();
-        getAddressFromLatLng(position);  // Get the address from the marker's position
+        getAddressFromLatLng(position);  
     });
 
     const input = document.getElementById('mapSearch');
     
-    input.addEventListener('keydown', function(event) {
+    input.addEventListener('keydown', function (event) {
         if (event.key === 'Enter') {
-            geocodeAddress(input.value);  // Geocode the address when Enter is pressed
+            geocodeAddress(input.value);  
         }
     });
 
-    google.maps.event.addListener(map, 'click', function(event) {
+    google.maps.event.addListener(map, 'click', function (event) {
         const clickedLocation = event.latLng;
 
         marker.setPosition(clickedLocation);
@@ -456,12 +500,12 @@ function initMap() {
 }
 
 function geocodeAddress(address) {
-    geocoder.geocode({ 'address': address }, function(results, status) {
+    geocoder.geocode({ 'address': address }, function (results, status) {
         if (status === 'OK') {
             const location = results[0].geometry.location;
-            map.setCenter(location);  // Move the map to the searched location
-            marker.setPosition(location);  // Move the marker to the searched location
-            getAddressFromLatLng(location);  // Get the address from the new marker position
+            map.setCenter(location);  
+            marker.setPosition(location);  
+            getAddressFromLatLng(location);  
         } else {
             alert('Geocode was not successful for the following reason: ' + status);
         }
@@ -469,12 +513,12 @@ function geocodeAddress(address) {
 }
 
 function getAddressFromLatLng(latLng) {
-    geocoder.geocode({ 'location': latLng }, function(results, status) {
+    geocoder.geocode({ 'location': latLng }, function (results, status) {
         if (status === 'OK') {
             if (results[0]) {
                 document.getElementById('location').value = results[0].formatted_address;
 
-                $('#addFarmModal').modal('show');  // Show the modal programmatically
+                $('#addFarmModal').modal('show');  
             } else {
                 alert('No address found for this location.');
             }
@@ -484,15 +528,17 @@ function getAddressFromLatLng(latLng) {
     });
 }
 
-document.getElementById('saveLocation').addEventListener('click', function() {
+document.getElementById('saveLocation').addEventListener('click', function () {
     const locationValue = document.getElementById('location').value;
     if (locationValue) {
         console.log('Selected Address:', locationValue);
-        $('#mapModal').modal('hide');  // Close the modal
+        $('#mapModal').modal('hide'); 
     } else {
         alert('Please select a location on the map.');
     }
 });
+
+
 
 
 

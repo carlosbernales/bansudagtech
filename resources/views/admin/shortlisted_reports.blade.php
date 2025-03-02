@@ -1,6 +1,34 @@
 
 @include('admin/header')
+<style>
+.warning-icon {
+    position: relative;
+    display: inline-block;
+    cursor: pointer;
+}
 
+.warning-icon::after {
+    content: attr(data-tooltip);
+    position: absolute;
+    top: -25px;
+    left: 50%;
+    transform: translateX(-50%);
+    background-color: rgba(0, 0, 0, 0.7);
+    color: white;
+    padding: 5px;
+    border-radius: 3px;
+    font-size: 12px;
+    visibility: hidden;
+    opacity: 0;
+    transition: opacity 0.2s;
+}
+
+.warning-icon:hover::after {
+    visibility: visible;
+    opacity: 1;
+}
+
+</style>
     <meta name="csrf-token" content="{{ csrf_token() }}">
 
 	<!-- Breadcomb area End-->
@@ -30,6 +58,7 @@
                                         <th>Proof Image</th>
                                         <th>Date Reported</th>
                                         <th>Details</th>
+                                        <th></th>
                                         <th></th>
                                     </tr>
                                 </thead>
@@ -74,6 +103,25 @@
                                             </button>
                                         </form>
                                     </td>
+                                    <td>
+                                        @foreach ($matchingReports as $report)
+                                            @if ($calamity->calamity_type == $report->calamity_type && 
+                                                  $calamity->barangay == $report->barangay && 
+                                                  $calamity->municipality == $report->municipality)
+                                                <span class="warning-icon" data-tooltip="Most Affected Area: {{ $calamity->calamity_type }}">
+                                                    <i class="fa fa-exclamation-triangle text-warning"></i>
+                                                </span>
+                                            @endif
+                                        @endforeach
+                                        
+                                        @if ($nextHighest && $calamity->calamity_type == $nextHighest->calamity_type &&
+                                                $calamity->barangay == $nextHighest->barangay && 
+                                                $calamity->municipality == $nextHighest->municipality)
+                                           <span class="warning-icon" data-tooltip="Most Affected Area: {{ $calamity->calamity_type }}">
+                                                    <i class="fa fa-exclamation-triangle text-warning"></i>
+                                                </span>
+                                        @endif
+                                    </td>
                                 </tr>
 
                                 <div class="modal fade" id="viewDetails-{{ $calamity->id }}" tabindex="-1" aria-labelledby="viewDetailsLabel" aria-hidden="true">
@@ -83,38 +131,133 @@
                                                 <h5 class="modal-title" id="viewDetailsLabel">Calamity Details</h5>
                                             </div>
                                             <div class="modal-body">
+                                                @if(!empty($calamity->rsbsa))
                                                 <p><strong>RSBSA:</strong> {{ $calamity->rsbsa }}</p>
+                                                @endif
+                                                
+                                                @if(!empty($calamity->calamity_type))
                                                 <p><strong>Calamity Type:</strong> {{ $calamity->calamity_type }}</p>
+                                                @endif
+                                                 
+                                                @if(!empty($calamity->farmer_type))
                                                 <p><strong>Farmer Type:</strong> {{ $calamity->farmer_type }}</p>
+                                                @endif
+                                                
+                                                @if(!empty($calamity->birthdate))
                                                 <p><strong>Birthdate:</strong> {{ $calamity->birthdate }}</p>
+                                                @endif
+                                                
+                                                @if(!empty($calamity->region))
                                                 <p><strong>Region:</strong> {{ $calamity->region }}</p>
+                                                @endif
+                                                
+                                                @if(!empty($calamity->province))
                                                 <p><strong>Province:</strong> {{ $calamity->province }}</p>
+                                                @endif
+                                                
+                                                @if(!empty($calamity->municipality))
                                                 <p><strong>Municipality:</strong> {{ $calamity->municipality }}</p>
+                                                @endif
+                                                
+                                                @if(!empty($calamity->barangay))
                                                 <p><strong>Barangay:</strong> {{ $calamity->barangay }}</p>
+                                                @endif
+                                                
+                                                @if(!empty($calamity->org_name))
                                                 <p><strong>Organization Name:</strong> {{ $calamity->org_name }}</p>
+                                                @endif
+                                                
+                                                @if(!empty($calamity->tot_male))
                                                 <p><strong>Total Male:</strong> {{ $calamity->tot_male }}</p>
+                                                @endif
+                                                
+                                                @if(!empty($calamity->tot_female))
                                                 <p><strong>Total Female:</strong> {{ $calamity->tot_female }}</p>
+                                                @endif
+                                                
+                                                @if(!empty($calamity->sex))
                                                 <p><strong>Sex:</strong> {{ $calamity->sex }}</p>
+                                                @endif
+                                                
+                                                @if(!empty($calamity->indigenous))
                                                 <p><strong>Indigenous:</strong> {{ $calamity->indigenous }}</p>
+                                                @endif
+                                                
+                                                @if(!empty($calamity->tribe_name))
                                                 <p><strong>Tribe Name:</strong> {{ $calamity->tribe_name }}</p>
+                                                @endif
+                                                
+                                                @if(!empty($calamity->pwd))
                                                 <p><strong>PWD:</strong> {{ $calamity->pwd }}</p>
+                                                @endif
+                                                
+                                                @if(!empty($calamity->arb))
                                                 <p><strong>ARB:</strong> {{ $calamity->arb }}</p>
+                                                @endif
+                                                
+                                                @if(!empty($calamity->fourps))
                                                 <p><strong>4Ps:</strong> {{ $calamity->fourps }}</p>
+                                                @endif
+                                                
+                                                @if(!empty($calamity->crop_type))
                                                 <p><strong>Crop Type:</strong> {{ $calamity->crop_type }}</p>
+                                                @endif
+                                                
+                                                @if(!empty($calamity->partially_damage))
                                                 <p><strong>Partially Damaged:</strong> {{ $calamity->partially_damage }}</p>
+                                                @endif
+                                                
+                                                @if(!empty($calamity->totally_damage))
                                                 <p><strong>Totally Damaged:</strong> {{ $calamity->totally_damage }}</p>
+                                                @endif
+                                                
+                                                @if(!empty($calamity->total_area))
                                                 <p><strong>Total Area:</strong> {{ $calamity->total_area }}</p>
+                                                @endif
+                                                
+                                                @if(!empty($calamity->livestock_type))
                                                 <p><strong>Livestock Type:</strong> {{ $calamity->livestock_type }}</p>
+                                                @endif
+                                                
+                                                @if(!empty($calamity->animal_type))
                                                 <p><strong>Animal Type:</strong> {{ $calamity->animal_type }}</p>
+                                                @endif
+                                                
+                                                @if(!empty($calamity->age_class))
                                                 <p><strong>Age Class:</strong> {{ $calamity->age_class }}</p>
+                                                @endif
+                                                
+                                                @if(!empty($calamity->no_heads))
                                                 <p><strong>No. of Heads:</strong> {{ $calamity->no_heads }}</p>
+                                                @endif
+                                                
+                                                @if(!empty($calamity->remarks))
                                                 <p><strong>Remarks:</strong> {{ $calamity->remarks }}</p>
+                                                @endif
+                                                
+                                                @if(!empty($calamity->lastname))
                                                 <p><strong>Last Name:</strong> {{ $calamity->lastname }}</p>
+                                                @endif
+                                                
+                                                @if(!empty($calamity->firstname))
                                                 <p><strong>First Name:</strong> {{ $calamity->firstname }}</p>
+                                                @endif
+                                                
+                                                @if(!empty($calamity->middlename))
                                                 <p><strong>Middle Name:</strong> {{ $calamity->middlename }}</p>
+                                                @endif
+                                                
+                                                @if(!empty($calamity->suffix))
                                                 <p><strong>Suffix:</strong> {{ $calamity->suffix }}</p>
+                                                @endif
+                                                
+                                                @if(!empty($calamity->fullname))
                                                 <p><strong>Full Name:</strong> {{ $calamity->fullname }}</p>
+                                                @endif
+                                                
+                                                @if(!empty($calamity->email))
                                                 <p><strong>Email:</strong> {{ $calamity->email }}</p>
+                                                @endif
                                             </div>
                                         </div>
                                     </div>
@@ -167,24 +310,23 @@
 
 
                                  <!-- Edit Modal -->
-                                 <div class="modal fade" id="editModal{{ $calamity->id }}" tabindex="-1" role="dialog" aria-labelledby="editModalLabel{{ $calamity->id }}" aria-hidden="true">
-                                    <div class="modal-dialog modal-sm" role="document">
-                                        <div class="modal-content">
-                                            <div class="modal-header">
-                                                <h5 class="modal-title" id="editModalLabel{{ $calamity->id }}"></h5>
-                                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                                                    <span aria-hidden="true">&times;</span>
-                                                </button>
-                                            </div>
-                                            <div class="modal-body">
-                                            <form action="/updateToOngoing/{{ $calamity->id }}" method="POST">
-                                                @csrf
-                                                @method('PUT')
-                                                <div class="row">
-                                                    <div class="col-md-6 mb-3">
+                                    <div class="modal fade" id="editModal{{ $calamity->id }}" tabindex="-1" role="dialog" aria-labelledby="editModalLabel{{ $calamity->id }}" aria-hidden="true">
+                                        <div class="modal-dialog modal-sm" role="document">
+                                            <div class="modal-content">
+                                                <div class="modal-header">
+                                                    <h5 class="modal-title" id="editModalLabel{{ $calamity->id }}"></h5>
+                                                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                                        <span aria-hidden="true">&times;</span>
+                                                    </button>
+                                                </div>
+                                                <div class="modal-body">
+                                                    <form action="/updateToOngoing/{{ $calamity->id }}" method="POST">
+                                                    @csrf
+                                                    @method('PUT')
+                                                    <div class="form-group">
                                                         <label for="assistance-type">Type of Assistance</label>
-                                                        <select name="assistance_type" id="assistance-type-dropdown" class="form-control">
-                                                            <option value="">Select Assistance Type</option>
+                                                        <select name="assistance_type" id="assistance-type-dropdown" class="form-control" required>
+                                                            <option value="">Select Assistance</option>
                                                             @foreach ($assistanceTypes as $type)
                                                                 <option value="{{ $type->assistance_type }}" {{ $calamity->assistance_type == $type->assistance_type ? 'selected' : '' }}>
                                                                     {{ $type->assistance_type }}
@@ -192,14 +334,21 @@
                                                             @endforeach
                                                         </select>
                                                     </div>
+                                                
+                                                    <div class="form-group">
+                                                        <label for="assistance-type">Other Assistance</label>
+                                                        <input type="text" name="other_assistances" id="other-assistance" class="form-control" placeholder="Optional" value="{{ $calamity->other_assistance ?? '' }}">
+                                                    </div>
                                                 </div>
                                                 <div class="modal-footer">
                                                     <button type="submit" class="btn btn-primary" id="save-btn-{{ $calamity->id }}">Okay</button>
                                                 </div>
-                                            </form>
+                                                </form>
+
+                                            </div>
                                         </div>
                                     </div>
-                                </div>
+
                                 @endforeach
                                 </tbody>
                             </table>
@@ -218,12 +367,14 @@
                     <button type="button" class="close" data-dismiss="modal">&times;</button>
                 </div>
                 <div class="modal-body">
-                    <select id="assistance-type-dropdown" class="form-control">
+                    <select id="multi-assistance-type-dropdown" class="form-control">
                         <option value="">Select Assistance Type</option>
                         @foreach ($assistanceTypes as $type)
                             <option value="{{ $type->assistance_type }}">{{ $type->assistance_type }}</option>
                         @endforeach
                     </select>
+                    <br />
+                    <input type="text" id="other-assistances" class="form-control" placeholder="Enter Other Assistances (if any)" />
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
@@ -237,13 +388,117 @@
 
 
 
-<script async defer src="googlemapsAPI.js"></script>
+<div id="weather_alert_map" style="display: none; height: 330px; width: 100%;"></div>
+ <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyA-6lStYy7YLcsM1hg5Po9DuUht8N-eO1Y&callback=initMap" async defer></script>
 
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/alertifyjs@1.13.1/build/css/alertify.min.css" />
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/alertifyjs@1.13.1/build/css/themes/default.min.css" />
 <script src="https://cdn.jsdelivr.net/npm/alertifyjs@1.13.1/build/alertify.min.js"></script>
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script>
+    window.onload = function () {
+        if (typeof google !== 'undefined' && google.maps) {
+            initFarmWeatherMap(); // Updated function name
+        } else {
+            console.error("Google Maps API failed to load.");
+        }
+    };
 
+    function initFarmWeatherMap() {
+        const farms = @json($farms);
+        const defaultLocation = @json($defaultLocation);
+        const farmLocations = farms.map(farm => farm.location);
+        const geocoder = new google.maps.Geocoder();
+
+        geocoder.geocode({ address: defaultLocation }, (results, status) => {
+            if (status === "OK") {
+                const map = new google.maps.Map(document.getElementById('weather_alert_map'), {
+                    zoom: 10,
+                    center: results[0].geometry.location
+                });
+
+                farmLocations.forEach((address, index) => {
+                    geocoder.geocode({ address: address }, (results, status) => {
+                        if (status === "OK") {
+                            const position = results[0].geometry.location;
+
+                            fetchWeather(position.lat(), position.lng(), (temp) => {
+                                const marker = new google.maps.Marker({
+                                    map: map,
+                                    position: position,
+                                    title: address,
+                                    label: temp + '°C'
+                                });
+
+                                const infowindow = new google.maps.InfoWindow({
+                                    content: `<p>${address}</p><p>Temperature: ${temp}°C</p>`
+                                });
+
+                                marker.addListener('click', () => {
+                                    infowindow.open(map, marker);
+                                });
+
+                                if (temp < -7 || temp > 28) {
+                                    sendWeatherAlert(farms[index], temp);
+                                }
+                            });
+                        } else {
+                            console.error(`Geocode was not successful for: ${status}`);
+                        }
+                    });
+                });
+            } else {
+                console.error(`Geocode failed for default location: ${status}`);
+            }
+        });
+    }
+
+    function fetchWeather(lat, lng, callback) {
+        const apiKey = "4e89cb6596765628fd6138f58d7454e1";
+        const url = `https://api.openweathermap.org/data/2.5/weather?lat=${lat}&lon=${lng}&units=metric&appid=${apiKey}`;
+
+        fetch(url)
+            .then(response => response.json())
+            .then(data => {
+                if (data && data.main && data.main.temp !== undefined) {
+                    callback(data.main.temp);
+                } else {
+                    callback('N/A');
+                }
+            })
+            .catch(() => callback('N/A'));
+    }
+
+    function sendWeatherAlert(farm, temperature) {
+        const data = {
+            id: farm.id,
+            email: farm.email,
+            commodity: farm.commodity,
+            farm_type: farm.farm_type,
+            livestock_type: farm.livestock_type,
+            user_id: farm.user_id,
+            temperature: temperature
+        };
+
+        fetch('/weather-alert', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
+            },
+            body: JSON.stringify(data)
+        })
+        .then(response => response.json())
+        .then(responseData => {
+            if (responseData.success) {
+                console.log('Weather alert submitted successfully.');
+            } else {
+                console.log('Failed to submit weather alert.');
+            }
+        })
+        .catch(() => console.error('Error sending weather alert.'));
+    }
+</script>
 <script>
     alertify.set('notifier', 'position', 'top-right');
 
@@ -264,9 +519,10 @@ document.addEventListener('DOMContentLoaded', () => {
     const updateBtn = document.getElementById('update-status-btn');
     const checkboxes = document.querySelectorAll('.row-checkbox');
     const selectAll = document.getElementById('select-all');
-    const assistanceModal = $('#assistanceModal'); // Use jQuery for Bootstrap modal
+    const assistanceModal = $('#assistanceModal');
     const submitAssistanceTypeBtn = document.getElementById('submit-assistance-type');
-    const assistanceTypeDropdown = document.getElementById('assistance-type-dropdown');
+    const assistanceTypeDropdown = document.getElementById('multi-assistance-type-dropdown');
+    const otherAssistancesInput = document.getElementById('other-assistances');
     const csrfToken = document.querySelector('meta[name="csrf-token"]').content;
 
     const toggleButton = () => {
@@ -301,39 +557,47 @@ document.addEventListener('DOMContentLoaded', () => {
             .filter(checkbox => checkbox.checked)
             .map(checkbox => checkbox.value);
         const assistanceType = assistanceTypeDropdown.value;
+        const otherAssistances = otherAssistancesInput.value.trim();
 
-        if (assistanceType) {
-            const form = document.createElement('form');
-            form.method = 'POST';
-            form.action = '/multipleUpdateToOngoing';
-
-            const csrfInput = document.createElement('input');
-            csrfInput.type = 'hidden';
-            csrfInput.name = '_token';
-            csrfInput.value = csrfToken;
-            form.appendChild(csrfInput);
-
-            selectedIds.forEach(id => {
-                const input = document.createElement('input');
-                input.type = 'hidden';
-                input.name = 'ids[]';
-                input.value = id;
-                form.appendChild(input);
-            });
-
-            const assistanceInput = document.createElement('input');
-            assistanceInput.type = 'hidden';
-            assistanceInput.name = 'assistance_type';
-            assistanceInput.value = assistanceType;
-            form.appendChild(assistanceInput);
-
-            document.body.appendChild(form);
-            form.submit();
-
-            assistanceModal.modal('hide');
-        } else {
+        if (!assistanceType) {
             alert('Please select an assistance type.');
+            return;
         }
+
+        const form = document.createElement('form');
+        form.method = 'POST';
+        form.action = '/multipleUpdateToOngoing';
+
+        const csrfInput = document.createElement('input');
+        csrfInput.type = 'hidden';
+        csrfInput.name = '_token';
+        csrfInput.value = csrfToken;
+        form.appendChild(csrfInput);
+
+        selectedIds.forEach(id => {
+            const input = document.createElement('input');
+            input.type = 'hidden';
+            input.name = 'ids[]';
+            input.value = id;
+            form.appendChild(input);
+        });
+
+        const assistanceInput = document.createElement('input');
+        assistanceInput.type = 'hidden';
+        assistanceInput.name = 'assistance_type';
+        assistanceInput.value = assistanceType;
+        form.appendChild(assistanceInput);
+
+        const otherAssistancesInputElement = document.createElement('input');
+        otherAssistancesInputElement.type = 'hidden';
+        otherAssistancesInputElement.name = 'other_assistances';
+        otherAssistancesInputElement.value = otherAssistances;
+        form.appendChild(otherAssistancesInputElement);
+
+        document.body.appendChild(form);
+        form.submit();
+
+        assistanceModal.modal('hide');
     });
 });
 
